@@ -36,6 +36,10 @@
         (right (tail queue)) (tail queue))
   queue)
 
+(defmethod print-object ((queue queue) stream)
+  (print-unreadable-object (queue stream :type T)
+    (format stream "~s ~s" :size (size queue))))
+
 (defun make-queue ()
   (make-instance 'queue))
 
@@ -67,6 +71,10 @@
   queue)
 
 (defun dequeue (queue)
+  ;; The sentinel would avoid this check usually
+  ;; but we need to keep the counter intact, and
+  ;; having a secondary value to tell us whether
+  ;; it is empty is also useful, so we need to test.
   (if (eql (right (head queue)) (tail queue))
       (values NIL NIL)
       (let ((cell (right (head queue))))
@@ -126,6 +134,3 @@
        vec))
     (sequence
      (coerce-queue queue 'list))))
-
-
-

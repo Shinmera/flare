@@ -55,18 +55,18 @@
   (:export
    #:indexed-set
    #:make-indexed-set
+   #:loop-set
+   #:map-set
+   #:do-set
    #:set-add
    #:set-remove
-   #:in-set-p
    #:set-size
-   #:set-clear
    #:set-first
    #:set-last
    #:set-value-at
    #:set-index-of
-   #:loop-set
-   #:map-set
-   #:do-set
+   #:in-set-p
+   #:clear-set
    #:coerce-set))
 
 (defpackage #:flare

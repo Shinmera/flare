@@ -12,6 +12,10 @@
 (defun make-indexed-set ()
   (make-instance 'indexed-set))
 
+(setf (macro-function 'loop-set) (macro-function 'loop-queue))
+(setf (fdefinition 'map-set) (fdefinition 'map-queue))
+(setf (macro-function 'do-set) (macro-function 'do-queue))
+
 (defun set-add (value set)
   (cond ((gethash value (set set))
          (values set NIL))
@@ -32,18 +36,15 @@
           (T
            (values set NIL)))))
 
-(defun in-set-p (value set)
-  (nth-value 1 (gethash value (set set))))
-
 (setf (fdefinition 'set-size) (fdefinition 'queue-size))
-(setf (fdefinition 'clear-set) (fdefinition 'clear-queue))
 (setf (fdefinition 'set-first) (fdefinition 'queue-first))
 (setf (fdefinition 'set-last) (fdefinition 'queue-last))
-
-(setf (fdefinition 'map-set) (fdefinition 'map-queue))
-(setf (macro-function 'do-set) (macro-function 'do-queue))
 (setf (fdefinition 'set-value-at) (fdefinition 'queue-value-at))
 (setf (fdefinition 'set-index-of) (fdefinition 'queue-index-of))
+(setf (fdefinition 'clear-set) (fdefinition 'clear-queue))
+
+(defun in-set-p (value set)
+  (nth-value 1 (gethash value (set set))))
 
 (defun coerce-set (set type)
   (case type
