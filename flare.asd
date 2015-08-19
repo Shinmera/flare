@@ -14,6 +14,7 @@
   :serial T
   :components ((:file "package")
                (:file "vector")
+               (:file "queue")
                (:file "indexed-set")
                (:file "scene"))
   :depends-on ())

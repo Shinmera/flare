@@ -29,26 +29,28 @@
 
 (defpackage #:flare-queue
   (:nicknames #:org.shirakumo.flare.queue)
-  (:us #:cl)
+  (:use #:cl)
   (:export
    #:queue
    #:make-queue
+   #:loop-queue
+   #:map-queue
+   #:do-queue
    #:enqueue
    #:dequeue
+   #:queue-remove
    #:queue-size
-   #:in-queue-p
    #:queue-first
    #:queue-last
    #:queue-index-of
    #:queue-value-at
-   #:loop-queue
-   #:map-queue
-   #:do-queue
+   #:clear-queue
+   #:in-queue-p
    #:coerce-queue))
 
 (defpackage #:flare-indexed-set
   (:nicknames #:org.shirakumo.flare.indexed-set)
-  (:use #:cl)
+  (:use #:cl #:org.shirakumo.flare.queue)
   (:shadow #:set)
   (:export
    #:indexed-set
