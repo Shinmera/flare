@@ -1,0 +1,71 @@
+;;;; Flint Design Shizzle
+
+;;; Animation 1
+1: EDIT Create a ring of 16 bullets.
+1: TWEEN Expand the radius of the ring, eased.
+1: TWEEN Rotate the ring, eased.
+2: EDIT Split each bullet in the ring by a ring of 3 bullets.
+2: TWEEN Expand the radius of the ring, exponential.
+2: TWEEN Rotate the ring, exponential.
+2: TWEEN Expand each ring.child, exponential.
+2: TWEEN Rotate each ring.child, exponential.
+2: TWEEN Fade out the ring.
+3: EDIT Remove the ring.
+
+(animation 1
+ 0
+   (:scene 
+     (enter ring :name :ring :contents ((bullet :size 2) 20)))
+   (:ring 
+     (scale orientation :to 20 :interpolate ease)
+     (rotate orientation :to (vec 0 0 360) :interpolate ease))
+ 10
+   ((:ring *) 
+     (split :by ((ring :contents ((bullet :size 1) 3)) 1)))
+   (:ring 
+     (scale orientation :by 1.1 :exponential)
+     (rotate orientation :by (vec 0 0 1) :project expt))
+   ((:ring *) 
+     (scale orientation :by 1.1 :exponential)
+     (rotate orientation :by (vec 0 0 1) :project expt))
+   (:ring 
+     (set alpha :from 0.0 :to 1.0 :project expt))
+ 20
+   (:ring (leave)))
+
+
+;;; Animation 2
+1: EDIT Create a bullet with random lifetime in a random direction every 3 steps.
+
+(animation 2
+ 0
+   (:scene (every 3 (enter ring :contents (bullet :size 2) :orientation (random) :life (random)))
+   (ring (scale orientation :by 1.1 :project expt)))
+
+
+;;; Animation 3
+1: EDIT Create a burst of random bullets in a random direction
+
+(animation 3
+ 0
+   (:scene (enter ring :contents (cloud :size 0 :contents ((bullet :size 2) (random))) :orientation (random)))
+   (ring (scale orientation :by 1.1))
+   ((ring cloud) (set size :from 0 :to 50 :project expt))
+ 50
+   (ring (leave)))
+
+;;; Basic structure
+ANIMATION   ::= TITLE [TIME INSTRUCTION*]*
+TITLE       ::= symbol
+TIME        ::= real
+INSTRUCTION ::= (SELECTOR ACTION*)
+SELECTOR    ::= DESIGNATOR | (DESIGNATOR+)
+DESIGNATOR  ::= ANY | CLASS | NAME | INDEX | #\# #\' FUNCTION
+ANY         ::= #\*
+CLASS       ::= symbol
+NAME        ::= keyword
+INDEX       ::= integer
+ACTION      ::= (FUNCTION ARG*)
+FUNCTION    ::= symbol
+ARG         ::= T
+
