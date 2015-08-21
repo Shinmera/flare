@@ -27,6 +27,11 @@
                     (error "No such easing ~s found." by))))
     (+ from (* (funcall easing x) (- to from)))))
 
+(defun ease-vec (x by &optional (from (vec 0 0 0)) (to (normalize (vec 1 1 1))))
+  (vec (ease x by (x from) (x to))
+       (ease x by (y from) (y to))
+       (ease x by (z from) (z to))))
+
 (define-easing linear (x)
   x)
 
@@ -52,7 +57,7 @@
   (let ((x (* x 2)))
     (if (< x 1)
         (/ (expt x 3) 2)
-        (/ (+ (expt (- n 2) 3) 2) 2))))
+        (/ (+ (expt (- x 2) 3) 2) 2))))
 
 (define-easing quart-in (x)
   (expt x 4))
@@ -74,9 +79,9 @@
 
 (define-easing quint-in-out (x)
   (let ((x (* x 2)))
-    (if (< n 1)
+    (if (< x 1)
         (/ (expt x 5) 2)
-        (/ (+ (expt (- n 2) 5) 2) 2))))
+        (/ (+ (expt (- x 2) 5) 2) 2))))
 
 (define-easing sine-in (x)
   (1+ (- (cos (* x (/ PI 2))))))
