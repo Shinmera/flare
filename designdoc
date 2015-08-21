@@ -12,7 +12,7 @@
 2: TWEEN Fade out the ring.
 3: EDIT Remove the ring.
 
-(animation 1
+(define-progression 1
  0
    (:scene 
      (enter ring :name :ring :contents ((bullet :size 2) 20)))
@@ -20,12 +20,12 @@
      (scale orientation :to 20 :interpolate ease)
      (rotate orientation :to (vec 0 0 360) :interpolate ease))
  10
-   ((:ring *) 
+   ((:ring >) 
      (split :by ((ring :contents ((bullet :size 1) 3)) 1)))
    (:ring 
      (scale orientation :by 1.1 :exponential)
      (rotate orientation :by (vec 0 0 1) :project expt))
-   ((:ring *) 
+   ((:ring >) 
      (scale orientation :by 1.1 :exponential)
      (rotate orientation :by (vec 0 0 1) :project expt))
    (:ring 
