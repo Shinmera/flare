@@ -7,6 +7,8 @@
 (in-package #:org.shirakumo.flare.viewer)
 (in-readtable :qtools)
 
+(defvar *viewer* NIL)
+
 (define-widget main (QMainWindow)
   ())
 
@@ -17,7 +19,12 @@
   ((scene :initform (make-instance 'flare::scene) :accessor scene)))
 
 (define-initializer (viewer setup)
-  (flare::enter (make-instance 'sphere) scene))
+  (setf *viewer* viewer)
+  (let ((ring (make-instance 'flare::ring :size 100 :name :ring))
+        (inner (make-instance 'flare::ring :size 50 :name :inner)))
+    (flare::enter ring scene)
+    (flare::enter inner ring)
+    (flare::enter (make-instance 'sphere) inner)))
 
 (define-subwidget (viewer timer) (q+:make-qtimer viewer)
   (setf (q+:single-shot timer) NIL)
@@ -25,6 +32,8 @@
 
 (define-slot (viewer update) ()
   (declare (connected timer (timeout)))
+  (incf (flare::angle (flare::unit :ring scene)) 2)
+  (incf (flare::angle (flare::unit :inner scene)) 10)
   (q+:repaint viewer))
 
 (define-override (viewer paint-event) (ev)
@@ -36,11 +45,13 @@
     (q+:translate painter (round (/ (q+:width viewer) 2)) (round (/ (q+:height viewer) 2)))
     
     (flare::update scene)
-    (flare::paint scene painter))
+    (q+:begin-native-painting painter)
+    (flare::paint scene painter)
+    (q+:end-native-painting painter))
   (stop-overriding))
 
-(defun main ()
-  (with-main-window (window 'main :name "Flare-Viewer")))
+(defun main (&key (blocking T))
+  (with-main-window (window 'main :name "Flare-Viewer" :blocking blocking)))
 
 (defclass sphere (flare::particle)
   ((size :initarg :size :accessor size))
@@ -64,10 +75,12 @@
                       (gl:normal (* x zr1 size) (* y zr1 size) z1)
                       (gl:vertex (* x zr1 size) (* y zr1 size) z1)))))
 
-(defmethod flare::paint ((sphere sphere) target)
-  (q+:begin-native-painting target)
+(defmethod flare::call-with-translation (func target vec)
   (gl:with-pushed-matrix
-    (gl:translate (flare::x sphere) (flare::y sphere) (flare::z sphere))
+    (gl:translate (flare::x vec) (flare::y vec) (flare::z vec))
+    (funcall func)))
+
+(defmethod flare::paint ((sphere sphere) target)
+  (flare::with-translation ((flare::location sphere) target)
     (gl:color 255 255 255)
-    (draw-sphere (size sphere)))
-  (q+:end-native-painting target))
+    (draw-sphere (size sphere))))
