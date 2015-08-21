@@ -71,4 +71,4 @@
 
 (defpackage #:flare
   (:nicknames #:org.shirakumo.flare)
-  (:use #:cl #:flare-vector #:flare-indexed-set))
+  (:use #:cl #:flare-vector #:flare-queue #:flare-indexed-set))
