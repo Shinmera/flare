@@ -23,7 +23,7 @@
          (let ((cell (flare-queue::make-cell value NIL NIL)))
            (setf (gethash value (set set)) cell)
            (flare-queue::cell-insert-before cell (flare-queue::tail set)))
-         (flare-queue::set-size (1+ (size set)) set)
+         (flare-queue::set-size (1+ (flare-queue::size set)) set)
          (values set T))))
 
 (defun set-remove (value set)
@@ -31,7 +31,7 @@
     (cond (cell
            (remhash value (set set))
            (flare-queue::cell-remove cell)
-           (flare-queue::set-size (1- (size set)) set)
+           (flare-queue::set-size (1- (flare-queue::size set)) set)
            (values set T))
           (T
            (values set NIL)))))
