@@ -12,9 +12,21 @@
 (defgeneric compile-change (name args))
 (defgeneric perform (change object clock step))
 (defgeneric initial-value (tween object))
+(defgeneric animations (progression))
+(defgeneric animation (n progression))
+(defgeneric start (animation))
+(defgeneric end (animation))
+(defgeneric selector (animation))
+(defgeneric changes (animation))
+(defgeneric field (tween))
+(defgeneric from (tween))
+(defgeneric to (tween))
+(defgeneric from (tween))
+(defgeneric by (tween))
+(defgeneric ease-func (tween))
 
 (defclass progression ()
-  ((animations :initform (make-array 0 :adjustable T :fill-pointer 0) :accessor animations)
+  ((animations :initform (make-array 0) :accessor animations)
    (active-set :initform () :accessor active-set)
    (active-pointer :initform 0 :accessor active-pointer)
    (name :initarg :name :accessor name))
@@ -36,10 +48,29 @@
           for animation = (aref (animations progression) (active-pointer progression))
           while (<= (start animation) clock)
           do (incf (active-pointer progression))
-             (push animation (active-set progression)))
+             (unless (find animation (active-set progression))
+               (push animation (active-set progression))))
     ;; Process active
     (dolist (animation (active-set progression))
       (tick animation scene))))
+
+(defmethod add-animation (animation (progression progression))
+  (let ((new-els (sort (cons animation (coerce (animations progression) 'list))
+                       #'< :key #'start)))
+    (setf (animations progression)
+          (coerce new-els 'vector))
+    (setf (active-pointer progression) 0))
+  animation)
+
+(defmethod remove-animation (animation (progression progression))
+  (let ((new-els (remove animation (coerce (animations progression) 'list))))
+    (setf (animations progression)
+          (coerce new-els 'vector))
+    (setf (active-pointer progression) 0))
+  animation)
+
+(defmethod animation (n (progression progression))
+  (aref (animations progression) n))
 
 (defclass animation ()
   ((start :initarg :start :accessor start)
@@ -50,13 +81,22 @@
    :start 0 :end T :selector T :changes ()))
 
 (defmethod initialize-instance :after ((animation animation) &key)
+  (setf (selector animation) (selector animation)))
+
+(defmethod print-object ((animation animation) stream)
+  (print-unreadable-object (animation stream :type T)
+    (format stream "~s ~s ~s ~s" :start (start animation) :end (end animation))))
+
+(defmethod (setf selector) :after (selector (animation animation))
   (unless (functionp (selector animation))
     (setf (selector animation) (compile-selector (selector animation)))))
 
 (defmethod tick ((animation animation) scene)
   (let* ((clock (clock scene))
-         (step (/ (- clock (start animation))
-                  (- (end animation) (start animation)))))
+         (step (if (eql t (end animation))
+                   NIL
+                   (/ (- clock (start animation))
+                      (- (end animation) (start animation))))))
     (funcall (selector animation)
              scene (lambda (object)
                      (dolist (change (changes animation))
@@ -71,7 +111,14 @@
    (to :initarg :to :accessor to)
    (by :initarg :by :accessor by)
    (ease :initarg :ease :accessor ease-func)
-   (initials :initform (make-hash-table :test 'eq) :accessor initials)))
+   (initials :initform (make-hash-table :test 'eq) :accessor initials))
+  (:default-initargs
+   :from NIL :to NIL :by NIL :ease 'linear))
+
+(defmethod initialize-instance :after ((tween tween) &key)
+  (when (and (not (to tween))
+             (not (by tween)))
+    (error "Must specify either TO or BY.")))
 
 (defmethod initial-value ((tween tween) object)
   (or (gethash object (initials tween))
@@ -99,7 +146,14 @@
 
 (defmethod perform ((tween set!) object clock step)
   (setf (slot-value object (field tween))
-        (ease step (ease-func tween) (from tween) (to tween))))
+        (ease step (ease-func tween) (or (from tween) (initial-value tween object)) (to tween))))
+
+(defclass increase (tween)
+  ())
+
+(defmethod perform ((tween increase) object clock step)
+  (incf (slot-value object (field tween))
+        (by tween)))
 
 (defclass edit (change)
   ((done :initform NIL :accessor done)))
