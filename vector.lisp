@@ -13,11 +13,13 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 (defgeneric z (vec))
 (defgeneric size (vec))
 (defgeneric translate (vec other))
+(defgeneric -translate (vec other))
 (defgeneric scale (vec other))
 (defgeneric rotate-around (vec axis phi))
 (defgeneric rotate (vec other))
 (defgeneric normalize (vec))
 (defgeneric translated (vec other))
+(defgeneric -translated (vec other))
 (defgeneric scaled (vec other))
 (defgeneric rotated (vec other))
 (defgeneric normalized (vec))
@@ -43,6 +45,11 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 (defun vec (x y z)
   (make-instance 'vec :x x :y y :z z))
 
+(defun vec= (a b)
+  (and (= (x a) (x b))
+       (= (y a) (y b))
+       (= (z a) (z b))))
+
 (defmethod copy ((v vec))
   (make-instance 'vec :x (x v) :y (y v) :z (z v)))
 
@@ -64,6 +71,18 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
   (vmodf + (x v) other)
   (vmodf + (y v) other)
   (vmodf + (z v) other)
+  v)
+
+(defmethod -translate ((v vec) (other vec))
+  (vmodf - (x v) (x other))
+  (vmodf - (y v) (y other))
+  (vmodf - (z v) (z other))
+  v)
+
+(defmethod -translate ((v vec) (other real))
+  (vmodf - (x v) other)
+  (vmodf - (y v) other)
+  (vmodf - (z v) other)
   v)
 
 (defmethod scale ((v vec) (other vec))
@@ -112,6 +131,9 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 
 (defmethod translated ((v vec) other)
   (translate (copy v) other))
+
+(defmethod -translated ((v vec) other)
+  (-translate (copy v) other))
 
 (defmethod scaled ((v vec) other)
   (scale (copy v) other))
