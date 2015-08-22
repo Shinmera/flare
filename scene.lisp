@@ -9,6 +9,7 @@
 (defgeneric call-with-translation (func target vec))
 (defgeneric update (object))
 (defgeneric stop (timer))
+(defgeneric running (timer))
 (defgeneric start (timer))
 (defgeneric reset (timer))
 (defgeneric clock (timer))
@@ -29,6 +30,11 @@
 (defgeneric add-progression (progression scene))
 (defgeneric remove-progression (progression scene))
 (defgeneric scene (scene-unit))
+(defgeneric location (entity))
+(defgeneric orientation (entity))
+(defgeneric size (entity))
+(defgeneric up (entity))
+(defgeneric angle (entity))
 
 (defmethod update (object)
   object)
@@ -51,6 +57,9 @@
   (print-unreadable-object (timer stream :type T :identity T)
     (format stream "~s ~a" (if (previous-time timer) :running :stopped) (clock timer))))
 
+(defmethod running ((timer timer))
+  (not (null (previous-time timer))))
+
 (defmethod reset ((timer timer))
   (setf (clock timer) 0.0s0)
   (when (previous-time timer)
@@ -66,13 +75,16 @@
   timer)
 
 (defmethod update :before ((timer timer))
-  (when (previous-time timer)
-    (let ((new-time (get-internal-real-time)))
-      (incf (clock timer)
-            (float (/ (- new-time (previous-time timer))
-                      internal-time-units-per-second)
-                   1.0s0))
-      (setf (previous-time timer) new-time))))
+  (let ((new-time (get-internal-real-time)))
+    (incf (clock timer)
+          (float (/ (- new-time (previous-time timer))
+                    internal-time-units-per-second)
+                 1.0s0))
+    (setf (previous-time timer) new-time)))
+
+(defmethod update :around ((timer timer))
+  (when (running timer)
+    (call-next-method)))
 
 (defclass paintable ()
   ((visibility :initarg :visibility :accessor visibility))
@@ -80,6 +92,27 @@
 
 (defclass container ()
   ((objects :initform (make-indexed-set) :accessor objects)))
+
+(defun map-container-tree (function container)
+  (labels ((traverse (container)
+             (when (typep container 'container)
+               (do-set (i container) (objects container)
+                 (declare (ignore i))
+                 (funcall function container)
+                 (traverse container)))))
+    (traverse container)))
+
+(defmacro do-container-tree ((object container) &body body)
+  `(block NIL (map-container-tree (lambda (,object) ,@body) ,container)))
+
+(defun print-container-tree (container)
+  (labels ((print-container (container level)
+             (format T "~&~a ~a~%" (make-string (* level 2) :initial-element #\ ) container)
+             (when (typep container 'container)
+               (do-set (i container) (objects container)
+                 (declare (ignore i))
+                 (print-container container (1+ level))))))
+    (print-container container 0)))
 
 (defmethod insert ((container container) &rest objects)
   (dolist (obj objects)
@@ -150,11 +183,14 @@
              (tick progression scene))
            (progressions scene)))
 
+(defmethod progression (name (scene scene))
+  (gethash name (progressions scene)))
+
 (defmethod add-progression (progression (scene scene))
-  (setf (gethash (name progression) scene) progression))
+  (setf (gethash (name progression) (progressions scene)) progression))
 
 (defmethod remove-progression (progression (scene scene))
-  (remhash (name progression) scene))
+  (remhash (name progression) (progressions scene)))
 
 (defclass scene-unit (unit)
   ())
