@@ -30,10 +30,12 @@
 (defun compile-constraint (constraint next)
   (cond ((keywordp constraint)
          (lambda (collective)
-           (funcall next (unit collective constraint))))
+           (let ((unit (unit constraint collective)))
+             (when unit
+               (funcall next unit)))))
         ((eql constraint '>)
          (lambda (container)
-           (do-set (*i* unit) container
+           (do-set (*i* unit) (objects container)
              (funcall next unit))))
         ((realp constraint)
          (lambda (object)
