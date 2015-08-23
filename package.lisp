@@ -80,22 +80,37 @@
    #:tick
    #:add-animation
    #:remove-animation
-   #:compile-change
    #:perform
    #:initial-value
    #:animations
+   #:animation
    #:start
-   #:end
+   #:duration
    #:selector
    #:changes
+
+   #:progression
+   #:animation)
+  ;; clock.lisp
+  (:export
+   #:update
+   #:stop
+   #:start
+   #:reset
+   #:running
+   #:synchronize
+   #:clock
+
+   #:clock)
+  ;; change.lisp
+  (:export
    #:field
    #:from
    #:to
    #:from
    #:by
    #:ease-func
-   #:progression
-   #:animation
+
    #:change
    #:tween
    #:scale
@@ -107,6 +122,26 @@
    #:leave
    #:delegating-change
    #:every.)
+  ;; container.lisp
+  (:export
+   #:objects
+   #:insert
+   #:withdraw
+   #:name-map
+   #:units
+   #:unit
+   #:enter
+   #:leave
+   #:object
+   #:name
+   #:collective
+   #:map-container-tree
+   #:do-container-tree
+   #:print-container-tree
+
+   #:container
+   #:collective
+   #:unit)
   ;; easings.lisp
   (:export
    #:easing
@@ -148,43 +183,27 @@
   ;; parser.lisp
   (:export
    #:define-progression)
-  ;; scene.lisp
+  ;; paintable.lisp
   (:export
    #:call-with-translation
-   #:with-translation
-   #:update
-   #:stop
-   #:running
-   #:start
-   #:reset
-   #:clock
    #:visibility
    #:paint
-   #:objects
-   #:insert
-   #:withdraw
-   #:name-map
-   #:units
-   #:unit
-   #:enter
-   #:leave
-   #:object
-   #:name
-   #:collective
+   #:with-translation
+   
+   #:target
+   #:paintable)
+  ;; scene.lisp
+  (:export
    #:progressions
    #:add-progression
    #:remove-progression
    #:scene
+   #:location
+   #:orientation
+   #:size
+   #:up
+   #:angle
 
-   #:target
-   #:timer
-   #:paintable
-   #:container
-   #:map-container-tree
-   #:do-container-tree
-   #:print-container-tree
-   #:collective
-   #:unit
    #:scene
    #:scene-unit
    #:entity
@@ -192,9 +211,4 @@
    #:sized-entity
    #:formation
    #:particle
-   #:ring
-   #:location
-   #:orientation
-   #:size
-   #:up
-   #:angle))
+   #:ring))
