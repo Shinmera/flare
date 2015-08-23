@@ -142,7 +142,9 @@ Changes:
          (step (unless (or (eql t (duration animation))
                            (= 0 (duration animation)))
                  (/ (- clock (start animation)) (duration animation)))))
-    (funcall (selector animation)
-             scene (lambda (object)
-                     (dolist (change (changes animation))
-                       (perform change object clock step))))))
+    ;; This is shit. FIXME
+    (dolist (change (changes animation))
+      (unless (done change)
+        (funcall (selector animation)
+                 scene (lambda (object)
+                         (perform change object clock step)))))))

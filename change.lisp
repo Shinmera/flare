@@ -7,6 +7,7 @@
 (in-package #:org.shirakumo.flare)
 
 (defgeneric perform (change object clock step))
+(defgeneric done (change))
 (defgeneric field (tween))
 (defgeneric from (tween))
 (defgeneric to (tween))
@@ -16,7 +17,7 @@
 (defgeneric initial-value (tween object))
 
 (defclass change ()
-  ())
+  ((done :initform NIL :accessor done)))
 
 (defclass tween (change)
   ((field :initarg :field :accessor field)
@@ -77,14 +78,12 @@
         (by tween)))
 
 (defclass edit (change)
-  ((done :initform NIL :accessor done)))
+  ())
 
 (defmethod reset ((edit edit))
   (setf (done edit) NIL))
 
-(defmethod perform :around ((edit edit) object clock step)
-  (unless (done edit)
-    (call-next-method))
+(defmethod perform :after ((edit edit) object clock step)
   (setf (done edit) T))
 
 (defclass enter (edit)
@@ -99,6 +98,7 @@
    :object T))
 
 (defmethod perform ((change leave) object clock step)
+  (v:info :test "LEAVE: ~a (~a ~a)" object (object change) (collective object))
   (leave object (object change)))
 
 (defclass delegating-change (change)
