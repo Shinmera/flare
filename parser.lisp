@@ -17,7 +17,7 @@
                (list (push statement temps))
                (real
                 (dolist (form (reverse temps))
-                  (push (list begin statement form) animations))
+                  (push (list begin (- statement begin) form) animations))
                 (setf temps ())
                 (setf begin statement)))
           finally (dolist (form temps)
@@ -73,10 +73,10 @@
 (defun parse-change (form)
   `(compile-change ',(car form) ',(cdr form)))
 
-(defun parse-animation (start end form)
+(defun parse-animation (start duration form)
   (destructuring-bind (selector &rest changes) form
     (let ((animation (gensym "ANIMATION")))
-      `(let ((,animation (make-instance 'animation :start ,start :end ,end :selector ',selector)))
+      `(let ((,animation (make-instance 'animation :start ,start :duration ,duration :selector ',selector)))
          ,@(loop for change in changes
                  collect `(push ,(parse-change change) (changes ,animation)))
          ,animation))))
@@ -85,5 +85,5 @@
   (let ((defs (parse-intervals intervals))
         (progression (gensym "PROGRESSION")))
     `(let ((,progression (make-instance 'progression :name ',name)))
-       ,@(loop for (start end form) in defs
-               collect `(enqueue ,(parse-animation start end form) ,progression)))))
+       ,@(loop for (start duration form) in defs
+               collect `(enqueue ,(parse-animation start duration form) ,progression)))))
