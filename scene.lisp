@@ -73,7 +73,7 @@ Tree:"
 (defmethod (setf scene) (scene (unit scene-unit))
   (setf (collective unit) scene))
 
-(defclass entity (container scene-unit paintable)
+(defclass entity (collective scene-unit paintable)
   ((location :initarg :location :accessor location))
   (:default-initargs
    :location (vec 0 0 0)))
@@ -85,13 +85,15 @@ Tree:"
 
 (defmethod enter ((entity entity) (container entity))
   (call-next-method)
-  (when (and (name entity) (collective container))
-    (setf (gethash (name entity) (name-map (collective container))) entity)))
+  ;; (when (and (name entity) (collective container))
+  ;;   (setf (gethash (name entity) (name-map (collective container))) entity))
+  )
 
 (defmethod leave ((entity entity) (container entity))
   (call-next-method)
-  (when (and (name entity) (collective container))
-    (remhash (name entity) (name-map (collective container)))))
+  ;; (when (and (name entity) (collective container))
+  ;;   (remhash (name entity) (name-map (collective container))))
+  )
 
 (defclass oriented-entity (entity)
   ((orientation :initarg :orientation :accessor orientation))
