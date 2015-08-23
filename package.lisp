@@ -78,10 +78,7 @@
   ;; animation.lisp
   (:export
    #:tick
-   #:add-animation
-   #:remove-animation
-   #:perform
-   #:initial-value
+   #:start-animation
    #:animations
    #:animation
    #:start
@@ -104,12 +101,14 @@
    #:clock)
   ;; change.lisp
   (:export
+   #:perform
    #:field
    #:from
    #:to
    #:from
    #:by
    #:ease-func
+   #:initial-value
 
    #:change
    #:tween
@@ -130,6 +129,7 @@
    #:name-map
    #:units
    #:unit
+   #:clear
    #:enter
    #:leave
    #:object
@@ -182,6 +182,9 @@
    #:bounce-in-out)
   ;; parser.lisp
   (:export
+   #:make-progression
+   #:progression-definition
+   #:remove-progression
    #:define-progression)
   ;; paintable.lisp
   (:export
@@ -195,8 +198,6 @@
   ;; scene.lisp
   (:export
    #:progressions
-   #:add-progression
-   #:remove-progression
    #:scene
    #:location
    #:orientation
