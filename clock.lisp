@@ -7,26 +7,17 @@
 (in-package #:org.shirakumo.flare)
 
 (defgeneric update (object))
-(defgeneric stop (timer))
-(defgeneric start (timer))
-(defgeneric reset (timer))
-(defgeneric running (timer))
-(defgeneric synchronize (timer new))
-(defgeneric clock (timer))
+(defgeneric stop (clock))
+(defgeneric start (clock))
+(defgeneric reset (clock))
+(defgeneric running (clock))
+(defgeneric synchronize (clock new))
+(defgeneric clock (clock))
 
 (defmethod update (object)
   object)
 
-(defmacro define-self-returning-method (name arglist)
-  `(defmethod ,name :around ,arglist
-     (call-next-method)
-     ,(first arglist)))
-
 (define-self-returning-method update (object))
-(define-self-returning-method stop (timer))
-(define-self-returning-method start (timer))
-(define-self-returning-method reset (timer))
-(define-self-returning-method synchronize (timer new))
 
 (defclass clock ()
   ((previous-time :initform (get-internal-real-time) :accessor previous-time)
@@ -36,12 +27,17 @@
    :clock 0.0s0
    :running NIL))
 
+(define-self-returning-method stop ((clock clock)))
+(define-self-returning-method start ((clock clock)))
+(define-self-returning-method reset (clock))
+(define-self-returning-method synchronize (clock new))
+
 (defmethod describe-object ((clock clock) stream)
   (format stream "~&~a
   [~a]
 
 The clock is ~:[STOPPED~;RUNNING~]
-Internal clock is at ~a~%"
+Internal clock is at ~a~&"
           clock (type-of clock) (running clock) (clock clock)))
 
 (defmethod print-object ((clock clock) stream)

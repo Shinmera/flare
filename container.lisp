@@ -6,6 +6,7 @@
 
 (in-package #:org.shirakumo.flare)
 
+(defgeneric clear (container))
 (defgeneric objects (container))
 (defgeneric insert (container &rest objects))
 (defgeneric withdraw (container &rest objects))
@@ -18,6 +19,12 @@
 (defgeneric name (unit))
 (defgeneric collective (unit))
 
+(define-self-returning-method clear (container))
+(define-self-returning-method insert (container &rest objects))
+(define-self-returning-method withdraw (container &rest objects))
+(define-self-returning-method enter (unit collective))
+(define-self-returning-method leave (unit collective))
+
 (defclass container ()
   ((objects :initform (make-indexed-set) :accessor objects)))
 
@@ -27,7 +34,8 @@
 
 Tree:"
           container (type-of container))
-  (print-container-tree container stream))
+  (print-container-tree container stream)
+  (format stream "~&"))
 
 (defun map-container-tree (function container)
   (labels ((traverse (container)
@@ -50,15 +58,21 @@ Tree:"
                  (print-container container (1+ level))))))
     (print-container container 0)))
 
+(defmethod update ((container container))
+  (do-set (i obj) (objects container)
+    (declare (ignore i))
+    (update obj)))
+
 (defmethod insert ((container container) &rest objects)
   (dolist (obj objects)
-    (set-add obj (objects container)))
-  container)
+    (set-add obj (objects container))))
 
 (defmethod withdraw ((container container) &rest objects)
   (dolist (obj objects)
-    (set-remove obj (objects container)))
-  container)
+    (set-remove obj (objects container))))
+
+(defmethod clear ((container container))
+  (clear-set (objects container)))
 
 (defclass collective (container)
   ((name-map :initform (make-hash-table :test 'eql) :accessor name-map)))
@@ -68,6 +82,11 @@ Tree:"
 
 (defmethod unit (name (collective collective))
   (gethash name (name-map collective)))
+
+(defmethod clear ((collective collective))
+  (do-set (i val) (objects collective)
+    (declare (ignore i))
+    (leave val collective)))
 
 (defclass unit ()
   ((name :initarg :name :accessor name)
@@ -100,7 +119,8 @@ Tree:"
   (remhash (name unit) (name-map collective)))
 
 (defmethod leave ((unit unit) (collective (eql T)))
-  (leave unit (collective unit)))
+  (when (collective unit)
+    (leave unit (collective unit))))
 
 (defmethod unit (name (unit unit))
   (unit name (collective unit)))

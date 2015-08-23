@@ -7,8 +7,6 @@
 (in-package #:org.shirakumo.flare)
 
 (defgeneric progressions (scene))
-(defgeneric add-progression (progression scene))
-(defgeneric remove-progression (progression scene))
 (defgeneric scene (scene-unit))
 (defgeneric location (entity))
 (defgeneric orientation (entity))
@@ -29,15 +27,17 @@ Progressions:
 Tree:"
           scene (type-of scene) (clock scene)
           (loop for v being the hash-values of (progressions scene) collect v))
-  (print-container-tree scene stream))
+  (print-container-tree scene stream)
+  (format stream "~&"))
 
 (defmethod start :after ((scene scene))
   (loop for progression being the hash-values of (progressions scene)
         do (setf (previous-time progression) (previous-time scene))))
 
 (defmethod update ((scene scene))
+  (call-next-method)
   (loop for progression being the hash-values of (progressions scene)
-        do (tick progression scene)))
+        do (tick progression T scene)))
 
 (defmethod paint ((scene scene) target)
   (do-set (i obj) (objects scene)
@@ -47,21 +47,22 @@ Tree:"
 (defmethod progression (name (scene scene))
   (gethash name (progressions scene)))
 
-(defmethod add-progression ((name symbol) (scene scene))
-  (add-progression (make-instance 'progression :name name) scene))
+(defmethod enter ((name symbol) (scene scene))
+  (enter (make-instance 'progression :name name) scene))
 
-(defmethod add-progression ((progression progression) (scene scene))
-  (when (eql progression (gethash (name progression) (progressions scene)))
-    (cerror "Replace the progression."
-            "A different progression with the same name ~s already exists on ~a."
-            (name progression) scene))
+(defmethod enter ((progression progression) (scene scene))
+  (let ((found (gethash (name progression) (progressions scene))))
+    (when (and found (not (eql progression found)))
+      (cerror "Replace the progression."
+              "A different progression with the same name ~s already exists on ~a."
+              (name progression) scene)))
   (setf (gethash (name progression) (progressions scene)) progression))
 
-(defmethod remove-progression ((name symbol) (scene scene))
+(defmethod leave ((name symbol) (scene scene))
   (remhash name (progressions scene)))
 
-(defmethod remove-progression ((progression progression) (scene scene))
-  (remove-progression (name progression) scene))
+(defmethod leave ((progression progression) (scene scene))
+  (leave (name progression) scene))
 
 (defclass scene-unit (unit)
   ())
@@ -117,13 +118,7 @@ Tree:"
    :angle 0))
 
 (defun %prepare-ring (ring)
-  (setf (tangent ring) (cross (up ring) (orientation ring))))
-
-(defmethod initialize-instance :after ((ring ring) &key) (%prepare-ring ring))
-(defmethod (setf up) :after (val (ring ring)) (%prepare-ring ring))
-(defmethod (setf orientation) :after (val (ring ring)) (%prepare-ring ring))
-
-(defmethod paint ((ring ring) target)
+  (setf (tangent ring) (cross (up ring) (orientation ring)))
   (let ((step (/ 360 (max 1 (set-size (objects ring)))))
         (offset (angle ring)))
     (loop-set (current) (objects ring)
@@ -143,6 +138,20 @@ Tree:"
                    (+ (z (location ring))
                       (* u (z (orientation ring)))
                       (* v (z (tangent ring)))))
-      ;; Paint at proper location
-      do (with-translation (p target)
-           (paint (flare-queue::value current) target)))))
+      ;; Set to proper location
+      do (setf (location (flare-queue::value current)) p))))
+
+(defmethod initialize-instance :after ((ring ring) &key) (%prepare-ring ring))
+(defmethod (setf up) :after (val (ring ring)) (%prepare-ring ring))
+(defmethod (setf orientation) :after (val (ring ring)) (%prepare-ring ring))
+(defmethod (setf angle) :after (val (ring ring)) (%prepare-ring ring))
+(defmethod insert :after ((ring ring) &rest objs) (%prepare-ring ring))
+(defmethod withdraw :after ((ring ring) &rest objs) (%prepare-ring ring))
+
+(defmethod update :before ((ring ring))
+  (%prepare-ring ring))
+
+(defmethod paint ((ring ring) target)
+  (do-set (i current) (objects ring)
+    (declare (ignore i))
+    (paint current target)))
