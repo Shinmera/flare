@@ -13,6 +13,7 @@
   :homepage "https://github.com/Shinmera/flare"
   :serial T
   :components ((:file "package")
+               (:file "toolkit")
                (:file "vector")
                (:file "queue")
                (:file "indexed-set")
@@ -24,4 +25,4 @@
                (:file "change")
                (:file "parser")
                (:file "scene"))
-  :depends-on ())
+  :depends-on (:lambda-fiddle))
