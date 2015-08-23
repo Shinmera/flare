@@ -96,8 +96,8 @@
           (not (eql (right (head queue)) (tail queue)))))
 
 (defun queue-last (queue)
-  (value (left (tail queue))
-         (not (eql (left (tail queue)) (head queue)))))
+  (values (left (tail queue))
+          (not (eql (left (tail queue)) (head queue)))))
 
 (defun queue-value-at (n queue)
   (do-queue (i val) queue
@@ -116,6 +116,7 @@
 
 (defun in-queue-p (value queue)
   (do-queue (i val) queue
+    (declare (ignore i))
     (when (eql val value)
       (return T))))
 
