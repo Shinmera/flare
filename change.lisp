@@ -6,13 +6,14 @@
 
 (in-package #:org.shirakumo.flare)
 
-(defgeneric compile-change (name args))
+(defgeneric perform (change object clock step))
 (defgeneric field (tween))
 (defgeneric from (tween))
 (defgeneric to (tween))
 (defgeneric from (tween))
 (defgeneric by (tween))
 (defgeneric ease-func (tween))
+(defgeneric initial-value (tween object))
 
 (defclass change ()
   ())
@@ -32,10 +33,18 @@
              (not (by tween)))
     (error "Must specify either TO or BY.")))
 
+(defmethod print-object ((tween tween) stream)
+  (print-unreadable-object (tween stream :type T)
+    (format stream "~s ~s ~s ~s ~s"
+            :from (from tween) :to (to tween) (ease-func tween))))
+
 (defmethod initial-value ((tween tween) object)
   (or (gethash object (initials tween))
       (setf (gethash object (initials tween))
             (slot-value object (field tween)))))
+
+(defmethod reset ((tween tween))
+  (setf (initials tween) (make-hash-table :test 'eq)))
 
 (defclass scale (tween)
   ())
@@ -70,31 +79,32 @@
 (defclass edit (change)
   ((done :initform NIL :accessor done)))
 
+(defmethod reset ((edit edit))
+  (setf (done edit) NIL))
+
 (defmethod perform :around ((edit edit) object clock step)
   (unless (done edit)
     (call-next-method))
   (setf (done edit) T))
 
-(defclass enter (change)
+(defclass enter (edit)
   ((object :initarg :object :accessor object)))
 
 (defmethod perform ((enter enter) object clock step)
-  (enter (object enter) object))
+  (enter (funcall (object enter)) object))
 
-(defclass leave (change)
+(defclass leave (edit)
   ((object :initarg :object :accessor object))
   (:default-initargs
-   :object NIL))
+   :object T))
 
 (defmethod perform ((change leave) object clock step)
-  (if (object change)
-      (leave object (object change))
-      (leave object T)))
+  (leave object (object change)))
 
 (defclass delegating-change (change)
   ((change :initarg :change :accessor change)))
 
-(defclass every. (change)
+(defclass every. (delegating-change)
   ((distance :initarg :distance :accessor distance)
    (previous-time :initform NIL :accessor previous-time)))
 
