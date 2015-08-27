@@ -40,8 +40,7 @@ Tree:"
 (defun map-container-tree (function container)
   (labels ((traverse (container)
              (when (typep container 'container)
-               (do-set (i container) (objects container)
-                 (declare (ignore i))
+               (do-set (container (objects container))
                  (funcall function container)
                  (traverse container)))))
     (traverse container)))
@@ -53,14 +52,12 @@ Tree:"
   (labels ((print-container (container level)
              (format stream "~&~a ~a~%" (make-string (* level 2) :initial-element #\ ) container)
              (when (typep container 'container)
-               (do-set (i container) (objects container)
-                 (declare (ignore i))
+               (do-set (container (objects container))
                  (print-container container (1+ level))))))
     (print-container container 0)))
 
 (defmethod update ((container container))
-  (do-set (i obj) (objects container)
-    (declare (ignore i))
+  (do-set (obj (objects container))
     (update obj)))
 
 (defmethod insert ((container container) &rest objects)
@@ -84,9 +81,7 @@ Tree:"
   (gethash name (name-map collective)))
 
 (defmethod clear ((collective collective))
-  (do-set (i val) (objects collective)
-    (declare (ignore i))
-    (leave val collective)))
+  (clear-set (objects collective)))
 
 (defclass unit ()
   ((name :initarg :name :accessor name)

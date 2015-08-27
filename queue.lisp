@@ -44,25 +44,33 @@
   (make-instance 'queue))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defmacro loop-queue ((current) queue &body loop-clauses)
-    (let ((next (gensym "NEXT"))
-          (cqueue (gensym "SET")))
-      `(loop with ,cqueue = ,queue
-             for ,current = (right (head ,cqueue)) then ,next
-             for ,next = (right ,current)
-             until (eq ,current (tail ,cqueue))
-             ,@loop-clauses))))
+  (defmacro-driver (FOR var ON-QUEUE q)
+    (let ((queue (gensym "QUEUE"))
+          (tail (gensym "TAIL"))
+          (kwd (if generate 'generate 'for)))
+      `(progn
+         (with ,queue = ,q)
+         (with ,tail = (tail ,queue))
+         (,kwd ,var next (right ,var))
+         (until (eq ,var ,tail)))))
+  
+  (defmacro-driver (FOR var IN-QUEUE q)
+    (let ((kwd (if generate 'generate 'for))
+          (cell (gensym "CELL")))
+      `(progn
+         (,kwd ,cell on-queue ,q)
+         (,kwd ,var next (value ,cell))))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defun map-queue (function queue)
-    (loop-queue (current) queue
-                for i from 0
-                do (funcall function i (value current)))))
+    (iterate
+      (for var in-queue queue)
+      (funcall function var))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defmacro do-queue ((index value &optional result) queue &body body)
+  (defmacro do-queue ((value queue &optional result) &body body)
     `(block NIL
-       (map-queue (lambda (,index ,value) ,@body) ,queue)
+       (map-queue (lambda (,value) ,@body) ,queue)
        ,result)))
 
 (defun enqueue (value queue)
@@ -83,10 +91,11 @@
         (values (value cell) T))))
 
 (defun queue-remove (value queue)
-  (loop-queue (current) queue
-              do (when (eql (value current) value)
-                   (cell-remove current)
-                   (return T))))
+  (iterate
+    (for cell on-queue queue)
+    (when (eql (value cell) value)
+      (cell-remove cell)
+      (return T))))
 
 (defun queue-size (queue)
   (size queue))
@@ -100,13 +109,18 @@
           (not (eql (left (tail queue)) (head queue)))))
 
 (defun queue-value-at (n queue)
-  (do-queue (i val) queue
+  (iterate
+    (for current in-queue queue)
+    (for i from 0)
     (when (= i n)
-      (return val))))
+      (return (values current T))))
+  (values NIL NIL))
 
 (defun queue-index-of (value queue)
-  (do-queue (i val) queue
-    (when (eql val value)
+  (iterate
+    (for current in-queue queue)
+    (for i from 0)
+    (when (eql current value)
       (return i))))
 
 (defun clear-queue (queue)
@@ -115,8 +129,7 @@
   queue)
 
 (defun in-queue-p (value queue)
-  (do-queue (i val) queue
-    (declare (ignore i))
+  (do-queue (val queue)
     (when (eql val value)
       (return T))))
 
@@ -129,9 +142,9 @@
        collect (value current)))
     (vector
      (let ((vec (make-array (size queue))))
-       (loop-queue (current) queue
-         for i from 0
-         do (setf (aref vec i) (value current)))
+       (iterate (for val in-queue queue)
+         (for i from 0)
+         (setf (aref vec i) val))
        vec))
     (sequence
      (coerce-queue queue 'list))))

@@ -25,4 +25,5 @@
                (:file "change")
                (:file "parser")
                (:file "scene"))
-  :depends-on (:lambda-fiddle))
+  :depends-on (:lambda-fiddle
+               :iterate))

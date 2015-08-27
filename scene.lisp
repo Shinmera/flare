@@ -40,8 +40,7 @@ Tree:"
         do (tick progression T scene)))
 
 (defmethod paint ((scene scene) target)
-  (do-set (i obj) (objects scene)
-    (declare (ignore i))
+  (do-set (obj (objects scene))
     (paint obj target)))
 
 (defmethod progression (name (scene scene))
@@ -79,8 +78,7 @@ Tree:"
    :location (vec 0 0 0)))
 
 (defmethod paint ((entity entity) target)
-  (do-set (i obj) (objects entity)
-    (declare (ignore i))
+  (do-set (obj (objects entity))
     (paint obj target)))
 
 (defmethod enter ((entity entity) (container entity))
@@ -123,25 +121,21 @@ Tree:"
   (setf (tangent ring) (cross (up ring) (orientation ring)))
   (let ((step (/ 360 (max 1 (set-size (objects ring)))))
         (offset (angle ring)))
-    (loop-set (current) (objects ring)
-      ;; Step the angle
-      for deg from offset below (+ offset 360) by step
-      for phi = (* deg Pi 1/180)
-      ;; Translate to cartesian
-      for u = (* (size ring) (cos phi))
-      for v = (* (size ring) (sin phi))
-      ;; Translate into ring plane
-      for p = (vec (+ (x (location ring))
-                      (* u (x (orientation ring)))
-                      (* v (x (tangent ring))))
-                   (+ (y (location ring))
-                      (* u (y (orientation ring)))
-                      (* v (y (tangent ring))))
-                   (+ (z (location ring))
-                      (* u (z (orientation ring)))
-                      (* v (z (tangent ring)))))
-      ;; Set to proper location
-      do (setf (location (flare-queue::value current)) p))))
+    (iterate (for child in-set (objects ring))
+      (for deg from offset below (+ offset 360) by step)
+      (for phi = (* deg Pi 1/180))
+      (for u = (* (size ring) (cos phi)))
+      (for v = (* (size ring) (sin phi)))
+      (for p = (vec (+ (x (location ring))
+                       (* u (x (orientation ring)))
+                       (* v (x (tangent ring))))
+                    (+ (y (location ring))
+                       (* u (y (orientation ring)))
+                       (* v (y (tangent ring))))
+                    (+ (z (location ring))
+                       (* u (z (orientation ring)))
+                       (* v (z (tangent ring))))))
+      (setf (location child) p))))
 
 (defmethod initialize-instance :after ((ring ring) &key) (%prepare-ring ring))
 (defmethod (setf up) :after (val (ring ring)) (%prepare-ring ring))
@@ -154,6 +148,5 @@ Tree:"
   (%prepare-ring ring))
 
 (defmethod paint ((ring ring) target)
-  (do-set (i current) (objects ring)
-    (declare (ignore i))
+  (do-set (current (objects ring))
     (paint current target)))

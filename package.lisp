@@ -32,11 +32,12 @@
 
 (defpackage #:flare-queue
   (:nicknames #:org.shirakumo.flare.queue)
-  (:use #:cl)
+  (:use #:cl #:iterate)
   (:export
    #:queue
    #:make-queue
-   #:loop-queue
+   #:on-queue
+   #:in-queue
    #:map-queue
    #:do-queue
    #:enqueue
@@ -53,13 +54,14 @@
 
 (defpackage #:flare-indexed-set
   (:nicknames #:org.shirakumo.flare.indexed-set)
-  (:use #:cl #:org.shirakumo.flare.queue)
+  (:use #:cl #:iterate #:org.shirakumo.flare.queue)
   (:shadow #:set)
   (:export
    #:indexed-set
    #:make-indexed-set
-   #:loop-set
    #:map-set
+   #:on-set
+   #:in-set
    #:do-set
    #:set-add
    #:set-remove
@@ -74,7 +76,8 @@
 
 (defpackage #:flare
   (:nicknames #:org.shirakumo.flare)
-  (:use #:cl #:flare-vector #:flare-queue #:flare-indexed-set)
+  (:use #:cl #:iterate #:flare-vector #:flare-queue #:flare-indexed-set)
+  (:shadow #:leave)
   ;; animation.lisp
   (:export
    #:tick

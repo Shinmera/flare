@@ -12,7 +12,6 @@
 (defun make-indexed-set ()
   (make-instance 'indexed-set))
 
-(setf (macro-function 'loop-set) (macro-function 'loop-queue))
 (setf (fdefinition 'map-set) (fdefinition 'map-queue))
 (setf (macro-function 'do-set) (macro-function 'do-queue))
 
@@ -36,6 +35,12 @@
           (T
            (values set NIL)))))
 
+(defmacro-driver (FOR var ON-SET set)
+  `(,(if generate 'generate 'for) ,var on-queue ,set))
+
+(defmacro-driver (FOR var IN-SET set)
+  `(,(if generate 'generate 'for) ,var in-queue ,set))
+
 (setf (fdefinition 'set-size) (fdefinition 'queue-size))
 (setf (fdefinition 'set-first) (fdefinition 'queue-first))
 (setf (fdefinition 'set-last) (fdefinition 'queue-last))
@@ -52,8 +57,7 @@
      set)
     (hash-set
      (let ((table (make-hash-table :test 'eql)))
-       (do-queue (i val table) set
-         (declare (ignore i))
+       (do-queue (val set table)
          (setf (gethash val table) val))))
     (T
      (coerce-queue set type))))
