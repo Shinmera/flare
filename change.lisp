@@ -98,7 +98,6 @@
    :object T))
 
 (defmethod perform ((change leave) object clock step)
-  (v:info :test "LEAVE: ~a (~a ~a)" object (object change) (collective object))
   (leave object (object change)))
 
 (defclass delegating-change (change)

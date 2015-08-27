@@ -98,7 +98,6 @@ Animations:
   (aref (animations progression) n))
 
 (defmethod start-animation ((animation animation) (progression progression))
-  (v:info :test "STARTING: ~a" animation)
   (when (eq animation (aref (animations progression) (active-pointer progression)))
     (incf (active-pointer progression)))
   (push (cons (clock progression) animation) (active-set progression)))
