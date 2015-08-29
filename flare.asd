@@ -14,7 +14,6 @@
   :serial T
   :components ((:file "package")
                (:file "toolkit")
-               (:file "vector")
                (:file "queue")
                (:file "indexed-set")
                (:file "easings")
@@ -26,4 +25,5 @@
                (:file "parser")
                (:file "scene"))
   :depends-on (:lambda-fiddle
-               :iterate))
+               :iterate
+               :3d-vectors))

@@ -5,30 +5,6 @@
 |#
 
 (in-package #:cl-user)
-(defpackage #:flare-vector
-  (:nicknames #:org.shirakumo.flare.vector)
-  (:use #:cl)
-  (:export
-   #:vec
-   #:vec=
-   #:copy
-   #:x
-   #:y
-   #:z
-   #:size
-   #:translate
-   #:-translate
-   #:scale
-   #:rotate-around
-   #:rotate
-   #:normalize
-   #:translated
-   #:-translated
-   #:scaled 
-   #:rotated
-   #:normalized
-   #:cross
-   #:dot))
 
 (defpackage #:flare-queue
   (:nicknames #:org.shirakumo.flare.queue)
@@ -37,7 +13,6 @@
    #:queue
    #:make-queue
    #:on-queue
-   #:in-queue
    #:map-queue
    #:do-queue
    #:enqueue
@@ -76,7 +51,7 @@
 
 (defpackage #:flare
   (:nicknames #:org.shirakumo.flare)
-  (:use #:cl #:iterate #:flare-vector #:flare-queue #:flare-indexed-set)
+  (:use #:cl #:iterate #:3d-vectors #:flare-queue #:flare-indexed-set)
   (:shadow #:leave)
   ;; animation.lisp
   (:export
