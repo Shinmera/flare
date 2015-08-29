@@ -27,10 +27,10 @@
                     (error "No such easing ~s found." by))))
     (+ from (* (funcall easing x) (- to from)))))
 
-(defun ease-vec (x by &optional (from (vec 0 0 0)) (to (normalize (vec 1 1 1))))
-  (vec (ease x by (x from) (x to))
-       (ease x by (y from) (y to))
-       (ease x by (z from) (z to))))
+(defun ease-vec (x by &optional (from (vec 0 0 0)) (to (vunit (vec 1 1 1))))
+  (vec (ease x by (vx from) (vx to))
+       (ease x by (vy from) (vy to))
+       (ease x by (vz from) (vz to))))
 
 (define-easing linear (x)
   x)

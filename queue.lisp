@@ -138,8 +138,8 @@
     (queue
      queue)
     (list
-     (loop-queue (current) queue
-       collect (value current)))
+     (iterate (for val in-queue queue)
+       (collect val)))
     (vector
      (let ((vec (make-array (size queue))))
        (iterate (for val in-queue queue)

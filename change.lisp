@@ -52,16 +52,16 @@
 
 (defmethod perform ((tween scale) object clock step)
   (setf (slot-value object (field tween))
-        (scaled (initial-value tween object)
-                (ease-vec step (ease-func tween) (from tween) (to tween)))))
+        (v* (initial-value tween object)
+            (ease-vec step (ease-func tween) (from tween) (to tween)))))
 
 (defclass rotate (tween)
   ())
 
 (defmethod perform ((tween rotate) object clock step)
   (setf (slot-value object (field tween))
-        (rotated (initial-value tween object)
-                 (ease-vec step (ease-func tween) (from tween) (to tween)))))
+        (vrotv (initial-value tween object)
+               (ease-vec step (ease-func tween) (from tween) (to tween)))))
 
 (defclass set! (tween)
   ())
