@@ -23,7 +23,8 @@
                (:file "animation")
                (:file "change")
                (:file "parser")
-               (:file "scene"))
+               (:file "scene")
+               (:file "forms"))
   :depends-on (:lambda-fiddle
                :iterate
                :3d-vectors))
