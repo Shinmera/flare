@@ -151,13 +151,6 @@
            (every
             `(make-instance 'every. :distance ,(second form) :change ,(parse-change (third form))))))))
 
-(defmacro make-progression (name &body intervals)
-  (let ((progression (gensym "PROGRESSION")))
-    `(let ((,progression (make-instance 'progression :name ',name)))
-       ,@(loop for (start duration form) in (parse-intervals intervals)
-               collect `(enter ,(parse-animation start duration form) ,progression))
-       ,progression)))
-
 (defvar *progressions* (make-hash-table :test 'eql))
 
 (defun progression-definition (name)
