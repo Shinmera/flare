@@ -6,9 +6,12 @@
 
 (in-package #:org.shirakumo.flare)
 
+(defclass animatable () ())
 (defclass progression () ())
 (defclass animation () ())
-(defgeneric tick (progression animation scene))
+(defgeneric progressions (animatable))
+(defgeneric progression (name animatable))
+(defgeneric tick (progression animation animatable))
 (defgeneric start-animation (animation progression))
 (defgeneric animations (progression))
 (defgeneric animation (n progression))
@@ -16,16 +19,79 @@
 (defgeneric selector (animation))
 (defgeneric changes (animation))
 
-(define-self-returning-method tick (progression animation scene))
+(define-self-returning-method tick (progression animation animatable))
 (define-self-returning-method start-animation (animation progression))
 
-(defclass progression (clock)
+(defclass animatable ()
+  ((progressions :initform (make-hash-table :test 'eql) :accessor progressions)))
+
+(defmethod enter ((def progression-definition) (animatable animatable))
+  (enter (make-progression def) animatable))
+
+(defmethod enter ((progression progression) (animatable animatable))
+  (when (and (animatable progression)
+             (not (eql (animatable progression) animatable)))
+    (warn "~a must leave ~a to enter ~a."
+          progression (animatable progression) animatable)
+    (leave progression T))
+  (setf (gethash (name progression) (progressions animatable)) progression)
+  (setf (animatable progression) animatable))
+
+(defmethod leave ((progression progression) (animatable animatable))
+  (unless (eql (animatable progression) animatable)
+    (error "~a cannot leave ~a as it is a progression of ~a."
+           progression animatable (animatable progression)))
+  (reset progression)
+  (setf (gethash (name progression) (progressions animatable)) NIL)
+  (setf (animatable progression) NIL))
+
+(defmethod progression (name ((animatable animatable)))
+  (gethash name (progressions animatable)))
+
+(defmethod update :before ((animatable animatable))
+  (loop for progression being the hash-values of (progressions animatable)
+        do (update progression)))
+
+(defclass progression-definition ()
   ((animations :initform (make-array 0) :accessor animations)
-   (active-set :initform () :accessor active-set)
+   (name :initarg :name :accessor name)
+   (instances :initform () :accessor instances)))
+
+(defmethod make-progression ((def progression-definition))
+  (let ((in (make-instance 'progression :definition def)))
+    (push (tg:make-weak-pointer in) (instances def))
+    in))
+
+(defmethod (setf animations) :before (an (def progression-definition))
+  (loop for pointer in (instances def)
+        for instance = (tg:weak-pointer-value pointer)
+        when instance
+        do (reset instance)))
+
+(defmethod enter ((animation animation) (def progression-definition))
+  (let ((new-els (stable-sort (cons animation (coerce (animations progression) 'list))
+                              #'< :key (lambda (a)
+                                         (if (realp (start a)) (start a) most-positive-fixnum)))))
+    (setf (animations progression)
+          (coerce new-els 'vector))))
+
+(defmethod leave ((animation animation) (def progression-definition))
+  (let ((new-els (remove animation (coerce (animations progression) 'list))))
+    (setf (animations progression)
+          (coerce new-els 'vector))))
+
+(defmethod clear ((def progression-definition))
+  (setf (animations def) (make-array 0))
+  (setf (instances def) ()))
+
+(defclass progression (clock)
+  ((active-set :initform () :accessor active-set)
    (active-pointer :initform 0 :accessor active-pointer)
-   (name :initarg :name :accessor name))
+   (definition :initarg :definition :accessor definition)
+   (animatable :initarg :animatable :accessor animatable))
   (:default-initargs
-   :name (error "NAME required.")))
+   :definition (error "DEFINITION required.")
+   :animatable NIL))
 
 (defmethod print-object ((progression progression) stream)
   (print-unreadable-object (progression stream :type T)
@@ -45,6 +111,16 @@ Animations:
           (running progression) (clock progression) (length (active-set progression))
           (coerce (animations progression) 'list)))
 
+(defmethod animations ((progression progression))
+  (animations (definition progression)))
+
+(defmethod name ((progression progression))
+  (name (definition progression)))
+
+(defmethod leave ((progression progression) (where (eql T)))
+  (when (animatable progression)
+    (leave progression (animatable progression))))
+
 (defmethod reset ((progression progression))
   (call-next-method)
   (map NIL #'reset (animations progression))
@@ -53,8 +129,7 @@ Animations:
 
 (defmethod clear ((progression progression))
   (setf (active-set progression) ())
-  (setf (active-pointer progression) 0)
-  (setf (animations progression) (make-array 0)))
+  (setf (active-pointer progression) 0))
 
 (defmethod update ((progression progression))
   ;; Filter expired
@@ -72,27 +147,10 @@ Animations:
   ;; Are we done?
   (when (and (= (active-pointer progression) (length (animations progression)))
              (not (active-set progression)))
-    (stop progression)))
-
-(defmethod tick ((progression progression) (animation (eql T)) scene)
-  (update progression)
+    (stop progression))
+  ;; Ok, update things.
   (dolist (active (active-set progression))
-    ;; (v:info :test "TICKING ~a" active)
-    (tick progression (cdr active) scene)))
-
-(defmethod enter ((animation animation) (progression progression))
-  (let ((new-els (stable-sort (cons animation (coerce (animations progression) 'list))
-                       #'< :key (lambda (a)
-                                  (if (realp (start a)) (start a) most-positive-fixnum)))))
-    (setf (animations progression)
-          (coerce new-els 'vector))
-    (setf (active-pointer progression) 0)))
-
-(defmethod leave ((animation animation) (progression progression))
-  (let ((new-els (remove animation (coerce (animations progression) 'list))))
-    (setf (animations progression)
-          (coerce new-els 'vector))
-    (setf (active-pointer progression) 0)))
+    (tick progression (cdr active) (animatable progression))))
 
 (defmethod animation (n (progression progression))
   (aref (animations progression) n))
@@ -136,7 +194,7 @@ Changes:
   (dolist (change (changes animation))
     (reset change)))
 
-(defmethod tick ((progression progression) (animation animation) scene)
+(defmethod tick ((progression progression) (animation animation) animatable)
   (let* ((clock (clock progression))
          (step (unless (or (eql t (duration animation))
                            (= 0 (duration animation)))
@@ -145,5 +203,5 @@ Changes:
     (dolist (change (changes animation))
       (unless (done change)
         (funcall (selector animation)
-                 scene (lambda (object)
+                 animatable (lambda (object)
                          (perform change object clock step)))))))

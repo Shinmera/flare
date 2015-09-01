@@ -167,7 +167,7 @@
     `(let ((,progression
              (or (progression-definition ',name)
                  (setf (progression-definition ',name)
-                       (make-instance 'progression :name ',name)))))
+                       (make-instance 'progression-definition :name ',name)))))
        (clear ,progression)
        ,@(loop for (start duration form) in (parse-intervals intervals)
                collect `(enter ,(parse-animation start duration form) ,progression))
