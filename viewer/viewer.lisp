@@ -16,15 +16,11 @@
   (setf (q+:central-widget main) viewer))
 
 (define-widget viewer (QGLWidget)
-  ((scene :initform (make-instance 'flare::scene) :accessor scene)))
+  ((scene :initform (make-instance 'scene) :accessor scene)))
 
 (define-initializer (viewer setup)
   (setf *viewer* viewer)
-  (let ((ring (make-instance 'flare::ring :size 100 :name :ring))
-        (inner (make-instance 'flare::ring :size 50 :name :inner)))
-    (flare::enter ring scene)
-    (flare::enter inner ring)
-    (flare::enter (make-instance 'sphere) inner)))
+  (start scene))
 
 (define-subwidget (viewer timer) (q+:make-qtimer viewer)
   (setf (q+:single-shot timer) NIL)
@@ -32,8 +28,7 @@
 
 (define-slot (viewer update) ()
   (declare (connected timer (timeout)))
-  (incf (flare::angle (flare::unit :ring scene)) 2)
-  (incf (flare::angle (flare::unit :inner scene)) 10)
+  (update scene)
   (q+:repaint viewer))
 
 (define-override (viewer paint-event) (ev)
@@ -44,16 +39,15 @@
 
     (q+:translate painter (round (/ (q+:width viewer) 2)) (round (/ (q+:height viewer) 2)))
     
-    (flare::update scene)
     (q+:begin-native-painting painter)
-    (flare::paint scene painter)
+    (paint scene painter)
     (q+:end-native-painting painter))
   (stop-overriding))
 
 (defun main (&key (blocking T))
   (with-main-window (window 'main :name "Flare-Viewer" :blocking blocking)))
 
-(defclass sphere (flare::particle)
+(defclass sphere (particle)
   ((size :initarg :size :accessor size))
   (:default-initargs :size 10))
 
@@ -75,12 +69,12 @@
                       (gl:normal (* x zr1 size) (* y zr1 size) z1)
                       (gl:vertex (* x zr1 size) (* y zr1 size) z1)))))
 
-(defmethod flare::call-with-translation (func target vec)
+(defmethod call-with-translation (func target vec)
   (gl:with-pushed-matrix
-    (gl:translate (flare::x vec) (flare::y vec) (flare::z vec))
+    (gl:translate (vx vec) (vy vec) (vz vec))
     (funcall func)))
 
-(defmethod flare::paint ((sphere sphere) target)
-  (flare::with-translation ((flare::location sphere) target)
+(defmethod paint ((sphere sphere) target)
+  (with-translation ((location sphere) target)
     (gl:color 255 255 255)
     (draw-sphere (size sphere))))
