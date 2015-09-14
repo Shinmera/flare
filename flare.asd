@@ -27,4 +27,6 @@
                (:file "forms"))
   :depends-on (:lambda-fiddle
                :iterate
+               :array-utils
+               :trivial-garbage
                :3d-vectors))

@@ -7,158 +7,212 @@
 (in-package #:org.shirakumo.flare)
 
 (defclass animatable () ())
+(defclass progression-definition () ())
 (defclass progression () ())
 (defclass animation () ())
-(defgeneric progressions (animatable))
-(defgeneric progression (name animatable))
-(defgeneric tick (progression animation animatable))
-(defgeneric start-animation (animation progression))
-(defgeneric animations (progression))
-(defgeneric animation (n progression))
-(defgeneric duration (animation))
-(defgeneric selector (animation))
-(defgeneric changes (animation))
+(defclass change () ())
 
-(define-self-returning-method tick (progression animation animatable))
-(define-self-returning-method start-animation (animation progression))
+(defgeneric progressions (animatable))
+(defgeneric add-progression (progression animatable))
+(defgeneric remove-progression (progression animatable))
+(defgeneric progression (denominator animatable))
+
+(defgeneric animations (progression-definition))
+(defgeneric instances (progression-definition))
+
+(defgeneric start (progression))
+(defgeneric stop (progression))
+(defgeneric reset (progression))
+(defgeneric rewind (progression clock))
+(defgeneric update (progression))
+(defgeneric present-animations (progression))
+(defgeneric past-animations (progression))
+(defgeneric future-animations (progression))
+(defgeneric animations (progression))
+
+(defgeneric start (animation))
+(defgeneric duration (animation))
+(defgeneric changes (animation))
+(defgeneric selector (animation))
+(defgeneric tick (animation animatable clock step))
 
 (defclass animatable ()
-  ((progressions :initform (make-hash-table :test 'eql) :accessor progressions)))
+  ((progressions :initform () :accessor progressions)))
 
-(defmethod enter ((def progression-definition) (animatable animatable))
-  (enter (make-progression def) animatable))
+(defmethod update :after ((animatable animatable))
+  (dolist (progression (progressions animatable))
+    (update progression)))
 
-(defmethod enter ((progression progression) (animatable animatable))
+(defmethod reset :before ((animatable animatable))
+  (dolist (progression (progressions animatable))
+    (reset progression)))
+
+(defmethod add-progression ((progression progression) (animatable animatable))
   (when (and (animatable progression)
              (not (eql (animatable progression) animatable)))
-    (warn "~a must leave ~a to enter ~a."
-          progression (animatable progression) animatable)
-    (leave progression T))
-  (setf (gethash (name progression) (progressions animatable)) progression)
-  (setf (animatable progression) animatable))
+    (error ""))
+  (setf (animatable progression) animatable)
+  (push progression (progressions animatable))
+  progression)
+
+(defmethod enter ((progression progression) (animatable animatable))
+  (add-progression progression animatable))
+
+(defmethod remove-progression ((progression progression) (animatable animatable))
+  (unless (eql (animatable progression) animatable)
+    (error ""))
+  (setf (animatable progression) NIL)
+  (setf (progressions animatable)
+        (delete progression (progressions animatable)))
+  progression)
 
 (defmethod leave ((progression progression) (animatable animatable))
-  (unless (eql (animatable progression) animatable)
-    (error "~a cannot leave ~a as it is a progression of ~a."
-           progression animatable (animatable progression)))
-  (reset progression)
-  (setf (gethash (name progression) (progressions animatable)) NIL)
-  (setf (animatable progression) NIL))
+  (remove-progression progression animatable))
 
-(defmethod progression (name ((animatable animatable)))
-  (gethash name (progressions animatable)))
-
-(defmethod update :before ((animatable animatable))
-  (loop for progression being the hash-values of (progressions animatable)
-        do (update progression)))
+(defmethod progression ((definition progression-definition) (animatable animatable))
+  (loop for progression in (progressions animatable)
+        when (eql (definition progression) definition)
+        collect progression))
 
 (defclass progression-definition ()
   ((animations :initform (make-array 0) :accessor animations)
-   (name :initarg :name :accessor name)
    (instances :initform () :accessor instances)))
 
-(defmethod make-progression ((def progression-definition))
-  (let ((in (make-instance 'progression :definition def)))
-    (push (tg:make-weak-pointer in) (instances def))
-    in))
+(defmethod progression-instance ((definition progression-definition))
+  (let ((instance (make-instance 'progression :definition definition)))
+    (push (tg:make-weak-pointer instance) (instances definition))
+    instance))
 
-(defmethod (setf animations) :before (an (def progression-definition))
-  (loop for pointer in (instances def)
-        for instance = (tg:weak-pointer-value pointer)
-        when instance
-        do (reset instance)))
+(defmethod add-progression ((definition progression-definition) (animatable animatable))
+  (add-progression (progression-instance definition) animatable))
 
-(defmethod enter ((animation animation) (def progression-definition))
-  (let ((new-els (stable-sort (cons animation (coerce (animations progression) 'list))
-                              #'< :key (lambda (a)
-                                         (if (realp (start a)) (start a) most-positive-fixnum)))))
-    (setf (animations progression)
-          (coerce new-els 'vector))))
+(defmethod enter ((definition progression-definition) (animatable animatable))
+  (add-progression definition animatable))
 
-(defmethod leave ((animation animation) (def progression-definition))
-  (let ((new-els (remove animation (coerce (animations progression) 'list))))
-    (setf (animations progression)
-          (coerce new-els 'vector))))
+(defmethod (setf animations) (animations (definition progression-definition))
+  (setf (slot-value definition 'animations)
+        (stable-sort animations #'< :key #'start)))
 
-(defmethod clear ((def progression-definition))
-  (setf (animations def) (make-array 0))
-  (setf (instances def) ()))
+(defmethod (setf animations) :after (val (definition progression-definition))
+  ;; Take the chance to clear out empty references.
+  (setf (instances definition) (delete-if-not #'tg:weak-pointer-value (instances definition)))
+  (loop for pointer in (instances definition)
+        do (setf (animations (tg:weak-pointer-value pointer)) (animations definition))))
 
 (defclass progression (clock)
-  ((active-set :initform () :accessor active-set)
-   (active-pointer :initform 0 :accessor active-pointer)
-   (definition :initarg :definition :accessor definition)
-   (animatable :initarg :animatable :accessor animatable))
+  ((definition :initarg :definition :accessor definition)
+   (animatable :initarg :animatable :accessor animatable)
+   (active :initform #() :accessor present-animations)
+   (ended :initform #() :accessor past-animations)
+   (future :initform #() :accessor future-animations))
   (:default-initargs
-   :definition (error "DEFINITION required.")
-   :animatable NIL))
+   :animatable NIL
+   :definition (error "DEFINITION required.")))
+
+(defmethod initialize-instance :after ((progression progression) &key)
+  (setf (animations progression) (animations (definition progression))))
 
 (defmethod print-object ((progression progression) stream)
-  (print-unreadable-object (progression stream :type T)
-    (format stream "~s ~s ~a" :name (name progression) (clock progression))))
+  (print-unreadable-object (progression stream :type T :identity T)
+    (format stream "~s ~s ~s ~s"
+            (if (running progression) :started :stopped) (clock progression)
+            :animatable (animatable progression))))
 
-(defmethod describe-object ((progression progression) stream)
-  (format stream "~&~a
-  [~a]
+(defun copy-animations (thing)
+  (let ((new (make-array (length thing) :fill-pointer (length thing))))
+    (etypecase thing
+      (vector (loop for i from 0 below (length thing)
+                    do (setf (aref new i) (copy (aref thing i)))))
+      (list (loop for i from 0
+                  for el in thing
+                  do (setf (aref new i) (copy el)))))
+    new))
 
-Name: ~s
-The clock is ~:[STOPPED~;RUNNING~]
-Internal clock is at ~a
-#Active animations: ~d
-Animations:
-  ~{~a~^~%  ~}~&"
-          progression (type-of progression) (name progression)
-          (running progression) (clock progression) (length (active-set progression))
-          (coerce (animations progression) 'list)))
+(defmethod (setf animations) (animations (progression progression))
+  (let ((clock (clock progression)))
+    ;; Rewind
+    (reset progression)
+    ;; Unload new changes
+    (setf (future-animations progression)
+          (stable-sort (copy-animations animations) #'< :key #'start))
+    (setf (present-animations progression)
+          (make-array (length (future-animations progression)) :fill-pointer 0))
+    (setf (past-animations progression)
+          (make-array (length (future-animations progression)) :fill-pointer 0))
+    ;; Fast-forward
+    (setf (clock progression) clock)
+    (update progression))
+  animations)
 
-(defmethod animations ((progression progression))
-  (animations (definition progression)))
-
-(defmethod name ((progression progression))
-  (name (definition progression)))
-
-(defmethod leave ((progression progression) (where (eql T)))
-  (when (animatable progression)
-    (leave progression (animatable progression))))
+(defvar *resetting* NIL) ; oh dear.
 
 (defmethod reset ((progression progression))
-  (call-next-method)
-  (map NIL #'reset (animations progression))
-  (setf (active-set progression) ())
-  (setf (active-pointer progression) 0))
+  (let ((*resetting* T))
+    ;; Rewind done changes to active set
+    (loop repeat (length (past-animations progression))
+          do (vector-push (vector-pop (past-animations progression))
+                          (present-animations progression)))
+    ;; Resort to ascertain order of activation
+    (setf (present-animations progression)
+          (stable-sort (present-animations progression) #'> :key #'start))
+    ;; Reset in order.
+    (loop for animation across (present-animations progression)
+          do (reset animation))
+    (loop repeat (length (present-animations progression))
+          for animation = (vector-pop (present-animations progression))
+          do (vector-push animation (future-animations progression)))
+    ;; Fix clock.
+    (call-next-method))
+  progression)
 
-(defmethod clear ((progression progression))
-  (setf (active-set progression) ())
-  (setf (active-pointer progression) 0))
+(defun shift-array-elements (from to test)
+  (loop with i = 0
+        while (< i (length from))
+        do (cond ((funcall test (aref from i))
+                  (vector-push (array-utils:vector-pop-position from i) to))
+                 (T
+                  (incf i)))))
+
+;; Trix! This is called automatically on an UPDATE due to the
+;; inheritance from the CLOCK calling it.
+(defmethod (setf clock) :before (new (progression progression))
+  ;; If we're travelling backwards we first need to reset completely.
+  (let ((old (clock progression)))
+    (when (and (< new old) (not *resetting*))
+      (reset progression))))
 
 (defmethod update ((progression progression))
-  ;; Filter expired
-  (setf (active-set progression)
-        (remove-if (lambda (a) (and (not (eql T (duration (cdr a))))
-                                    (<= (+ (car a) (duration (cdr a))) (clock progression))))
-                   (active-set progression)))
-  ;; Start new
-  (loop while (< (active-pointer progression) (length (animations progression)))
-        for animation = (aref (animations progression) (active-pointer progression))
-        for start = (start animation)
-        while (or (eql start NIL) (<= start (clock progression)))
-        do (unless (or (eql start NIL) (find animation (active-set progression)))
-             (start-animation animation progression)))
-  ;; Are we done?
-  (when (and (= (active-pointer progression) (length (animations progression)))
-             (not (active-set progression)))
-    (stop progression))
-  ;; Ok, update things.
-  (dolist (active (active-set progression))
-    (tick progression (cdr active) (animatable progression))))
-
-(defmethod animation (n (progression progression))
-  (aref (animations progression) n))
-
-(defmethod start-animation ((animation animation) (progression progression))
-  (when (eq animation (aref (animations progression) (active-pointer progression)))
-    (incf (active-pointer progression)))
-  (push (cons (clock progression) animation) (active-set progression)))
+  ;; Start new ones
+  (shift-array-elements
+   (future-animations progression)
+   (present-animations progression)
+   (lambda (animation)
+     (<= (start animation) (clock progression))))
+  ;; Animate
+  (when (animatable progression)
+    (loop for animation across (present-animations progression)
+          for step = (cond ((eql T (duration animation))
+                            T)
+                           ((<= (duration animation) 0)
+                            1.0)
+                           (T
+                            (min (/ (- (clock progression) (start animation))
+                                    (duration animation))
+                                 1.0)))
+          do (tick animation (animatable progression) (clock progression) step)))  
+  ;; End expired
+  (shift-array-elements
+   (present-animations progression)
+   (past-animations progression)
+   (lambda (animation)
+     (and (not (eql (duration animation) T))
+          (<= (+ (start animation) (duration animation)) (clock progression)))))
+  ;; Stop altogether if finished
+  ;; (when (= 0
+  ;;          (length (present-animations progression))
+  ;;          (length (future-animations progression)))
+  ;;   (stop progression))
+  )
 
 (defclass animation ()
   ((start :initarg :start :accessor start)
@@ -166,42 +220,68 @@ Animations:
    (selector :initarg :selector :accessor selector)
    (changes :initarg :changes :accessor changes))
   (:default-initargs
-   :start 0 :duration T :selector T :changes ()))
+   :start (error "BEGINNING needed.")
+   :duration (error "DURATION needed.")
+   :selector T
+   :changes ()))
 
 (defmethod initialize-instance :after ((animation animation) &key)
   (setf (selector animation) (selector animation)))
 
-(defmethod describe-object ((animation animation) stream)
-  (format stream "~&~a
-  [~a]
-
-Start: ~a
-Duration: ~a
-Changes:
-  ~{~a~^~%  ~}~&"
-          animation (type-of animation)
-          (start animation) (duration animation) (changes animation)))
-
 (defmethod print-object ((animation animation) stream)
-  (print-unreadable-object (animation stream :type T)
+  (print-unreadable-object (animation stream :type T :identity T)
     (format stream "~s ~s ~s ~s" :start (start animation) :duration (duration animation))))
 
-(defmethod (setf selector) :after (selector (animation animation))
-  (unless (functionp (selector animation))
-    (setf (selector animation) (compile-selector (selector animation)))))
+(defmethod (setf selector) (value (animation animation))
+  (setf (slot-value animation 'selector)
+        (typecase value
+          (function value)
+          (T (compile-selector value)))))
+
+(defmethod copy ((animation animation))
+  (make-instance 'animation
+                 :start (start animation)
+                 :duration (duration animation)
+                 :selector (selector animation)
+                 :changes (mapcar #'copy (changes animation))))
+
+(defmethod tick ((animation animation) (animatable animatable) clock step)
+  (funcall (selector animation)
+           animatable
+           (lambda (object)
+             (dolist (change (changes animation))
+               (tick change object clock step)))))
 
 (defmethod reset ((animation animation))
   (dolist (change (changes animation))
     (reset change)))
 
-(defmethod tick ((progression progression) (animation animation) animatable)
-  (let* ((clock (clock progression))
-         (step (unless (or (eql t (duration animation))
-                           (= 0 (duration animation)))
-                 (/ (- clock (start animation)) (duration animation)))))
-    ;; This is shit. FIXME
-    (dolist (change (changes animation))
-      (unless (done change)
-        (funcall (selector animation)
-                 animatable (lambda (object)
-                         (perform change object clock step)))))))
+
+(defun format-progression (progr)
+  (format T "~&Clock: ~a~
+             ~&
+             ~&Progression:~
+             ~&  Future:~{~
+             ~&    ~a~}
+             ~&  Present:~{~
+             ~&    ~a~}~
+             ~&  Past: ~{~
+             ~&    ~a~}~
+             ~&
+             ~&Scene:"
+          (clock (animatable progr))
+          (coerce (future-animations progr) 'list)
+          (coerce (present-animations progr) 'list)
+          (coerce (past-animations progr) 'list))
+  (print-container-tree (animatable progr)))
+
+
+(defun simulate-progression (def)
+  (let ((scene (make-instance 'scene))
+        (progr (progression-instance def)))
+    (enter progr scene)
+    (start scene)
+    (start progr)
+    (loop (update scene)
+          (format-progression progr)
+          (sleep 0.7))))

@@ -51,6 +51,7 @@
       `(progn
          (with ,queue = ,q)
          (with ,tail = (tail ,queue))
+         (initially (setf ,var (head ,queue)))
          (,kwd ,var next (right ,var))
          (until (eq ,var ,tail)))))
   

@@ -55,17 +55,32 @@
   (:shadow #:leave)
   ;; animation.lisp
   (:export
-   #:tick
-   #:start-animation
-   #:animations
+   #:animatable
+   #:progression-definition
+   #:progression
    #:animation
+   #:change
+   
+   #:progressions
+   #:add-progression
+   #:remove-progression
+   #:progression-instance
+   #:animations
+   #:instances
+   #:start
+   #:stop
+   #:reset
+   #:rewind
+   #:update
+   #:present-animations
+   #:past-animations
+   #:future-animations
+   #:animations
    #:start
    #:duration
-   #:selector
    #:changes
-
-   #:progression
-   #:animation)
+   #:selector
+   #:tick)
   ;; clock.lisp
   (:export
    #:update
@@ -79,26 +94,32 @@
    #:clock)
   ;; change.lisp
   (:export
-   #:perform
-   #:field
-   #:from
-   #:to
-   #:from
-   #:by
-   #:ease-func
-   #:initial-value
-
+   #:define-change-parser
    #:change
-   #:tween
-   #:scale
-   #:rotate
-   #:set!
-   #:increase
-   #:edit
+   #:print-change
+   #:print
+   #:call-change
+   #:call
+   #:operation
+   #:enter-operation
+   #:objects
+   #:creator
    #:enter
+   #:create
+   #:leave-operation
    #:leave
-   #:delegating-change
-   #:every.)
+   #:objects
+   #:tween
+   #:slot-tween
+   #:slot
+   #:originals
+   #:original-value
+   #:range-tween
+   #:range-slot-tween
+   #:set
+   #:constant-tween
+   #:increase-slot-tween
+   #:increase)
   ;; container.lisp
   (:export
    #:objects
@@ -175,7 +196,6 @@
    #:paintable)
   ;; scene.lisp
   (:export
-   #:progressions
    #:scene
    #:location
    #:orientation

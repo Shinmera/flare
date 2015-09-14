@@ -17,8 +17,8 @@
   ())
 
 (defmethod start :after ((scene scene))
-  (loop for progression being the hash-values of (progressions scene)
-        do (setf (previous-time progression) (previous-time scene))))
+  (dolist (progression (progressions scene))
+    (setf (previous-time progression) (previous-time scene))))
 
 (defmethod update ((scene scene))
   (call-next-method))
@@ -26,26 +26,6 @@
 (defmethod paint ((scene scene) target)
   (do-set (obj (objects scene))
     (paint obj target)))
-
-(defmethod progression (name (scene scene))
-  (gethash name (progressions scene)))
-
-(defmethod enter ((name symbol) (scene scene))
-  (enter (make-instance 'progression :name name) scene))
-
-(defmethod enter ((progression progression) (scene scene))
-  (let ((found (gethash (name progression) (progressions scene))))
-    (when (and found (not (eql progression found)))
-      (cerror "Replace the progression."
-              "A different progression with the same name ~s already exists on ~a."
-              (name progression) scene)))
-  (setf (gethash (name progression) (progressions scene)) progression))
-
-(defmethod leave ((name symbol) (scene scene))
-  (remhash name (progressions scene)))
-
-(defmethod leave ((progression progression) (scene scene))
-  (leave (name progression) scene))
 
 (defclass scene-unit (unit)
   ())

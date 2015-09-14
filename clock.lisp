@@ -42,7 +42,7 @@ Internal clock is at ~a~&"
 
 (defmethod print-object ((clock clock) stream)
   (print-unreadable-object (clock stream :type T :identity T)
-    (format stream "~s ~a" (if (previous-time clock) :running :stopped) (clock clock))))
+    (format stream "~s ~a" (if (running clock) :running :stopped) (clock clock))))
 
 (defmethod reset ((clock clock))
   (setf (clock clock) 0.0s0)

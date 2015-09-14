@@ -105,51 +105,22 @@
                           (let ((*mapper* function))
                             (funcall func collective))))))
 
+(defmacro compile-change (type &rest args)
+  (parse-change type args))
+
 (defun parse-animation (start duration form)
   (destructuring-bind (selector &rest changes) form
     (let ((animation (gensym "ANIMATION")))
       `(let ((,animation (make-instance 'animation :start ,start :duration ,duration :selector ',selector)))
          ,@(loop for change in changes
-                 collect `(push ,(parse-change change) (changes ,animation)))
+                 collect `(push (compile-change ,@change) (changes ,animation)))
          ,animation))))
 
-(defun nenter (thing target)
-  (if (consp target)
-      (setf (cdr target) (cons thing (cdr target)))
-      (enter thing target)))
-
-(defun parse-change (form)
-  (cond ((subtypep (first form) 'tween)
-         `(make-instance ',(first form) :field ',(second form) ,@(cddr form)))
-        (T
-         ;; Generalise.
-         (ecase (first form)
-           (create
-            (labels ((process-contents (parent contents)
-                       (destructuring-bind (name &rest initargs &key contents (count 1) &allow-other-keys) contents
-                         (remf initargs :contents)
-                         (remf initargs :count)
-                         (let ((inner `(nenter ,(if contents
-                                                    (let ((parent (gensym "ENTITY")))
-                                                      `(let ((,parent (make-instance ',name ,@initargs)))
-                                                         ,(process-contents parent contents)))
-                                                    `(make-instance ',name ,@initargs))
-                                               ,parent)))
-                           (case count
-                             ((0 NIL))
-                             (1 inner)
-                             (T `(dotimes (,(gensym "I") ,count ,parent)
-                                   ,inner)))))))
-              (let ((entities (gensym "ENTITIES")))
-                `(let ((,entities (funcall 'list NIL)))
-                   ,(process-contents entities (copy-list (cdr form)))
-                   (cdr ,entities)))))
-           (leave
-            `(make-instance 'leave))
-           (enter
-            `(make-instance 'enter :object (lambda () (first ,(parse-change `(create ,@(cdr form)))))))
-           (every
-            `(make-instance 'every. :distance ,(second form) :change ,(parse-change (third form))))))))
+(defmacro compile-animations (&body intervals)
+  (let ((animations (when intervals (parse-intervals intervals))))
+    `(list
+      ,@(loop for (start duration form) in animations
+              collect (parse-animation start duration form)))))
 
 (defvar *progressions* (make-hash-table :test 'eql))
 
@@ -159,16 +130,14 @@
 (defun (setf progression-definition) (progression name)
   (setf (gethash name *progressions*) progression))
 
-(defun remove-progression (name)
+(defun remove-progression-definition (name)
   (remhash name *progressions*))
 
 (defmacro define-progression (name &body intervals)
-  (let ((progression (gensym "PROGRESSION")))
-    `(let ((,progression
-             (or (progression-definition ',name)
-                 (setf (progression-definition ',name)
-                       (make-instance 'progression-definition :name ',name)))))
-       (clear ,progression)
-       ,@(loop for (start duration form) in (parse-intervals intervals)
-               collect `(enter ,(parse-animation start duration form) ,progression))
-       ',name)))
+  `(setf (animations (or (progression-definition ',name)
+                         (setf (progression-definition ',name)
+                               (make-instance 'progression-definition))))
+         (compile-animations ,@intervals)))
+
+(defmethod progression-instance ((name symbol))
+  (progression-instance (progression-definition name)))
