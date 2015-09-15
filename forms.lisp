@@ -6,6 +6,12 @@
 
 (in-package #:org.shirakumo.flare)
 
+(defgeneric orientation (entity))
+(defgeneric size (entity))
+(defgeneric up (arc))
+(defgeneric angle (arc))
+(defgeneric spacing (arc))
+
 (defclass oriented-entity (entity)
   ((orientation :initarg :orientation :accessor orientation))
   (:default-initargs
@@ -19,47 +25,81 @@
 (defclass formation (entity)
   ())
 
+(defgeneric reposition (formation))
+
+(defmethod initialize-instance :after ((formation formation) &key)
+  (reposition formation))
+
+(defmethod insert :after ((formation formation) &rest objs)
+  (declare (ignore objs))
+  (reposition formation))
+
+(defmethod withdraw :after ((formation formation) &rest objs)
+  (declare (ignore objs))
+  (reposition formation))
+
+(defmethod (setf location) :after (value (formation formation))
+  (reposition formation))
+
 (defclass particle (entity)
   ())
 
-(defclass ring (formation oriented-entity sized-entity)
+(defclass arc (formation oriented-entity sized-entity)
   ((up :initarg :up :accessor up)
    (tangent :accessor tangent)
-   (angle :initarg :angle :accessor angle))
+   (angle :initarg :angle :accessor angle)
+   (spacing :initarg :spacing :accessor spacing))
   (:default-initargs
    :up (vec 0 0 1)
-   :angle 0))
+   :angle 0
+   :spacing 10
+   :size 0))
 
-(defun %prepare-ring (ring)
-  (setf (tangent ring) (vc (up ring) (orientation ring)))
-  (let ((step (/ 360 (max 1 (set-size (objects ring)))))
-        (offset (angle ring)))
-    (iterate (for child in-set (objects ring))
-      (for deg from offset below (+ offset 360) by step)
-      (for phi = (* deg Pi 1/180))
-      (for u = (* (size ring) (cos phi)))
-      (for v = (* (size ring) (sin phi)))
-      (for p = (vec (+ (vx (location ring))
-                       (* u (vx (orientation ring)))
-                       (* v (vx (tangent ring))))
-                    (+ (vy (location ring))
-                       (* u (vy (orientation ring)))
-                       (* v (vy (tangent ring))))
-                    (+ (vz (location ring))
-                       (* u (vz (orientation ring)))
-                       (* v (vz (tangent ring))))))
-      (setf (location child) p))))
+(defmethod print-object ((arc arc) stream)
+  (print-unreadable-object (arc stream :type T :identity T)
+    (format stream "~s ~s ~s ~s" :spacing (spacing arc) :angle (angle arc))))
 
-(defmethod initialize-instance :after ((ring ring) &key) (%prepare-ring ring))
-(defmethod (setf up) :after (val (ring ring)) (%prepare-ring ring))
-(defmethod (setf orientation) :after (val (ring ring)) (%prepare-ring ring))
-(defmethod (setf angle) :after (val (ring ring)) (%prepare-ring ring))
-(defmethod insert :after ((ring ring) &rest objs) (declare (ignore objs)) (%prepare-ring ring))
-(defmethod withdraw :after ((ring ring) &rest objs) (declare (ignore objs)) (%prepare-ring ring))
+(defmethod reposition ((arc arc))
+  (with-slots (up tangent angle spacing size orientation location) arc
+    (setf tangent (vc up orientation))
+    (let ((offset (- angle (/ (* (set-size (objects arc)) spacing) 2))))
+      (iterate (for child in-set (objects arc))
+        (for deg from angle by spacing)
+        (for phi = (* deg Pi 1/180))
+        (for u = (* size (cos phi)))
+        (for v = (* size (sin phi)))
+        (for p = (vec (+ (vx location)
+                         (* u (vx orientation))
+                         (* v (vx tangent)))
+                      (+ (vy location)
+                         (* u (vy orientation))
+                         (* v (vy tangent)))
+                      (+ (vz location)
+                         (* u (vz orientation))
+                         (* v (vz tangent)))))
+        (setf (location child) p)))))
 
-(defmethod update :before ((ring ring))
-  (%prepare-ring ring))
+(defmethod (setf up) :after (val (arc arc))
+  (reposition arc))
 
-(defmethod paint ((ring ring) target)
-  (do-set (current (objects ring))
-    (paint current target)))
+(defmethod (setf orientation) :after (val (arc arc))
+  (reposition arc))
+
+(defmethod (setf angle) :after (val (arc arc))
+  (reposition arc))
+
+(defmethod (setf size) :after (val (arc arc))
+  (reposition arc))
+
+(defmethod (setf spacing) :after (val (arc arc))
+  (reposition arc))
+
+(defclass ring (arc)
+  ())
+
+;; Can't be :AFTER as they would happen after the REPOSITION
+;; call that ARC performs, which is not what we need.
+(defmethod reposition :before ((ring ring))
+  (let ((size (set-size (objects ring))))
+    (setf (slot-value ring 'spacing)
+          (if (<= size 0) 0 (/ 360 size)))))
