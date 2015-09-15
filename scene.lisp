@@ -8,10 +8,6 @@
 
 (defgeneric scene (scene-unit))
 (defgeneric location (entity))
-(defgeneric orientation (entity))
-(defgeneric size (entity))
-(defgeneric up (entity))
-(defgeneric angle (entity))
 
 (defclass scene (collective clock paintable animatable)
   ())

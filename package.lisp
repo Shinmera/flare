@@ -179,11 +179,24 @@
    #:bounce-in
    #:bounce-out
    #:bounce-in-out)
+  ;; forms.lisp
+  (:export
+   #:oriented-entity
+   #:sized-entity
+   #:formation
+   #:particle
+   #:arc
+   #:orientation
+   #:size
+   #:up
+   #:angle
+   #:spacing
+   #:ring)
   ;; parser.lisp
   (:export
    #:make-progression
    #:progression-definition
-   #:remove-progression
+   #:remove-progression-definition
    #:define-progression)
   ;; paintable.lisp
   (:export
@@ -198,16 +211,5 @@
   (:export
    #:scene
    #:location
-   #:orientation
-   #:size
-   #:up
-   #:angle
-
-   #:scene
    #:scene-unit
-   #:entity
-   #:oriented-entity
-   #:sized-entity
-   #:formation
-   #:particle
-   #:ring))
+   #:entity))
