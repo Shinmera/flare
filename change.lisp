@@ -142,9 +142,7 @@
 
 (defmethod tick ((tween range-slot-tween) object clock step)
   (setf (slot-value object (slot tween))
-        (etypecase (from tween)
-          (number (ease step (ease-func tween) (from tween) (to tween)))
-          (vec (ease-vec step (ease-func tween) (from tween) (to tween))))))
+        (ease-object (from tween) (to tween) step (ease-func tween))))
 
 (defmethod copy ((tween range-slot-tween))
   (make-instance 'range-slot-tween

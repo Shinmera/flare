@@ -147,7 +147,7 @@
    #:remove-easing
    #:define-easing
    #:ease
-   #:ease-vec
+   #:ease-object
    #:linear
    #:quad-in
    #:quad-out
