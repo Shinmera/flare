@@ -48,8 +48,11 @@
   (with-main-window (window 'main :name "Flare-Viewer" :blocking blocking)))
 
 (defclass sphere (particle)
-  ((size :initarg :size :accessor size))
-  (:default-initargs :size 10))
+  ((size :initarg :size :accessor size)
+   (color :initarg :color :accessor color))
+  (:default-initargs
+   :size 10
+   :color (vec 1 1 1)))
 
 (defmethod draw-sphere (size &key (lat 8) (lng 8))
   (loop for i from 0 below lat
@@ -76,5 +79,5 @@
 
 (defmethod paint ((sphere sphere) target)
   (with-translation ((location sphere) target)
-    (gl:color 255 255 255)
+    (gl:color (vx (color sphere)) (vy (color sphere)) (vz (color sphere)))
     (draw-sphere (size sphere))))
