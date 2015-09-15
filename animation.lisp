@@ -141,7 +141,12 @@
           (make-array (length (future-animations progression)) :fill-pointer 0))
     ;; Fast-forward
     (setf (clock progression) clock)
-    (update progression))
+    (cond ((running progression)
+           (update progression))
+          (T
+           (setf (running progression) T)
+           (update progression)
+           (setf (running progression) NIL))))
   animations)
 
 (defvar *resetting* NIL) ; oh dear.
@@ -208,11 +213,10 @@
      (and (not (eql (duration animation) T))
           (<= (+ (start animation) (duration animation)) (clock progression)))))
   ;; Stop altogether if finished
-  ;; (when (= 0
-  ;;          (length (present-animations progression))
-  ;;          (length (future-animations progression)))
-  ;;   (stop progression))
-  )
+  (when (= 0
+           (length (present-animations progression))
+           (length (future-animations progression)))
+    (stop progression)))
 
 (defclass animation ()
   ((start :initarg :start :accessor start)
