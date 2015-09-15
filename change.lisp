@@ -17,16 +17,17 @@
 (defclass change ()
   ())
 
+(defmethod copy ((change change))
+  (make-instance (class-name (class-of change))))
+
+(defmethod reset ((change change))
+  change)
+
 (defclass print-change (change)
   ())
 
 (defmethod tick ((change print-change) object clock step)
   (format T "~a ~a ~a" object clock step))
-
-(defmethod copy ((change print-change))
-  (make-instance 'print-change))
-
-(defmethod reset ((change print-change)))
 
 (define-change-parser print ()
   `(make-instance 'print-change))
@@ -37,10 +38,10 @@
 (defmethod tick ((change call-change) object clock step)
   (funcall (func change) object clock step))
 
-(defmethod copy ((change call-change))
-  (make-instance 'call-change :func (func change)))
-
-(defmethod reset ((change call-change)))
+(defmethod copy :around ((change call-change))
+  (let ((c (call-next-method)))
+    (setf (func c) (func change))
+    c))
 
 (define-change-parser call (function)
   `(make-instance 'call-change :func ,function))
@@ -69,21 +70,24 @@
           (register obj)))))
 
 (defmethod copy ((op enter-operation))
-  (make-instance 'enter-operation :creator (creator op)))
+  (let ((c (call-next-method)))
+    (setf (creator c) (creator op))
+    c))
 
 (define-change-parser create (class &rest initargs &key n children parent &allow-other-keys)
-  (remf initargs :n)
-  (remf initargs :children)
-  (remf initargs :parent)
-  (let* ((instance (gensym "INSTANCE"))
-         (inner `(let ((,instance (make-instance ',class ,@initargs)))
-                   ,@(when children (list (parse-change 'create `(,@children :parent ,instance))))
-                   ,@(when parent (list `(enter ,instance ,parent)))
-                   ,instance)))
-    (if n
-        `(loop repeat ,n
-               collect ,inner)
-        inner)))
+  (let ((initargs (copy-list initargs)))
+    (remf initargs :n)
+    (remf initargs :children)
+    (remf initargs :parent)
+    (let* ((instance (gensym "INSTANCE"))
+           (inner `(let ((,instance (make-instance ',class ,@initargs)))
+                     ,@(when children (list (parse-change 'create `(,@children :parent ,instance))))
+                     ,@(when parent (list `(enter ,instance ,parent)))
+                     ,instance)))
+      (if n
+          `(loop repeat ,n
+                 collect ,inner)
+          inner))))
 
 (define-change-parser enter (&rest args)
   `(make-instance
@@ -104,14 +108,13 @@
     (setf (gethash object (objects op)) (collective object))
     (leave object T)))
 
-(defmethod copy ((op leave-operation))
-  (make-instance 'leave-operation))
-
 (define-change-parser leave ()
   `(make-instance 'leave-operation))
 
 (defclass tween (change)
   ())
+
+(defgeneric tween-value (tween object clock step))
 
 (defclass slot-tween (tween)
   ((slot :initarg :slot :accessor slot)
@@ -128,6 +131,39 @@
         do (setf (slot-value object (slot tween)) value)
            (remhash object (originals tween))))
 
+(defmethod copy ((tween slot-tween))
+  (let ((c (call-next-method)))
+    (setf (slot c) (slot tween))
+    c))
+
+(defmethod tick ((tween slot-tween) object clock step)
+  (setf (slot-value object (slot tween))
+        (tween-value tween object clock step)))
+
+(defclass accessor-tween (tween)
+  ((accessor :initarg :accessor :accessor accessor)
+   (originals :initform (make-hash-table :test 'eq) :accessor originals)))
+
+(defmethod original-value (object (tween accessor-tween))
+  (or (gethash object (originals tween))
+      (setf (gethash object (originals tween))
+            (funcall (fdefinition (accessor tween)) object))))
+
+(defmethod reset ((tween accessor-tween))
+  (loop for object being the hash-keys of (originals tween)
+        for value being the hash-values of (originals tween)
+        do (funcall (fdefinition `(setf ,(accessor tween))) value object)
+           (remhash object (originals tween))))
+
+(defmethod copy ((tween accessor-tween))
+  (let ((c (call-next-method)))
+    (setf (accessor c) (accessor tween))
+    c))
+
+(defmethod tick ((tween accessor-tween) object clock step)
+  (funcall (fdefinition `(setf ,(accessor tween)))
+           (tween-value tween object clock step) object))
+
 (defclass range-tween (tween)
   ((from :initarg :from :accessor from)
    (to :initarg :to :accessor to)
@@ -137,44 +173,53 @@
    :to 1
    :ease 'linear))
 
-(defclass range-slot-tween (range-tween slot-tween)
-  ())
+(defmethod copy ((tween range-tween))
+  (let ((c (call-next-method)))
+    (setf (from c) (from tween))
+    (setf (to c) (to tween))
+    (setf (ease-func c) (ease-func tween))
+    c))
 
-(defmethod tick ((tween range-slot-tween) object clock step)
-  (setf (slot-value object (slot tween))
-        (ease-object (from tween) (to tween) step (ease-func tween))))
-
-(defmethod copy ((tween range-slot-tween))
-  (make-instance 'range-slot-tween
-                 :slot (slot tween)
-                 :from (from tween)
-                 :to (to tween)
-                 :ease (ease-func tween)))
-
-(define-change-parser set (slot &key (from 0) (to 1) (ease 'linear))
-  `(make-instance 'range-slot-tween :ease ',ease :from ,from :to ,to :slot ',slot))
+(defmethod tween-value ((tween range-tween) object clock step)
+  (ease-object (or (from tween)
+                   (original-value object tween))
+               (to tween) step (ease-func tween)))
 
 (defclass constant-tween (tween)
   ((by :initarg :by :accessor by)
-   (for :initarg :for :accessor for))
+   (for :initarg :for :accessor for)
+   (start :initform NIL :accessor start))
   (:default-initargs
    :by 1
    :for 1))
 
+(defmethod copy ((tween constant-tween))
+  (let ((c (call-next-method)))
+    (setf (by c) (by tween))
+    (setf (for c) (for tween))
+    c))
+
+(defmethod reset :after ((tween constant-tween))
+  (setf (start tween) NIL))
+
+(defmethod tween-value ((tween constant-tween) object clock step)
+  (let ((rlclock (- clock (or (start tween) (setf (start tween) clock)))))
+    (+ (original-value object tween) (* (by tween) (/ rlclock (for tween))))))
+
+(defclass range-slot-tween (range-tween slot-tween)
+  ())
+
 (defclass increase-slot-tween (constant-tween slot-tween)
   ())
 
-(defmethod tick ((tween increase-slot-tween) object clock step)
-  (setf (slot-value object (slot tween))
-        (etypecase (by tween)
-          (number (+ (original-value object tween) (* (by tween) (/ clock (for tween)))))
-          (vec (v+ (original-value object tween) (v* (by tween) (/ clock (for tween))))))))
+(defclass range-accessor-tween (range-tween accessor-tween)
+  ())
 
-(defmethod copy ((tween increase-slot-tween))
-  (make-instance 'increase-slot-tween
-                 :slot (slot tween)
-                 :by (by tween)
-                 :for (for tween)))
+(defclass increase-accessor-tween (constant-tween accessor-tween)
+  ())
 
-(define-change-parser increase (slot &key (by 1) (for 1))
-  `(make-instance 'increase-slot-tween :by ,by :for ,for :slot ',slot))
+(define-change-parser set (accessor &key (from 0) (to 1) (ease 'linear))
+  `(make-instance 'range-accessor-tween :ease ',ease :from ,from :to ,to :accessor ',accessor))
+
+(define-change-parser increase (accessor &key (by 1) (for 1))
+  `(make-instance 'increase-accessor-tween :by ,by :for ,for :accessor ',accessor))
