@@ -7,23 +7,33 @@
 (in-package #:org.shirakumo.flare.viewer)
 (in-readtable :qtools)
 
-(defvar *viewer* NIL)
+(defvar *main* NIL)
 (defvar *progressions* ())
 
 (define-widget main (QMainWindow)
   ())
 
+(define-initializer (main setup)
+  (setf *main* main))
+
+(define-finalizer (main teardown)
+  (setf *main* NIL))
+
 (define-subwidget (main viewer) (make-instance 'viewer)
   (setf (q+:central-widget main) viewer))
 
 (define-subwidget (main menu) (make-instance 'menu)
-  (q+:add-dock-widget main (q+:qt.right-dock-widget-area) menu))
+  (q+:add-dock-widget main (q+:qt.bottom-dock-widget-area) menu))
+
+(defun scene ()
+  (slot-value (slot-value *main* 'viewer) 'scene))
 
 (define-widget menu (QDockWidget)
   ())
 
 (define-initializer (menu setup)
-  (setf (q+:features menu) (q+:qdockwidget.dock-widget-movable)))
+  (setf (q+:features menu) (q+:qdockwidget.dock-widget-movable))
+  (setf (q+:title-bar-widget menu) (q+:make-qwidget)))
 
 (define-subwidget (menu container) (q+:make-qwidget)
   (setf (q+:widget menu) container))
@@ -38,36 +48,37 @@
 ;; progressions at the same time, like in a real editor.
 (define-slot (menu choose) ((name string))
   (declare (connected chooser (activated string)))
-  (dolist (progression (progressions (scene *viewer*)))
-    (leave progression (scene *viewer*)))
+  (dolist (progression (progressions (scene)))
+    (leave progression (scene)))
   (enter (progression-instance (find name *progressions* :test #'string-equal))
-         (scene *viewer*)))
+         (scene)))
 
-(define-subwidget (menu reset) (q+:make-qpushbutton "<<"))
+(define-subwidget (menu reset) (q+:make-qpushbutton (q+:qicon-from-theme "media-seek-backward") "<<"))
 
 (define-slot (menu reset) ()
   (declare (connected reset (clicked)))
-  (dolist (progression (progressions (scene *viewer*)))
+  (dolist (progression (progressions (scene)))
     (reset progression)))
 
-(define-subwidget (menu start) (q+:make-qpushbutton ">"))
+(define-subwidget (menu start) (q+:make-qpushbutton (q+:qicon-from-theme "media-playback-start") ">"))
 
 (define-slot (menu start) ()
   (declare (connected start (clicked)))
-  (dolist (progression (progressions (scene *viewer*)))
+  (dolist (progression (progressions (scene)))
     (start progression)))
 
-(define-subwidget (menu stop) (q+:make-qpushButton "o"))
+(define-subwidget (menu stop) (q+:make-qpushButton (q+:qicon-from-theme "media-playback-stop") "o"))
 
 (define-slot (menu stop) ()
   (declare (connected stop (clicked)))
-  (dolist (progression (progressions (scene *viewer*)))
+  (dolist (progression (progressions (scene)))
     (stop progression)))
 
 (define-subwidget (menu layout) (q+:make-qvboxlayout container)
   (setf (q+:alignment layout) (q+:qt.align-top))
-  (q+:add-widget layout chooser)
   (let ((sub (q+:make-qhboxlayout)))
+    (setf (q+:alignment sub) (q+:qt.align-left))
+    (q+:add-widget sub chooser)
     (q+:add-widget sub reset)
     (q+:add-widget sub start)
     (q+:add-widget sub stop)
@@ -75,34 +86,33 @@
 
 (defun reset-menu (menu)
   (with-slots-bound (menu menu)
-    (loop repeat (q+:size chooser)
+    (loop repeat (q+:count chooser)
           do (q+:remove-item chooser 0))
     (q+:add-items chooser (mapcar #'string *progressions*))
-    (let ((progression (first (progressions (scene *viewer*)))))
+    (let ((progression (first (progressions (scene)))))
       (when progression
         (q+:set-current-index
-         chooser (position progression *progressions*))))))
+         chooser (position (flare::definition progression) *progressions*
+                           :key #'progression-definition))))))
 
 (defmacro define-viewer-progression (name &body forms)
   `(progn
      (pushnew ',name *progressions*)
-     (when *viewer*
-       (reset-menu (slot-value *viewer* 'menu)))
+     (when *main*
+       (reset-menu (slot-value *main* 'menu)))
      (define-progression ,name ,@forms)))
 
 (define-widget viewer (QGLWidget)
-  ((scene :initform (make-instance 'scene) :accessor scene)))
+  ((scene :initform (make-instance 'scene))))
 
 (define-initializer (viewer setup)
-  (setf *viewer* viewer)
   (start scene)
   (when *progressions*
     (enter (progression-instance (first *progressions*))
            scene)))
 
 (define-finalizer (viewer teardown)
-  (stop scene)
-  (setf *viewer* NIL))
+  (stop scene))
 
 (define-subwidget (viewer timer) (q+:make-qtimer viewer)
   (setf (q+:single-shot timer) NIL)
@@ -167,3 +177,8 @@
 (define-viewer-progression spinner
   0 0 (T (enter ring :size 100 :children (sphere)))
   0 T (> (increase angle :by 360 :for 1)))
+
+(define-viewer-progression spiral
+  0 0 (T (enter ring :size 0 :children (sphere)))
+  0 T (> (increase angle :by 360 :for 1)
+         (increase size :by 20 :for 1)))
