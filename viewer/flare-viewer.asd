@@ -13,7 +13,10 @@
   :homepage "https://github.com/Shinmera/flare"
   :serial T
   :components ((:file "package")
-               (:file "viewer"))
+               (:file "main")
+               (:file "menu")
+               (:file "viewer")
+               (:file "examples"))
   :depends-on (:flare
                :verbose
                :qtools
