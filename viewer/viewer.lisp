@@ -47,6 +47,6 @@
 (defmethod call-with-translation (func (target qobject) vec)
   (q+:save target)
   (unwind-protect
-       (prxogn (q+:translate target (round (vx vec)) (rount (vy vec)))
+       (progn (q+:translate target (round (vx vec)) (round (vy vec)))
               (funcall func))
     (q+:restore target)))
