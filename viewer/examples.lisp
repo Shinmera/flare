@@ -31,9 +31,11 @@
                       (gl:vertex (* x zr1 size) (* y zr1 size) z1)))))
 
 (defmethod paint ((sphere sphere) target)
+  (q+:begin-native-painting target)
   (with-translation ((location sphere) :gl)
     (gl:color (vx (color sphere)) (vy (color sphere)) (vz (color sphere)))
-    (draw-sphere (size sphere))))
+    (draw-sphere (size sphere)))
+  (q+:end-native-painting target))
 
 (define-viewer-progression spinner
   0 0 (T (enter ring :size 100 :children (sphere)))
