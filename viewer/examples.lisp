@@ -7,10 +7,29 @@
 (in-package #:org.shirakumo.flare.viewer)
 (in-readtable :qtools)
 
-(defclass sphere (particle sized-entity)
+(defclass colored-entity (entity)
   ((color :initarg :color :accessor color))
   (:default-initargs
    :color (vec 1 1 1)))
+
+(defmethod initialize-instance :after ((entity colored-entity) &key)
+  (setf (color entity) (color entity)))
+
+(defmethod (setf color) ((vec vec) (entity colored-entity))
+  (setf (slot-value entity 'color)
+        (q+:make-qcolor
+         (round (* 255 (vx vec)))
+         (round (* 255 (vy vec)))
+         (round (* 255 (vz vec))))))
+
+(defmethod (setf color) ((obj qobject) (entity colored-entity))
+  (cond ((qtypep obj "QColor")
+         (call-next-method))
+        (T
+         (error "Don't know how to use ~a as a color." obj))))
+
+(defclass sphere (particle sized-entity colored-entity)
+  ())
 
 (defmethod draw-sphere (size &key (lat 8) (lng 8))
   (loop for i from 0 below lat
@@ -33,15 +52,32 @@
 (defmethod paint ((sphere sphere) target)
   (q+:begin-native-painting target)
   (with-translation ((location sphere) :gl)
-    (gl:color (vx (color sphere)) (vy (color sphere)) (vz (color sphere)))
+    (gl:color (q+:red (color sphere))
+              (q+:green (color sphere))
+              (q+:blue (color sphere)))
     (draw-sphere (size sphere)))
   (q+:end-native-painting target))
+
+(defclass spark (particle sized-entity colored-entity)
+  ()
+  (:default-initargs
+   :size 50))
+
+(defmethod paint ((spark spark) target)
+  (let ((size (round (size spark))))
+    (with-translation ((location spark) target)
+      (with-finalizing ((gradient (q+:make-qradialgradient (/ size 2) (/ size 2) (/ size 2))))
+        (setf (q+:color-at gradient 0) (color spark))
+        (setf (q+:color-at gradient 1) (q+:make-qcolor 0 0 0 0))
+        (setf (q+:brush target) (q+:make-qbrush gradient))
+        (setf (q+:pen target) (q+:qt.no-pen))
+        (q+:draw-ellipse target 0 0 size size)))))
 
 (define-viewer-progression spinner
   0 0 (T (enter ring :size 100 :children (sphere)))
   0 T (> (increase angle :by 360 :for 1)))
 
 (define-viewer-progression spiral
-  0 0 (T (enter ring :size 0 :children (sphere)))
+  0 0 (T (enter ring :size 0 :children (spark)))
   0 T (> (increase angle :by 360 :for 1)
          (increase size :by 20 :for 1)))
