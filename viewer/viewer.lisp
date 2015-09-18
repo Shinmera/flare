@@ -36,12 +36,17 @@
 
     (q+:translate painter (round (/ (q+:width viewer) 2)) (round (/ (q+:height viewer) 2)))
     
-    (q+:begin-native-painting painter)
-    (paint scene painter)
-    (q+:end-native-painting painter))
+    (paint scene painter))
   (stop-overriding))
 
-(defmethod call-with-translation (func target vec)
+(defmethod call-with-translation (func (target (eql :gl)) vec)
   (gl:with-pushed-matrix
     (gl:translate (vx vec) (vy vec) (vz vec))
     (funcall func)))
+
+(defmethod call-with-translation (func (target qobject) vec)
+  (q+:save target)
+  (unwind-protect
+       (prxogn (q+:translate target (round (vx vec)) (rount (vy vec)))
+              (funcall func))
+    (q+:restore target)))
