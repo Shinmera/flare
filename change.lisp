@@ -223,3 +223,22 @@
 
 (define-change-parser increase (accessor &key (by 1) (for 1))
   `(make-instance 'increase-accessor-tween :by ,by :for ,for :accessor ',accessor))
+
+(defclass call-slot-tween (slot-tween call-change)
+  ())
+
+(defmethod tween-value ((tween call-slot-tween) object clock step)
+  (funcall (func tween) object clock step))
+
+(defclass call-accessor-tween (accessor-tween call-change)
+  ())
+
+(defmethod tween-value ((tween call-accessor-tween) object clock step)
+  (funcall (func tween) object clock step))
+
+(define-change-parser calc (accessor &key to)
+  `(make-instance 'call-accessor-tween
+                  :func (lambda (object clock step)
+                          (declare (ignorable object clock step))
+                          ,to)
+                  :accessor ',accessor))

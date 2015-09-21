@@ -119,7 +119,10 @@
    #:set
    #:constant-tween
    #:increase-slot-tween
-   #:increase)
+   #:increase
+   #:call-slot-tween
+   #:call-accessor-tween
+   #:calc)
   ;; container.lisp
   (:export
    #:objects
