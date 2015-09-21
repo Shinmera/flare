@@ -74,10 +74,14 @@
         (q+:draw-ellipse target 0 0 size size)))))
 
 (define-viewer-progression spinner
-  0 0 (T (enter ring :size 100 :children (sphere)))
+  0 0 (T (enter ring :size 100 :children (sphere :size 10)))
   0 T (> (increase angle :by 360 :for 1)))
 
 (define-viewer-progression spiral
-  0 0 (T (enter ring :size 0 :children (spark)))
+  0 0 (T (enter ring :size 0 :children (sphere :size 10)))
   0 T (> (increase angle :by 360 :for 1)
-         (increase size :by 20 :for 1)))
+         (increase size :by 10 :for 1)))
+
+(define-viewer-progression pendulum
+  0 0 (T (enter ring :size 100 :children (sphere :size 10)))
+  0 T (> (calc angle :to (+ 90 (* (sin (* clock 4)) 40)))))
