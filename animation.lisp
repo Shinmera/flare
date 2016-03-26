@@ -192,7 +192,7 @@
    (future-animations progression)
    (present-animations progression)
    (lambda (animation)
-     (<= (start animation) (clock progression))))
+     (<= (beginning animation) (clock progression))))
   ;; Animate
   (when (animatable progression)
     (loop for animation across (present-animations progression)
@@ -201,7 +201,7 @@
                            ((<= (duration animation) 0)
                             1.0)
                            (T
-                            (min (/ (- (clock progression) (start animation))
+                            (min (/ (- (clock progression) (beginning animation))
                                     (duration animation))
                                  1.0)))
           do (tick animation (animatable progression) (clock progression) step)))  
@@ -211,7 +211,7 @@
    (past-animations progression)
    (lambda (animation)
      (and (not (eql (duration animation) T))
-          (<= (+ (start animation) (duration animation)) (clock progression)))))
+          (<= (+ (beginning animation) (duration animation)) (clock progression)))))
   ;; Stop altogether if finished
   (when (= 0
            (length (present-animations progression))
@@ -219,7 +219,7 @@
     (stop progression)))
 
 (defclass animation ()
-  ((start :initarg :start :accessor start)
+  ((beginning :initarg :beginning :accessor beginning)
    (duration :initarg :duration :accessor duration)
    (selector :initarg :selector :accessor selector)
    (changes :initarg :changes :accessor changes))
@@ -234,7 +234,7 @@
 
 (defmethod print-object ((animation animation) stream)
   (print-unreadable-object (animation stream :type T :identity T)
-    (format stream "~s ~s ~s ~s" :start (start animation) :duration (duration animation))))
+    (format stream "~s ~s ~s ~s" :start (beginning animation) :duration (duration animation))))
 
 (defmethod (setf selector) (value (animation animation))
   (setf (slot-value animation 'selector)
@@ -244,7 +244,7 @@
 
 (defmethod copy ((animation animation))
   (make-instance 'animation
-                 :start (start animation)
+                 :start (beginning animation)
                  :duration (duration animation)
                  :selector (selector animation)
                  :changes (mapcar #'copy (changes animation))))

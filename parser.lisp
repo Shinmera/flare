@@ -48,8 +48,10 @@
     (let ((animations ()))
       (loop for (start end anims) in normalized
             do (dolist (anim anims)
-                 (push (list start (if (and (realp start) (realp end))
-                                       (- end start) end) anim) animations)))
+                 (push (list start
+                             (if (and (realp start) (realp end)) (- end start) end)
+                             anim)
+                       animations)))
       (reverse animations))))
 
 (defvar *mapper*)
@@ -109,10 +111,10 @@
 (defmacro compile-change (type &rest args)
   (parse-change type args))
 
-(defun parse-animation (start duration form)
-  (destructuring-bind (selector &rest changes) form
+(defun parse-animation (beginning duration expression)
+  (destructuring-bind (selector &rest changes) expression
     (let ((animation (gensym "ANIMATION")))
-      `(let ((,animation (make-instance 'animation :start ,start :duration ,duration :selector ',selector)))
+      `(let ((,animation (make-instance 'animation :beginning ,beginning :duration ,duration :selector ',selector)))
          ,@(loop for change in changes
                  collect `(push (compile-change ,@change) (changes ,animation)))
          ,animation))))
@@ -120,8 +122,8 @@
 (defmacro compile-animations (&body intervals)
   (let ((animations (when intervals (parse-intervals intervals))))
     `(list
-      ,@(loop for (start duration form) in animations
-              collect (parse-animation start duration form)))))
+      ,@(loop for (start duration expression) in animations
+              collect (parse-animation start duration expression)))))
 
 (defvar *progressions* (make-hash-table :test 'eql))
 

@@ -8,9 +8,9 @@
 
 (defgeneric parse-change (type args))
 
-(defmacro define-change-parser (name args &body body)
+(defmacro define-change-parser (type args &body body)
   (let ((form (gensym "FORM")))
-    `(defmethod parse-change ((,(gensym) (eql ',name)) ,form)
+    `(defmethod parse-change ((,(gensym) (eql ',type)) ,form)
        (destructuring-bind ,args ,form
          ,@body))))
 
