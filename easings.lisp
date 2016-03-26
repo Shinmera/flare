@@ -7,15 +7,24 @@
 (in-package #:org.shirakumo.flare)
 
 (defvar *easings* (make-hash-table :test 'eql))
+(defvar *ease-docs* (make-hash-table :test 'eql))
 
 (defun easing (name)
   (gethash name *easings*))
 
 (defun (setf easing) (func name)
-  (setf (gethash name *easings*) func))
+  (setf (gethash name *easings*) func)
+  (setf (gethash name *ease-docs*) (documentation func t)))
 
 (defun remove-easing (name)
-  (remhash name *easings*))
+  (remhash name *easings*)
+  (remhash name *ease-docs*))
+
+(defmethod documentation ((name symbol) (type (eql 'easing)))
+  (gethash name *ease-docs*))
+
+(defmethod (setf documentation) (doc (name symbol) (type (eql 'easing)))
+  (setf (gethash name *ease-docs*) doc))
 
 (defmacro define-easing (name (x) &body body)
   `(setf (easing ',name)
