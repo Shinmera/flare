@@ -7,6 +7,13 @@
 (in-package #:org.shirakumo.flare.viewer)
 (in-readtable :qtools)
 
+(defvar *opacity* 1.0)
+
+(defmethod paint :around ((entity entity) target)
+  (let ((*opacity* (* *opacity* (visibility entity))))
+    (setf (q+:opacity target) *opacity*)
+    (call-next-method)))
+
 (defclass colored-entity (entity)
   ((color :initarg :color :accessor color))
   (:default-initargs
