@@ -20,17 +20,11 @@
 (defgeneric animations (progression-definition))
 (defgeneric instances (progression-definition))
 
-(defgeneric start (progression))
-(defgeneric stop (progression))
-(defgeneric reset (progression))
-(defgeneric rewind (progression clock))
-(defgeneric update (progression))
 (defgeneric present-animations (progression))
 (defgeneric past-animations (progression))
 (defgeneric future-animations (progression))
-(defgeneric animations (progression))
 
-(defgeneric start (animation))
+(defgeneric beginning (animation))
 (defgeneric duration (animation))
 (defgeneric changes (animation))
 (defgeneric selector (animation))

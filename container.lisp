@@ -15,7 +15,6 @@
 (defgeneric unit (name collective))
 (defgeneric enter (unit collective))
 (defgeneric leave (unit collective))
-(defgeneric object (collective))
 (defgeneric name (unit))
 (defgeneric collective (unit))
 
