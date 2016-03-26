@@ -87,7 +87,7 @@
 
 (defmethod (setf animations) (animations (definition progression-definition))
   (setf (slot-value definition 'animations)
-        (ensure-sorted animations #'< :key #'beginning)))
+        (ensure-sorted animations #'animation<)))
 
 (defmethod (setf animations) :after (val (definition progression-definition))
   ;; Take the chance to clear out empty references.
@@ -130,7 +130,7 @@
     (reset progression)
     ;; Unload new changes
     (setf (future-animations progression)
-          (ensure-sorted (copy-animations animations) #'< :key #'beginning))
+          (ensure-sorted (copy-animations animations) #'animation<))
     (setf (present-animations progression)
           (make-array (length (future-animations progression)) :fill-pointer 0))
     (setf (past-animations progression)
@@ -155,7 +155,7 @@
                           (present-animations progression)))
     ;; Resort to ascertain order of activation
     (setf (present-animations progression)
-          (ensure-sorted (present-animations progression) #'> :key #'beginning))
+          (ensure-sorted (present-animations progression) #'animation>))
     ;; Reset in order.
     (loop for animation across (present-animations progression)
           do (reset animation))
@@ -215,11 +215,13 @@
     (stop progression)))
 
 (defclass animation ()
-  ((beginning :initarg :beginning :accessor beginning)
+  ((defindex :initarg :defindex :accessor defindex)
+   (beginning :initarg :beginning :accessor beginning)
    (duration :initarg :duration :accessor duration)
    (selector :initarg :selector :accessor selector)
    (changes :initarg :changes :accessor changes))
   (:default-initargs
+   :defindex 0
    :beginning (error "BEGINNING needed.")
    :duration (error "DURATION needed.")
    :selector T
@@ -232,6 +234,14 @@
   (print-unreadable-object (animation stream :type T :identity T)
     (format stream "~s ~s ~s ~s" :start (beginning animation) :duration (duration animation))))
 
+(defun animation< (a b)
+  (and (< (beginning a) (beginning b))
+       (< (defindex a) (defindex b))))
+
+(defun animation> (a b)
+  (and (> (beginning a) (beginning b))
+       (> (defindex a) (defindex b))))
+
 (defmethod (setf selector) (value (animation animation))
   (setf (slot-value animation 'selector)
         (typecase value
@@ -240,6 +250,7 @@
 
 (defmethod copy ((animation animation))
   (make-instance 'animation
+                 :defindex (defindex animation)
                  :beginning (beginning animation)
                  :duration (duration animation)
                  :selector (selector animation)

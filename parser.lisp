@@ -111,10 +111,15 @@
 (defmacro compile-change (type &rest args)
   (parse-change type args))
 
+(defvar *animation-defindex* 0)
+
 (defun parse-animation (beginning duration expression)
   (destructuring-bind (selector &rest changes) expression
     (let ((animation (gensym "ANIMATION")))
-      `(let ((,animation (make-instance 'animation :beginning ,beginning :duration ,duration :selector ',selector)))
+      `(let ((,animation (make-instance 'animation :beginning ,beginning
+                                                   :duration ,duration
+                                                   :selector ',selector
+                                                   :defindex (incf *animation-defindex*))))
          ,@(loop for change in changes
                  collect `(push (compile-change ,@change) (changes ,animation)))
          ,animation))))
