@@ -24,9 +24,11 @@
                (:file "change")
                (:file "parser")
                (:file "scene")
-               (:file "forms"))
+               (:file "forms")
+               (:file "documentation"))
   :depends-on (:lambda-fiddle
                :iterate
                :array-utils
                :trivial-garbage
-               :3d-vectors))
+               :3d-vectors
+               :documentation-utils))
