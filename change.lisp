@@ -170,7 +170,7 @@
    (to :initarg :to :accessor to)
    (ease-func :initarg :ease :accessor ease-func))
   (:default-initargs
-   :from 0
+   :from NIL
    :to 1
    :ease 'linear))
 
@@ -219,7 +219,7 @@
 (defclass increase-accessor-tween (constant-tween accessor-tween)
   ())
 
-(define-change-parser set (accessor &key (from 0) (to 1) (ease 'linear))
+(define-change-parser set (accessor &key from (to 1) (ease 'linear))
   `(make-instance 'range-accessor-tween :ease ',ease :from ,from :to ,to :accessor ',accessor))
 
 (define-change-parser increase (accessor &key (by 1) (for 1))
