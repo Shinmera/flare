@@ -18,6 +18,8 @@ See PROGRESSIONS")
 
 The definition should at all time keep track of the existing instances
 and update them in case the definition gets updated with new animations.
+When the animations of the definition are set, the animations are also
+set for each of the known instances of the definition.
 
 See ANIMATIONS
 See INSTANCES")
@@ -26,24 +28,37 @@ See INSTANCES")
     "The controller to animate an animatable with.
 
 Contains an entire sequence of animations and controls their behaviour
-and effects on the animatable. If the animations on the progression
-should be set, the following happens:
+and effects on the animatable. 
+
+When animations on the progression are set, the following happens:
 1. The current clock is saved.
 2. The progression is reset.
-   1. All past animations are pushed onto the present set.
-   2. The active animations are re-sorted to ensure consistency.
-   3. All the animations in the present set are reset in order.
-      1. Each change on the animation is reset, which should cause
-         whatever effect it might have had to be restored on the scene.
-         This is particularly tricky for operations as they need to
-         ensure the scene stays consistent.
-   4. All animations are pushed onto the future set.
-   5. The clock is fixed.
 3. The new animations are set to the future set and sorted, the other
    sets are cleared and reinitialised to match the appropriate length.
 4. The clock is set to the previously saved time.
 5. All applicable animations are put into effect in fast-forwarding by
    calling UPDATE on the progression.
+
+When a progression is reset, the following happens:
+1. All past animations are pushed onto the present set.
+2. The active animations are re-sorted to ensure consistency.
+3. All the animations in the present set are reset in order.
+4. All animations are pushed onto the future set.
+5. The clock is fixed.
+
+When a progression is updated, the following happens:
+1. New animations that are now active during the current clock are
+   shifted from the future set to the present set.
+2. When the progression has an animatable, each animation is ticked.
+   For this, the tick step must be calculated. If the duration of the
+   animation is infinite, the tick is T. If the animation exceeded its
+   duration, it is 1.0. Otherwise it is the linear interpolation
+   between the current clock time, the beginning of the animation, and
+   its duration.
+3. Animations that have exceeded their duration are shifted from the
+   present set onto the past set.
+4. If no present or future animations remain, the progression stops
+   itself.
 
 See CLOCK
 See DEFINITION
@@ -54,6 +69,17 @@ See FUTURE")
   
   (type animation
     "A representation for a single set of changes in a progression.
+
+When an animation is ticked, the following happens:
+1. The selector is called with the given animatable and a function
+2. Once the selector calls its function with a matching object,
+   each change in the animation is ticked with the matching object
+   as argument.
+
+When an animation is reset, each change in the animation is also
+reset. This should cause whatever effect it might have had to be
+restored on the scene. This is particularly tricky for operations
+as they need to ensure the scene stays consistent.
 
 See START
 See DURATION
