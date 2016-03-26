@@ -127,6 +127,7 @@
 (defun clear-queue (queue)
   (setf (left (tail queue)) (head queue)
         (right (head queue)) (tail queue))
+  (set-size 0 queue)
   queue)
 
 (defun in-queue-p (value queue)
