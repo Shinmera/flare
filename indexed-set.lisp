@@ -55,7 +55,7 @@
   (case type
     (indexed-set
      set)
-    (hash-set
+    (hash-table
      (let ((table (make-hash-table :test 'eql)))
        (do-queue (val set table)
          (setf (gethash val table) val))))
