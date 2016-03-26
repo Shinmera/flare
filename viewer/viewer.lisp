@@ -8,7 +8,8 @@
 (in-readtable :qtools)
 
 (define-widget viewer (QGLWidget)
-  ((scene :initform (make-instance 'scene))))
+  ((scene :initform (make-instance 'scene))
+   (font :initform (q+:make-qfont "Consolas" 20) :finalized T)))
 
 (define-initializer (viewer setup)
   (start scene)
@@ -33,10 +34,14 @@
   (with-finalizing ((painter (q+:make-qpainter viewer)))
     (setf (q+:background painter) (q+:make-qbrush (q+:make-qcolor 0 0 0)))
     (q+:erase-rect painter (q+:rect viewer))
-
+    (q+:save painter)
     (q+:translate painter (round (/ (q+:width viewer) 2)) (round (/ (q+:height viewer) 2)))
-    
-    (paint scene painter))
+    (paint scene painter)
+    (q+:restore painter)
+    (when (first (progressions (scene)))
+      (let ((clock (round (clock (first (progressions (scene)))))))
+        (setf (q+:font painter) font)
+        (q+:draw-text painter 20 (- (q+:height viewer) 20) (format NIL "T~2,'0d:~2,'0d" (floor (/ clock 60)) (mod clock 60))))))
   (stop-overriding))
 
 (defmethod call-with-translation (func (target (eql :gl)) vec)
@@ -47,6 +52,7 @@
 (defmethod call-with-translation (func (target qobject) vec)
   (q+:save target)
   (unwind-protect
-       (progn (q+:translate target (round (vx vec)) (round (vy vec)))
-              (funcall func))
+       (with-finalizing ((point (q+:make-qpointf (vx vec) (vy vec))))
+         (q+:translate target point)
+         (funcall func))
     (q+:restore target)))
