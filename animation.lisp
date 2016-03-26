@@ -240,7 +240,7 @@
 
 (defmethod copy ((animation animation))
   (make-instance 'animation
-                 :start (beginning animation)
+                 :beginning (beginning animation)
                  :duration (duration animation)
                  :selector (selector animation)
                  :changes (mapcar #'copy (changes animation))))
