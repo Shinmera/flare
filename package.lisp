@@ -67,16 +67,11 @@
    #:progression-instance
    #:animations
    #:instances
-   #:start
-   #:stop
-   #:reset
-   #:rewind
-   #:update
    #:present-animations
    #:past-animations
    #:future-animations
    #:animations
-   #:start
+   #:beginning
    #:duration
    #:changes
    #:selector
@@ -134,7 +129,6 @@
    #:clear
    #:enter
    #:leave
-   #:object
    #:name
    #:collective
    #:map-container-tree
