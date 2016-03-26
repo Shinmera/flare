@@ -115,6 +115,7 @@
   ())
 
 (defgeneric tween-value (tween object clock step))
+(defgeneric original-value (object tween))
 
 (defclass slot-tween (tween)
   ((slot :initarg :slot :accessor slot)

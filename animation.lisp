@@ -19,11 +19,13 @@
 
 (defgeneric animations (progression-definition))
 (defgeneric instances (progression-definition))
+(defgeneric progression-instance (progression-definition))
 
 (defgeneric present-animations (progression))
 (defgeneric past-animations (progression))
 (defgeneric future-animations (progression))
 
+(defgeneric copy (animation))
 (defgeneric beginning (animation))
 (defgeneric duration (animation))
 (defgeneric changes (animation))
