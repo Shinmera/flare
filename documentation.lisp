@@ -16,13 +16,34 @@ See PROGRESSIONS")
   (type progression-definition
     "Container class to instantiate a progression from.
 
+The definition should at all time keep track of the existing instances
+and update them in case the definition gets updated with new animations.
+
 See ANIMATIONS
 See INSTANCES")
   
   (type progression
     "The controller to animate an animatable with.
+
 Contains an entire sequence of animations and controls their behaviour
-and effects on the animatable.
+and effects on the animatable. If the animations on the progression
+should be set, the following happens:
+1. The current clock is saved.
+2. The progression is reset.
+   1. All past animations are pushed onto the present set.
+   2. The active animations are re-sorted to ensure consistency.
+   3. All the animations in the present set are reset in order.
+      1. Each change on the animation is reset, which should cause
+         whatever effect it might have had to be restored on the scene.
+         This is particularly tricky for operations as they need to
+         ensure the scene stays consistent.
+   4. All animations are pushed onto the future set.
+   5. The clock is fixed.
+3. The new animations are set to the future set and sorted, the other
+   sets are cleared and reinitialised to match the appropriate length.
+4. The clock is set to the previously saved time.
+5. All applicable animations are put into effect in fast-forwarding by
+   calling UPDATE on the progression.
 
 See CLOCK
 See DEFINITION
@@ -41,6 +62,9 @@ See CHANGES")
   
   (type change
     "Container for a single change or tween within an animation.")
+
+  (variable *resetting*
+    "A kludge variable used to prevent recursion upon a progression reset.")
 
   (function progressions
     "Accessor to the list of progressions that act upon this.
@@ -69,6 +93,22 @@ See ANIMATABLE")
     "Accessor to all progression instances that were created from this definition.
 
 See PROGRESSION-DEFINITION")
+
+  (function progression-instance
+    "Constructs a new progression instance using the given definition.
+
+See PROGRESSION
+See PROGRESSION-DEFINITION")
+
+  (function definition
+    "Accessor to the progression's progression-definition
+
+See PROGRESSION")
+
+  (function animatable
+    "Accessor to the animatable the progression is acting upon.
+
+See PROGRESSION")
   
   (function present-animations
     "Accessor to the vector of currently active animations within the clock time.
@@ -84,6 +124,26 @@ See PROGRESSION")
     "Accessor to the vector of animations that have yet to become activated after the current clock time.
 
 See PROGRESSION")
+
+  (function copy-animations
+    "Create a copy of the given sequence of animations.
+
+Calls COPY on each animation.")
+
+  (function shift-array-elements
+    "Moves elements from FROM to TO if they pass TEST.
+
+Elements are actively removed from FROM and inserted into TO
+
+See ARRAY-UTILS:VECTOR-POP-POSITION
+See CL:VECTOR-PUSH")
+
+  (function copy
+    "Copy the given object as appropriate for its type.
+Only useful for copying ANIMATIONs and CHANGEs
+
+See ANIMATION
+See CHAGNE")
 
   (function beginning
     "Accessor to the beginning (in seconds) at which the animation should start.
@@ -112,7 +172,25 @@ See COMPILE-SELECTOR")
 
 See ANIMATION
 See ANIMATABLE
-See CLOCK"))
+See CLOCK")
+
+  (function format-progression
+    "Print the progression in a usable manner to inspect its current state.
+Useful for debugging
+
+See PROGRESSION")
+
+  (function simulate-progression
+    "Simulates running the progression-definition.
+
+Creates a new scene instance and progression instance,
+starts both of those and then updates the scene, printing
+the progression each 0.7 seconds.
+
+See SCENE
+See PROGRESSION-INSTANCE
+See UPDATE
+See FORMAT-PROGRESSION"))
 
 ;; change.lisp
 (docs:define-docs
@@ -192,6 +270,11 @@ See CHANGE")
 
   (function tween-value
     "Computes the currently applicable value for the given tween, object, clock, and stepping time.
+
+See TWEEN")
+
+  (function original-value
+    "Returns the original value this object might have had before the given tween changed anything.
 
 See TWEEN")
 
@@ -295,6 +378,14 @@ See SLOT-TWEEN")
 Creation: (set accessor :ease easing-func :from from :to to)
 
 See RANGE-TWEEN
+See ACCESSOR-TWEEN")
+
+  (type increase-accessor-tween
+    "Combination of a constant-tween and an accessor-tween.
+
+Creation: (increase accessor :by by :for for)
+
+See CONSTANT-TWEEN
 See ACCESSOR-TWEEN")
 
   (type call-slot-tween
@@ -463,6 +554,21 @@ See OBJECTS
 See INSERT
 See WITHDRAW")
 
+  (function map-container-tree
+    "Recursively maps FUNCTION over all descendants of CONTAINER.
+
+See CONTAINER")
+
+  (function do-container-tree
+    "Iterates over all descendants of CONTAINER
+
+See MAP-CONTAINER-TREE")
+
+  (function print-container-tree
+    "Prints the entire CONTAINER tree hierarchy nicely to the given STREAM.
+
+See CONTAINER")
+
   (type collective
     "A collective is a container that also has a name-map to easily reach objects.
 This includes objects that may be in containers further down the hierarchy.
@@ -481,6 +587,9 @@ See CONTAINER")
     "A hash table associating names to easing functions.
 
 Each easing function takes a single float value between 0 and 1 that should be eased according to a curve.")
+
+  (variable *ease-docs*
+    "A hash table associating names to easing function docstrings.")
 
   (function easing
     "Accessor to the easing function associated with the given name, if any.
@@ -734,6 +843,11 @@ See UP
 See TANGENT
 See ANGLE
 See SPACING")
+
+  (function tangent
+    "The tangent vector between the UP and ORIENTATION.
+
+See ARC")
 
   (type ring
     "Formation to represent an equidistant distribution of entities along a ring.
