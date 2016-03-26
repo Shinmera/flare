@@ -87,7 +87,7 @@
 
 (defmethod (setf animations) (animations (definition progression-definition))
   (setf (slot-value definition 'animations)
-        (ensure-sorted animations #'< :key #'start)))
+        (ensure-sorted animations #'< :key #'beginning)))
 
 (defmethod (setf animations) :after (val (definition progression-definition))
   ;; Take the chance to clear out empty references.
@@ -130,7 +130,7 @@
     (reset progression)
     ;; Unload new changes
     (setf (future-animations progression)
-          (ensure-sorted (copy-animations animations) #'< :key #'start))
+          (ensure-sorted (copy-animations animations) #'< :key #'beginning))
     (setf (present-animations progression)
           (make-array (length (future-animations progression)) :fill-pointer 0))
     (setf (past-animations progression)
@@ -155,7 +155,7 @@
                           (present-animations progression)))
     ;; Resort to ascertain order of activation
     (setf (present-animations progression)
-          (ensure-sorted (present-animations progression) #'> :key #'start))
+          (ensure-sorted (present-animations progression) #'> :key #'beginning))
     ;; Reset in order.
     (loop for animation across (present-animations progression)
           do (reset animation))
@@ -220,7 +220,7 @@
    (selector :initarg :selector :accessor selector)
    (changes :initarg :changes :accessor changes))
   (:default-initargs
-   :start (error "BEGINNING needed.")
+   :beginning (error "BEGINNING needed.")
    :duration (error "DURATION needed.")
    :selector T
    :changes ()))
