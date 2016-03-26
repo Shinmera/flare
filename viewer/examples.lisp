@@ -68,7 +68,7 @@
 (defclass spark (particle sized-entity colored-entity)
   ()
   (:default-initargs
-   :size 50))
+   :size 20))
 
 (defmethod paint ((spark spark) target)
   (let ((size (round (size spark))))
@@ -92,3 +92,28 @@
 (define-viewer-progression pendulum
   0 0 (T (enter ring :size 100 :children (sphere :size 10)))
   0 T (> (calc angle :to (+ 90 (* (sin (* clock 4)) 40)))))
+
+(define-viewer-progression show
+   0  0 (T (enter ring :name :ground :size 130 :children (spark :n 5))
+           (enter ring :name :phase1 :size 120 :children (spark :n 10)))
+   0 60 (:ground (increase angle :by 3))
+   0  5 (:phase1 (increase angle :by 8))
+   0 10 (:phase1 (set size :to 300 :ease quad-in-out))
+   5 15 (:phase1 (increase angle :by 5))
+  10 15 (:phase1 (set visibility :to 0 :ease linear))
+  15 15 (:phase1 (leave))
+  16 16 (T (enter ring :name :phase2 :size 120 :children (spark :n 7)))
+  16 20 (:phase2 (set size :to 300 :ease quad-in-out))
+  16 20 (:phase2 (set angle :to -180 :ease quart-in))
+  20 60 (:phase2 (increase angle :by -3))
+  20 20 (T (enter ring :name :phase3 :size 120 :children (ring :size 20 :n 5 :children (spark :n 2))))
+  20 50 (:phase3 (increase angle :by 2))
+  20 50 ((:phase3 >) (increase angle :by 3))
+  20 25 (:phase3 (set size :to 250 :ease quad-in-out))
+  25 30 ((:phase3 >) (set size :to 100 :ease quad-in-out))
+  30 40 (:phase3 (set size :to 400 :ease quad-in-out))
+  40 50 (:phase3 (set size :to 120 :ease quad-in-out))
+  48 50 (:phase3 (set visibility :to 0))
+  50 50 (:phase3 (leave))
+  50 60 (:phase2 (set size :to 120 :ease expo-in))
+  60 60 ((T >) (leave)))
