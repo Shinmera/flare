@@ -137,10 +137,12 @@
   (remhash name *progressions*))
 
 (defmacro define-progression (name &body intervals)
-  `(setf (animations (or (progression-definition ',name)
-                         (setf (progression-definition ',name)
-                               (make-instance 'progression-definition))))
-         (compile-animations ,@intervals)))
+  `(progn
+     (setf (animations (or (progression-definition ',name)
+                           (setf (progression-definition ',name)
+                                 (make-instance 'progression-definition))))
+           (compile-animations ,@intervals))
+     ',name))
 
 (defmethod progression-instance ((name symbol))
   (progression-instance (progression-definition name)))
