@@ -226,7 +226,7 @@ See FORMAT-PROGRESSION"))
   (function define-change-parser
     "Define a parser for the given type of change.")
 
-  (fucntion copy
+  (function copy
     "Create a copy of the given item in a way that is deemed appropriate for it.
 Mostly used for copying changes.")
 
