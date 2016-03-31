@@ -74,4 +74,4 @@ Here are some demo videos made during various points in the development of Flare
 
 <a href="http://www.youtube.com/watch?v=9J8UMLhcaik" target="_blank"><img src="http://img.youtube.com/vi/9J8UMLhcaik/0.jpg" alt="Youtube Video" width="240" height="180" border="10" /></a>
 
-<a href="http://www.youtube.com/watch?v=So3TyntvtHM" target="_blank"><img src="http://img.youtube.com/vi/So3TyntvtHM/0.jpg" alt="Youtube Video" width="240" height="180" border="10" /></a>
+<a href="http://www.youtube.com/watch?v=4OJZF8hLsVk" target="_blank"><img src="http://img.youtube.com/vi/4OJZF8hLsVk/0.jpg" alt="Youtube Video" width="240" height="180" border="10" /></a>
