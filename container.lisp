@@ -89,6 +89,10 @@ Tree:"
    :name NIL
    :collective NIL))
 
+(defmethod print-object ((unit unit) stream)
+  (print-unreadable-object (unit stream :type T)
+    (format stream "~s" (name unit))))
+
 (defmethod (setf name) :before (name (unit unit))
   (when (collective unit)
     (when (name unit)
