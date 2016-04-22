@@ -79,8 +79,9 @@ Tree:"
 (defmethod unit (name (collective collective))
   (gethash name (name-map collective)))
 
-(defmethod clear ((collective collective))
-  (clear-set (objects collective)))
+(defmethod clear :after ((collective collective))
+  (loop for k being the hash-keys of (name-map collective)
+        do (remhash k (name-map collective))))
 
 (defclass unit ()
   ((name :initarg :name :accessor name)
