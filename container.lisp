@@ -105,16 +105,14 @@ Tree:"
 (defmethod enter ((unit unit) (container container))
   (insert container unit))
 
-(defmethod enter ((unit unit) (collective collective))
-  (call-next-method)
+(defmethod enter :after ((unit unit) (collective collective))
   (setf (collective unit) collective)
   (setf (gethash (name unit) (name-map collective)) unit))
 
 (defmethod leave ((unit unit) (container container))
   (withdraw container unit))
 
-(defmethod leave ((unit unit) (collective collective))
-  (call-next-method)
+(defmethod leave :after ((unit unit) (collective collective))
   (setf (collective unit) NIL)
   (remhash (name unit) (name-map collective)))
 
