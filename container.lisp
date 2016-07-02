@@ -74,7 +74,7 @@ Tree:"
   ((name-map :initform (make-hash-table :test 'eql) :accessor name-map)))
 
 (defmethod units ((collective collective))
-  (objects collective))
+  (flare-indexed-set:coerce-set (objects collective) 'list))
 
 (defmethod unit (name (collective collective))
   (gethash name (name-map collective)))

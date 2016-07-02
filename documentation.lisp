@@ -534,10 +534,9 @@ See CONTAINER")
 See COLLECTIVE")
   
   (function units
-    "Accessor to the indexed set of objects in the collective.
+    "Returns a fresh list of all units in the collective.
 
 See UNIT
-See INDEXED-SET
 See COLLECTIVE")
   
   (function unit
