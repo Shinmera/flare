@@ -24,6 +24,12 @@
         (right (left cell)) (right cell))
   cell)
 
+(defmethod print-object ((cell cell) stream)
+  (if *print-readably*
+      (call-next-method)
+      (print-unreadable-object (cell stream :type T)
+        (format stream "~s" (value cell)))))
+
 (defclass queue ()
   ((head :initform (make-cell NIL NIL NIL) :accessor head)
    (tail :initform (make-cell NIL NIL NIL) :accessor tail)
@@ -43,29 +49,41 @@
 (defun make-queue ()
   (make-instance 'queue))
 
+;; Iteration
+
+(defclass queue-iterator (iterator)
+  ())
+
+(defmethod has-more ((iterator queue-iterator))
+  (not (eql (next (object iterator)) (object iterator))))
+
+(defmethod (setf current) (value (iterator queue-iterator))
+  (setf (value (object iterator)) value))
+
+(defmethod next ((iterator queue-iterator))
+  (value (setf (object iterator) (next (object iterator)))))
+
+(defmethod make-iterator ((queue queue) &key)
+  (make-instance 'queue-iterator :object (head iterator)))
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defmacro-driver (FOR var ON-QUEUE q)
-    (let ((queue (gensym "QUEUE"))
-          (tail (gensym "TAIL"))
-          (kwd (if generate 'generate 'for)))
-      `(progn
-         (with ,queue = ,q)
-         (with ,tail = (tail ,queue))
-         (initially (setf ,var (head ,queue)))
-         (,kwd ,var next (right ,var))
-         (until (eq ,var ,tail)))))
-  
-  (defmacro-driver (FOR var IN-QUEUE q)
-    (let ((kwd (if generate 'generate 'for))
-          (cell (gensym "CELL")))
-      `(progn
-         (,kwd ,cell on-queue ,q)
-         (,kwd ,var next (value ,cell))))))
+  (define-value-binding in-queue (var queue &aux (current (head queue)) (tail (tail queue)))
+    (let ((next (gensym "NEXT")))
+      `(let ((,next (right ,current)))
+         (if (eql ,next ,tail)
+             (end-for)
+             (update ,var (value (setf ,current ,next)))))))
+
+  (define-value-binding of-queue (var queue &aux (current (head queue)) (tail (tail queue)))
+    (let ((next (gensym "NEXT")))
+      `(let ((,next (right ,current)))
+         (if (eql ,next ,tail)
+             (end-for)
+             (setf ,var (setf ,current ,next)))))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defun map-queue (function queue)
-    (iterate
-      (for var in-queue queue)
+    (for ((var in-queue queue))
       (funcall function var))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
@@ -92,8 +110,7 @@
         (values (value cell) T))))
 
 (defun queue-remove (value queue)
-  (iterate
-    (for cell on-queue queue)
+  (for ((cell of-queue queue))
     (when (eql (value cell) value)
       (cell-remove cell)
       (return T))))
@@ -110,17 +127,15 @@
           (not (eql (left (tail queue)) (head queue)))))
 
 (defun queue-value-at (n queue)
-  (iterate
-    (for current in-queue queue)
-    (for i from 0)
+  (for ((current in-queue queue)
+        (i from 0))
     (when (= i n)
       (return (values current T))))
   (values NIL NIL))
 
 (defun queue-index-of (value queue)
-  (iterate
-    (for current in-queue queue)
-    (for i from 0)
+  (for ((current in-queue queue)
+        (i from 0))
     (when (eql current value)
       (return i))))
 
@@ -140,12 +155,12 @@
     (queue
      queue)
     (list
-     (iterate (for val in-queue queue)
-       (collect val)))
+     (for ((val in-queue queue)
+           (list collecting val))))
     (vector
      (let ((vec (make-array (size queue))))
-       (iterate (for val in-queue queue)
-         (for i from 0)
+       (for ((val in-queue queue)
+             (i from 0))
          (setf (aref vec i) val))
        vec))
     (sequence

@@ -27,8 +27,8 @@
                (:file "forms")
                (:file "documentation"))
   :depends-on (:lambda-fiddle
-               :iterate
                :array-utils
                :trivial-garbage
                :3d-vectors
-               :documentation-utils))
+               :documentation-utils
+               :for))

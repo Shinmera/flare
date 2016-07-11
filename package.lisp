@@ -8,7 +8,7 @@
 
 (defpackage #:flare-queue
   (:nicknames #:org.shirakumo.flare.queue)
-  (:use #:cl #:iterate)
+  (:use #:cl #:for)
   (:export
    #:queue
    #:make-queue
@@ -29,7 +29,7 @@
 
 (defpackage #:flare-indexed-set
   (:nicknames #:org.shirakumo.flare.indexed-set)
-  (:use #:cl #:iterate #:org.shirakumo.flare.queue)
+  (:use #:cl #:org.shirakumo.flare.queue)
   (:shadow #:set)
   (:export
    #:indexed-set
@@ -51,7 +51,7 @@
 
 (defpackage #:flare
   (:nicknames #:org.shirakumo.flare)
-  (:use #:cl #:iterate #:3d-vectors #:flare-queue #:flare-indexed-set)
+  (:use #:cl #:3d-vectors #:flare-queue #:flare-indexed-set)
   (:shadow #:leave)
   ;; animation.lisp
   (:export

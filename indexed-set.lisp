@@ -35,12 +35,6 @@
           (T
            (values set NIL)))))
 
-(defmacro-driver (FOR var ON-SET set)
-  `(,(if generate 'generate 'for) ,var on-queue ,set))
-
-(defmacro-driver (FOR var IN-SET set)
-  `(,(if generate 'generate 'for) ,var in-queue ,set))
-
 (setf (fdefinition 'set-size) (fdefinition 'queue-size))
 (setf (fdefinition 'set-first) (fdefinition 'queue-first))
 (setf (fdefinition 'set-last) (fdefinition 'queue-last))
