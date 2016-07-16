@@ -121,24 +121,22 @@
    #:calc)
   ;; container.lisp
   (:export
+   #:name
+   #:enter
+   #:leave
+   #:clear
    #:objects
-   #:insert
-   #:withdraw
    #:name-map
    #:units
    #:unit
-   #:clear
-   #:enter
-   #:leave
-   #:name
    #:collective
+   #:unit
+   #:container
    #:map-container-tree
    #:do-container-tree
    #:print-container-tree
-
-   #:container
    #:collective
-   #:unit)
+   #:container-unit)
   ;; easings.lisp
   (:export
    #:easing
@@ -209,5 +207,4 @@
   (:export
    #:scene
    #:location
-   #:scene-unit
    #:entity))

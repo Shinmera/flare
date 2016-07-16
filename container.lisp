@@ -6,26 +6,72 @@
 
 (in-package #:org.shirakumo.flare)
 
+(defgeneric name (unit))
+(defgeneric enter (unit collective))
+(defgeneric leave (unit collective))
 (defgeneric clear (container))
 (defgeneric objects (container))
-(defgeneric insert (container &rest objects))
-(defgeneric withdraw (container &rest objects))
 (defgeneric name-map (collective))
 (defgeneric units (collective))
 (defgeneric unit (name collective))
-(defgeneric enter (unit collective))
-(defgeneric leave (unit collective))
-(defgeneric name (unit))
-(defgeneric collective (unit))
+(defgeneric collective (container-unit))
 
 (define-self-returning-method clear (container))
-(define-self-returning-method insert (container &rest objects))
-(define-self-returning-method withdraw (container &rest objects))
 (define-self-returning-method enter (unit collective))
 (define-self-returning-method leave (unit collective))
 
+(defclass unit ()
+  ((name :initarg :name :reader name))
+  (:default-initargs :name (gensym "")))
+
+(defmethod initialize-instance :before ((unit unit) &key name)
+  (check-type name (and symbol (not null))))
+
+(defmethod print-object ((unit unit) stream)
+  (print-unreadable-object (unit stream :type T)
+    (format stream "~a" (name unit))))
+
 (defclass container ()
-  ((objects :initform (make-indexed-set) :accessor objects)))
+  ((objects :initarg :objects :accessor objects))
+  (:default-initargs :objects (make-indexed-set)))
+
+(defmethod paint ((container container))
+  (for:for ((item over container))
+    (paint item)))
+
+(defmethod update ((container container))
+  (for:for ((item over container))
+    (update item)))
+
+(defmethod enter (thing (container container))
+  (set-add thing (objects container)))
+
+(defmethod leave (thing (container container))
+  (set-remove thing (objects container)))
+
+(defmethod clear ((container container))
+  (for:for ((item over container))
+    (leave item container)))
+
+(defmethod for:make-iterator ((container container) &rest args)
+  (apply #'for:make-iterator (objects container) args))
+
+(defun map-container-tree (function container)
+  (for:for ((item over container))
+    (funcall function item)
+    (when (typep item 'container)
+      (map-container-tree function item))))
+
+(defmacro do-container-tree ((item container &optional return) &body body)
+  `(progn (map-container-tree (lambda (,item) ,@body) ,container)
+          ,return))
+
+(defun print-container-tree (container &optional (depth 0))
+  (format T "~&~v@{ ~}+ ~a~%" depth container)
+  (for:for ((item over container))
+    (if (typep item 'container)
+        (visualize-container item (+ depth 2))
+        (format T "~&~v@{ ~}| ~a~%" (+ depth 2) item))))
 
 (defmethod describe-object ((container container) stream)
   (format stream "~a
@@ -36,89 +82,74 @@ Tree:"
   (print-container-tree container stream)
   (format stream "~&"))
 
-(defun map-container-tree (function container)
-  (labels ((traverse (container)
-             (when (typep container 'container)
-               (do-set (container (objects container))
-                 (funcall function container)
-                 (traverse container)))))
-    (traverse container)))
-
-(defmacro do-container-tree ((object container) &body body)
-  `(block NIL (map-container-tree (lambda (,object) ,@body) ,container)))
-
-(defun print-container-tree (container &optional (stream T))
-  (labels ((print-container (container level)
-             (format stream "~&~a ~a~%" (make-string (* level 2) :initial-element #\ ) container)
-             (when (typep container 'container)
-               (do-set (container (objects container))
-                 (print-container container (1+ level))))))
-    (print-container container 0)))
-
-(defmethod update ((container container))
-  (do-set (obj (objects container))
-    (update obj)))
-
-(defmethod insert ((container container) &rest objects)
-  (dolist (obj objects)
-    (set-add obj (objects container))))
-
-(defmethod withdraw ((container container) &rest objects)
-  (dolist (obj objects)
-    (set-remove obj (objects container))))
-
-(defmethod clear ((container container))
-  (clear-set (objects container)))
-
 (defclass collective (container)
-  ((name-map :initform (make-hash-table :test 'eql) :accessor name-map)))
+  ((name-map :initform (make-hash-table :test 'eq) :accessor name-map)))
 
-(defmethod units ((collective collective))
-  (flare-indexed-set:coerce-set (objects collective) 'list))
+(defmethod print-object ((collective collective) stream)
+  (print-unreadable-object (collective stream :type T :identity T)
+    (format stream "~a items" (hash-table-count (name-map collective)))))
 
-(defmethod unit (name (collective collective))
-  (gethash name (name-map collective)))
-
-(defmethod clear ((collective collective))
-  (dolist (unit (coerce-set (objects collective) 'list))
-    (leave unit collective))
-  (clrhash (name-map collective)))
-
-(defclass unit ()
-  ((name :initarg :name :accessor name)
-   (collective :initarg :collective :accessor collective))
-  (:default-initargs
-   :name NIL
-   :collective NIL))
-
-(defmethod print-object ((unit unit) stream)
-  (print-unreadable-object (unit stream :type T)
-    (format stream "~s" (name unit))))
-
-(defmethod (setf name) :before (name (unit unit))
-  (when (collective unit)
-    (when (name unit)
-      (remhash (name unit) (name-map (collective unit))))
-    (when name
-      (setf (gethash name (name-map (collective unit))) unit))))
-
-(defmethod enter ((unit unit) (container container))
-  (insert container unit))
-
-(defmethod enter :after ((unit unit) (collective collective))
-  (setf (collective unit) collective)
+(defmethod register ((unit unit) (collective collective))
   (setf (gethash (name unit) (name-map collective)) unit))
 
-(defmethod leave ((unit unit) (container container))
-  (withdraw container unit))
-
-(defmethod leave :after ((unit unit) (collective collective))
-  (setf (collective unit) NIL)
+(defmethod deregister ((unit unit) (collective collective))
   (remhash (name unit) (name-map collective)))
 
-(defmethod leave ((unit unit) (collective (eql T)))
-  (when (collective unit)
-    (leave unit (collective unit))))
+(defmethod enter :after ((unit unit) (collective collective))
+  (register unit collective))
 
-(defmethod unit (name (unit unit))
-  (unit name (collective unit)))
+(defmethod leave :after ((unit unit) (collective collective))
+  (deregister unit collective))
+
+(defmethod units ((collective collective))
+  (let ((units ()))
+    (do-container-tree (item collective units)
+      (push item units))))
+
+(defmethod unit ((name symbol) (collective collective))
+  (gethash name (name-map collective)))
+
+(defclass container-unit (container unit)
+  ((collective :initform NIL :accessor collective)))
+
+(defmethod print-object ((unit container-unit) stream)
+  (print-unreadable-object (unit stream :type T)
+    (format stream "~a => ~a" (name unit) (collective unit))))
+
+(defmethod initialize-instance :after ((unit container-unit) &key collective)
+  (setf (collective unit) collective))
+
+(defmethod (setf collective) :before (collective (unit container-unit))
+  (let ((collective (collective unit))))
+  (when collective
+    (do-container-tree (item collective)
+      (deregister item collective))))
+
+(defmethod (setf collective) :after ((collective collective) (unit container-unit))
+  (when collective
+    (do-container-tree (item collective)
+      (register item collective))))
+
+(defmethod enter :before ((unit container-unit) (collective collective))
+  (when (collective unit)
+    (error "~a is already contained in ~a, cannot enter it into ~a."
+           unit (collective unit) collective)))
+
+(defmethod leave :before ((unit container-unit) (collective collective))
+  (unless (eql (collective unit) collective)
+    (error "~a is contained in ~a, cannot leave it from ~a."
+           unit (collective unit) collective)))
+
+(defmethod enter :after ((unit unit) (container container-unit))
+  (when (collective container)
+    (register unit (collective container))))
+
+(defmethod leave :after ((unit unit) (container container-unit))
+  (when (collective container)
+    (deregister unit (collective container))))
+
+(defmethod register :after ((unit container-unit) (collective collective))
+  (setf (collective unit) collective))
+
+(defmethod deregister :after ((unit container-unit) (collective collective))
+  (setf (collective unit) NIL))

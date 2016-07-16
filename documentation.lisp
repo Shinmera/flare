@@ -512,24 +512,31 @@ See CLOCK"))
 
 ;; container.lisp
 (docs:define-docs
+  (function name
+    "Reader to the name of the unit.
+
+See UNIT")
+  
+  (function enter
+    "Adds the given UNIT into the CONTAINER.
+
+Returns the unit given.
+
+See UNIT
+See CONTAINER")
+  
+  (function leave
+    "Removes the given UNIT from the CONTAINER.
+
+Returns the unit given.
+
+See UNIT
+See CONTAINER")
+
   (function clear
-    "Removes all objects from the container.
+    "Removes all objects from the CONTAINER.
 
 Returns the object given.
-
-See CONTAINER")
-  
-  (function insert
-    "Insert the OBJECTs into the CONTAINER.
-
-Returns the container given.
-
-See CONTAINER")
-  
-  (function withdraw
-    "Removes the OBJECTs from the CONTAINER.
-
-Returns the container given.
 
 See CONTAINER")
   
@@ -539,7 +546,7 @@ See CONTAINER")
 See COLLECTIVE")
   
   (function units
-    "Returns a fresh list of all units in the collective.
+    "Returns a fresh list of all units in the collective tree.
 
 See UNIT
 See COLLECTIVE")
@@ -550,39 +557,21 @@ See COLLECTIVE")
 See UNIT
 See COLLECTIVE")
   
-  (function enter
-    "Adds the given UNIT into the COLLECTIVE.
-
-Returns the unit given.
-
-See UNIT
-See COLLECTIVE")
-  
-  (function leave
-    "Removes the given UNIT from the COLLECTIVE.
-
-Returns the unit given.
-
-See UNIT
-See COLLECTIVE")
-  
-  (function name
-    "Accessor to the name of the unit.
-
-See UNIT")
-  
   (function collective
-    "Accessor to the collective the unit is in.
+    "Accessor to the collective the container-unit is in.
 
-See UNIT")
+See CONTAINER-UNIT")
 
   (type container
-    "A simple class that can hold a set of objects in an indexed-set.
+    "A simple class that can hold a set of objects.
 
 See CLEAR
 See OBJECTS
-See INSERT
-See WITHDRAW")
+See ENTER
+See LEAVE
+See MAP-CONTAINER-TREE
+See DO-CONTAINER-TREE
+See PRINT-CONTAINER-TREE")
 
   (function map-container-tree
     "Recursively maps FUNCTION over all descendants of CONTAINER.
@@ -601,9 +590,15 @@ See CONTAINER")
 
   (type collective
     "A collective is a container that also has a name-map to easily reach objects.
-This includes objects that may be in containers further down the hierarchy.
+This includes all objects in the container tree.
 
 See CONTAINER")
+
+  (type container-unit
+    "A container unit is a unit that can contain further objects.
+
+See CONTAINER
+See UNIT")
 
   (type unit
     "A unit is an object with a name and a collective."))
@@ -1066,17 +1061,10 @@ See CLOCK
 See PAINTABLE
 See ANIMATABLE")
 
-  (type scene-unit
-    "A unit within a scene.
-
-See SCENE
-See UNIT")
-
   (type entity
     "A paintable and animatable entity within a scene.
 
-See COLLECTIVE
-See SCENE-UNIT
+See CONTAINER-UNIT
 See PAINTABLE
 See ANIMATABLE
 See LOCATION"))

@@ -74,7 +74,7 @@
          (cond ((string= constraint ">")
                 (lambda (container)
                   (let ((*i* 0))
-                    (do-set (unit (objects container))
+                    (for:for ((unit over container))
                       (funcall next unit)
                       (incf *i*)))))
                ((string= constraint "*")
