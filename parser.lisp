@@ -59,8 +59,8 @@
 
 (defun compile-constraint (constraint next)
   (cond ((keywordp constraint)
-         (lambda (collective)
-           (let ((unit (unit constraint collective)))
+         (lambda (scene-graph)
+           (let ((unit (unit constraint scene-graph)))
              (when unit
                (funcall next unit)))))
         ((integerp constraint)
@@ -104,9 +104,9 @@
                       (funcall *mapper* set))
         for constraint in (reverse selector)
         do (setf func (compile-constraint constraint func))
-        finally (return (lambda (collective function)
+        finally (return (lambda (scene-graph function)
                           (let ((*mapper* function))
-                            (funcall func collective))))))
+                            (funcall func scene-graph))))))
 
 (defmacro compile-change (type &rest args)
   (parse-change type args))

@@ -55,15 +55,14 @@
 
 (defmethod reset ((op enter-operation))
   (loop for object being the hash-keys of (objects op)
-        for collective being the hash-values of (objects op)
-        do (leave object collective)
+        for container being the hash-values of (objects op)
+        do (leave object container)
            (remhash object (objects op))))
 
 (defmethod tick ((op enter-operation) target clock step)
   (flet ((register (object)
-           (unless (collective object)
-             (setf (gethash object (objects op)) target)
-             (enter object target))))
+           (setf (gethash object (objects op)) target)
+           (enter object target)))
     (let ((obj (funcall (creator op))))
       (if (listp obj)
           (mapc #'register obj)
@@ -99,13 +98,13 @@
 
 (defmethod reset ((op leave-operation))
   (loop for object being the hash-keys of (objects op)
-        for collective being the hash-values of (objects op)
-        do (enter object collective)
+        for container being the hash-values of (objects op)
+        do (enter object container)
            (remhash object (objects op))))
 
 (defmethod tick ((op leave-operation) object clock step)
-  (when (collective object)
-    (setf (gethash object (objects op)) (collective object))
+  (when (scene-graph object)
+    (setf (gethash object (objects op)) (scene-graph object))
     (leave object T)))
 
 (define-change-parser leave ()

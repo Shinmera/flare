@@ -541,24 +541,24 @@ Returns the object given.
 See CONTAINER")
   
   (function name-map
-    "Accessor to the name table of the collective.
+    "Accessor to the name table of the scene-graph.
 
-See COLLECTIVE")
+See SCENE-GRAPH")
   
   (function units
-    "Returns a fresh list of all units in the collective tree.
+    "Returns a fresh list of all units in the scene-graph tree.
 
 See UNIT
-See COLLECTIVE")
+See SCENE-GRAPH")
   
   (function unit
-    "Accessor to a given, named unit in the collective.
+    "Accessor to a given, named unit in the scene-graph.
 
 See UNIT
-See COLLECTIVE")
+See SCENE-GRAPH")
   
-  (function collective
-    "Accessor to the collective the container-unit is in.
+  (function scene-graph
+    "Accessor to the scene-graph the container-unit is in.
 
 See CONTAINER-UNIT")
 
@@ -588,8 +588,8 @@ See MAP-CONTAINER-TREE")
 
 See CONTAINER")
 
-  (type collective
-    "A collective is a container that also has a name-map to easily reach objects.
+  (type scene-graph
+    "A scene-graph is a container that also has a name-map to easily reach objects.
 This includes all objects in the container tree.
 
 See CONTAINER")
@@ -601,7 +601,7 @@ See CONTAINER
 See UNIT")
 
   (type unit
-    "A unit is an object with a name and a collective."))
+    "A unit is an object with a name."))
 
 ;; easings.lisp
 (docs:define-documentation-test easing (symb)
@@ -941,8 +941,8 @@ See DEFINE-PROGRESSION")
     "Compile a selector constraint into a function.
 
 constraint ::= name | nth | this | children | everything | function | list
-name       --- A keyword naming a unit in the collective
-nth        --- An integer specifying the nth unit in the collective
+name       --- A keyword naming a unit in the scene-graph
+nth        --- An integer specifying the nth unit in the scene-graph
 this       --- The symbol T meaning the current object
 children   --- A symbol with name \">\" specifying all children of the current object
 everything --- A symbol with name \"*\" specifying all descendants as per DO-CONTAINER-TREE
@@ -960,8 +960,8 @@ as many times as it wants.")
 
 selector ::= constraint | (constraint*)
 
-Returned is a function of two arguments, a collective and a function.
-The collective is the root of the scene graph that is selected on and
+Returned is a function of two arguments, a scene-graph and a function.
+The scene-graph is the root of the scene graph that is selected on and
 each unit within it that the selector is matching on results in a call
 to function with that unit as its argument.
 
@@ -1031,11 +1031,11 @@ An example definition follows:
   20 (:ring (leave)))
 
 At time 0, a ring is created with name :ring and 20 bullets of size 2 as
-its children. It is entered into the collective. Then from time 0 to 8,
+its children. It is entered into the scene-graph. Then from time 0 to 8,
 the ring's size is increased by 2 every second. Simultaneously from time
 0 to 20 the ring's angle is increased to 1000, eased by the quad-in-out
 interpolation and the ring's children (the 20 bullets) increase in size
-to 50. At time 20, the ring is removed from the collective again.
+to 50. At time 20, the ring is removed from the scene-graph again.
 
 See PROGRESSION-DEFINITION
 See COMPILE-ANIMATIONS"))
@@ -1056,7 +1056,7 @@ See ENTITY")
   (type scene
     "Container class to represent the top-level scene that should be drawn and managed.
 
-See COLLECTIVE
+See SCENE-GRAPH
 See CLOCK
 See PAINTABLE
 See ANIMATABLE")

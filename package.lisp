@@ -129,13 +129,13 @@
    #:name-map
    #:units
    #:unit
-   #:collective
+   #:scene-graph
    #:unit
    #:container
    #:map-container-tree
    #:do-container-tree
    #:print-container-tree
-   #:collective
+   #:scene-graph
    #:container-unit)
   ;; easings.lisp
   (:export

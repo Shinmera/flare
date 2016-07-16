@@ -8,7 +8,7 @@
 
 (defgeneric location (entity))
 
-(defclass scene (collective clock paintable animatable)
+(defclass scene (scene-graph clock paintable animatable)
   ())
 
 (defmethod start :after ((scene scene))

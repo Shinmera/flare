@@ -37,10 +37,8 @@ An example implementation of all this including some nifty show progressions can
 ## Internals
 Flare must handle two parts-- one the animation itself, and two the objects in the scene.
 
-### Scene Objects
-I'll mention the scene organisation first as it is both simpler and necessary to grasp to understand how animations work. Ok, so at the basis of all of this is the idea of `container`s and `unit`s. Containers are responsible for managing a set of objects. This set is indexed, so that the order is predictable (`indexed-set`). Building on this there's the `collective`, which is a sort of top-level container that also has a name map so that certain units can be reached easily. Units by themselves can be containers again, so a unit may be arbitrarily deep down in the tree from the `collective`.
-
-Each unit thus has an optional name through which it is immediately reachable, and a `collective` slot that points back to the top-level collective it is contained in. Units will automatically propagate this information so that when a unit at a lower level `enter`s or `leave`s, the collective and name are automatically set.
+### Scene Graph
+FIXME
 
 Building up on this are the `scene` and `entity` classes. The scene furthermore is `paintable`, `animatable`, and a `clock`, so that it can be drawn, animated, and can keep the time. An entity can always contain further entities, and aside from being paintable and animatable as well, it also always has a `location` vector so that we can move it around. All entities are always relative to their parent in their location. The transformation of this is achieved by a `call-with-translation` around each `paint` call.
 
