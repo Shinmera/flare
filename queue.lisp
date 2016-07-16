@@ -52,19 +52,19 @@
 ;; Iteration
 
 (defclass queue-iterator (iterator)
-  ())
+  ((tail :initarg :tail :accessor tail)))
 
 (defmethod has-more ((iterator queue-iterator))
-  (not (eql (next (object iterator)) (object iterator))))
+  (not (eql (right (object iterator)) (tail iterator))))
 
 (defmethod (setf current) (value (iterator queue-iterator))
   (setf (value (object iterator)) value))
 
 (defmethod next ((iterator queue-iterator))
-  (value (setf (object iterator) (next (object iterator)))))
+  (value (setf (object iterator) (right (object iterator)))))
 
 (defmethod make-iterator ((queue queue) &key)
-  (make-instance 'queue-iterator :object (head iterator)))
+  (make-instance 'queue-iterator :object (head queue) :tail (tail queue)))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (define-value-binding in-queue (var queue &aux (current (head queue)) (tail (tail queue)))
