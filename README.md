@@ -38,7 +38,7 @@ An example implementation of all this including some nifty show progressions can
 Flare must handle two parts-- one the animation itself, and two the objects in the scene.
 
 ### Scene Graph
-FIXME
+The scene graph is made up of `unit`s and `container`s. Each unit must have a symbol for a name and each container has some data structure that can hold other objects. You can add and remove objects from a container using `enter` and `leave` respectively. If you need to iterate over the entirety of the scene graph referenced by a container, use `map-container-tree` or `do-container-tree`. Since containers should only hold units, you can use `container-unit` for further nesting levels. At the bottom of the entire thing should be a `scene-graph`, which allows you to retrieve any unit within it by its name using the `unit` function.
 
 Building up on this are the `scene` and `entity` classes. The scene furthermore is `paintable`, `animatable`, and a `clock`, so that it can be drawn, animated, and can keep the time. An entity can always contain further entities, and aside from being paintable and animatable as well, it also always has a `location` vector so that we can move it around. All entities are always relative to their parent in their location. The transformation of this is achieved by a `call-with-translation` around each `paint` call.
 
