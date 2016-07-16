@@ -120,14 +120,14 @@ Tree:"
   (setf (scene-graph unit) scene-graph))
 
 (defmethod (setf scene-graph) :before (scene-graph (unit container-unit))
-  (let ((scene-graph (scene-graph unit))))
-  (when scene-graph
-    (do-container-tree (item scene-graph)
-      (deregister item scene-graph))))
+  (let ((scene-graph (scene-graph unit)))
+    (when scene-graph
+      (do-container-tree (item unit)
+        (deregister item scene-graph)))))
 
 (defmethod (setf scene-graph) :after ((scene-graph scene-graph) (unit container-unit))
   (when scene-graph
-    (do-container-tree (item scene-graph)
+    (do-container-tree (item unit)
       (register item scene-graph))))
 
 (defmethod enter :before ((unit container-unit) (scene-graph scene-graph))
