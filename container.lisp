@@ -35,9 +35,9 @@
   ((objects :initarg :objects :accessor objects))
   (:default-initargs :objects (make-indexed-set)))
 
-(defmethod paint ((container container))
+(defmethod paint ((container container) target)
   (for:for ((item over container))
-    (paint item)))
+    (paint item target)))
 
 (defmethod update ((container container))
   (for:for ((item over container))
