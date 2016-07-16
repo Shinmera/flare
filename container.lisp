@@ -70,7 +70,7 @@
   (format T "~&~v@{ ~}+ ~a~%" depth container)
   (for:for ((item over container))
     (if (typep item 'container)
-        (visualize-container item (+ depth 2))
+        (print-container-tree item (+ depth 2))
         (format T "~&~v@{ ~}| ~a~%" (+ depth 2) item))))
 
 (defmethod describe-object ((container container) stream)
