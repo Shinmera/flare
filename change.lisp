@@ -105,7 +105,7 @@
 (defmethod tick ((op leave-operation) object clock step)
   (when (scene-graph object)
     (setf (gethash object (objects op)) (scene-graph object))
-    (leave object T)))
+    (leave object (scene-graph object))))
 
 (define-change-parser leave ()
   `(make-instance 'leave-operation))
