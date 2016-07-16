@@ -11,6 +11,7 @@
 (defgeneric start (clock))
 (defgeneric reset (clock))
 (defgeneric running (clock))
+(defgeneric timescale (clock))
 (defgeneric synchronize (clock new))
 (defgeneric clock (clock))
 
@@ -22,9 +23,11 @@
 (defclass clock ()
   ((previous-time :initform (get-internal-real-time) :accessor previous-time)
    (clock :initarg :clock :accessor clock)
-   (running :initarg :running :accessor running))
+   (running :initarg :running :accessor running)
+   (timescale :initarg :timescale :accessor timescale))
   (:default-initargs
    :clock 0.0s0
+   :timescale 1.0s0
    :running NIL))
 
 (define-self-returning-method stop ((clock clock)))
@@ -66,9 +69,10 @@ Internal clock is at ~a~&"
 (defmethod update :before ((clock clock))
   (let ((new-time (get-internal-real-time)))
     (incf (clock clock)
-          (float (/ (- new-time (previous-time clock))
-                    internal-time-units-per-second)
-                 1.0s0))
+          (* (float (/ (- new-time (previous-time clock))
+                       internal-time-units-per-second)
+                    1.0s0)
+             (timescale clock)))
     (setf (previous-time clock) new-time)))
 
 (defmethod update :around ((clock clock))

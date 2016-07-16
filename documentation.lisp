@@ -467,6 +467,11 @@ See CLOCK")
     "Accessor to whether the clock is currently running or not.
 
 See CLOCK")
+
+  (function timescale
+    "Accessor to the timescale of the clock to allow slowing or speeding up the progression of time.
+
+See CLOCK")
   
   (function synchronize
     "Synchronize the clock to the new time.

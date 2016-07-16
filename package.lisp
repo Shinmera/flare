@@ -83,6 +83,7 @@
    #:start
    #:reset
    #:running
+   #:timescale
    #:synchronize
    #:clock
 
