@@ -556,6 +556,26 @@ See SCENE-GRAPH")
 
 See UNIT
 See SCENE-GRAPH")
+
+  (function register
+    "Registers the unit with the scene-graph, making it accessible by its name.
+Any unit that is entered into any part of the scene-graph must be registered by this
+function. This should happen automatically provided you use the CONTAINER-UNIT class
+for containers inside the scene-graph. Thus you need not call this function unless
+you implement your own container.
+
+See UNIT
+See SCENE-GRAPH")
+
+  (function deregister
+    "Deregisters the unit with the scene-graph, making it accessible by its name.
+Any unit that leaves from any part of the scene-graph must be deregistered by this
+function. This should happen automatically provided you use the CONTAINER-UNIT class
+for containers inside the scene-graph. Thus you need not call this function unless
+you implement your own container.
+
+See UNIT
+See SCENE-GRAPH")
   
   (function scene-graph
     "Accessor to the scene-graph the container-unit is in.

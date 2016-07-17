@@ -14,6 +14,8 @@
 (defgeneric name-map (scene-graph))
 (defgeneric units (scene-graph))
 (defgeneric unit (name scene-graph))
+(defgeneric register (unit scene-graph))
+(defgeneric deregister (unit scene-graph))
 (defgeneric scene-graph (container-unit))
 
 (define-self-returning-method clear (container))

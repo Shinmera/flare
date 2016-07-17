@@ -129,6 +129,8 @@
    #:name-map
    #:units
    #:unit
+   #:register
+   #:deregister
    #:scene-graph
    #:unit
    #:container
