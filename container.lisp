@@ -34,8 +34,7 @@
     (format stream "~a" (name unit))))
 
 (defclass container ()
-  ((objects :initarg :objects :accessor objects))
-  (:default-initargs :objects (make-indexed-set)))
+  ((objects :initform (make-indexed-set) :accessor objects)))
 
 (defmethod paint ((container container) target)
   (for:for ((item over container))
