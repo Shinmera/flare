@@ -10,9 +10,16 @@
   (:nicknames #:org.shirakumo.flare.queue)
   (:use #:cl #:for)
   (:export
+   #:cell
+   #:value
+   #:left
+   #:right
+   #:cell-insert-before
+   #:cell-remove
    #:queue
    #:make-queue
-   #:on-queue
+   #:in-queue
+   #:of-queue
    #:map-queue
    #:do-queue
    #:enqueue
