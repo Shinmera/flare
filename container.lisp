@@ -89,8 +89,16 @@ Tree:"
   (print-unreadable-object (scene-graph stream :type T :identity T)
     (format stream "~a items" (hash-table-count (name-map scene-graph)))))
 
+(defmethod register :around ((unit unit) (scene-graph scene-graph))
+  (unless (eql unit (gethash (name unit) (name-map scene-graph)))
+    (call-next-method)))
+
 (defmethod register ((unit unit) (scene-graph scene-graph))
   (setf (gethash (name unit) (name-map scene-graph)) unit))
+
+(defmethod deregister :around ((unit unit) (scene-graph scene-graph))
+  (when (eql unit (gethash (name unit) (name-map scene-graph)))
+    (call-next-method)))
 
 (defmethod deregister ((unit unit) (scene-graph scene-graph))
   (remhash (name unit) (name-map scene-graph)))
