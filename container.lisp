@@ -18,10 +18,6 @@
 (defgeneric deregister (unit scene-graph))
 (defgeneric scene-graph (container-unit))
 
-(define-self-returning-method clear (container))
-(define-self-returning-method enter (unit scene-graph))
-(define-self-returning-method leave (unit scene-graph))
-
 (defclass unit ()
   ((name :initarg :name :reader name))
   (:default-initargs :name (gensym "")))
@@ -45,14 +41,17 @@
     (update item)))
 
 (defmethod enter (thing (container container))
-  (set-add thing (objects container)))
+  (set-add thing (objects container))
+  thing)
 
 (defmethod leave (thing (container container))
-  (set-remove thing (objects container)))
+  (set-remove thing (objects container))
+  thing)
 
 (defmethod clear ((container container))
   (for:for ((item over container))
-    (leave item container)))
+    (leave item container))
+  container)
 
 (defmethod for:make-iterator ((container container) &rest args)
   (apply #'for:make-iterator (objects container) args))

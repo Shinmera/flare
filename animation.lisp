@@ -52,7 +52,8 @@
   progression)
 
 (defmethod enter ((progression progression) (animatable animatable))
-  (add-progression progression animatable))
+  (add-progression progression animatable)
+  progression)
 
 (defmethod remove-progression ((progression progression) (animatable animatable))
   (unless (eql (animatable progression) animatable)
@@ -63,7 +64,8 @@
   progression)
 
 (defmethod leave ((progression progression) (animatable animatable))
-  (remove-progression progression animatable))
+  (remove-progression progression animatable)
+  progression)
 
 (defmethod progression ((definition progression-definition) (animatable animatable))
   (loop for progression in (progressions animatable)
@@ -83,7 +85,8 @@
   (add-progression (progression-instance definition) animatable))
 
 (defmethod enter ((definition progression-definition) (animatable animatable))
-  (add-progression definition animatable))
+  (add-progression definition animatable)
+  definition)
 
 (defmethod (setf animations) (animations (definition progression-definition))
   (setf (slot-value definition 'animations)
