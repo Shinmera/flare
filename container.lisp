@@ -63,7 +63,8 @@
       (map-container-tree function item))))
 
 (defmacro do-container-tree ((item container &optional return) &body body)
-  `(progn (map-container-tree (lambda (,item) ,@body) ,container)
+  `(block NIL
+     (map-container-tree (lambda (,item) ,@body) ,container)
           ,return))
 
 (defun print-container-tree (container &optional (depth 0))
