@@ -6,7 +6,6 @@
           font-size: 14pt;
           padding: 5px;
       }
-
       body>header{
           display:flex;
           align-items: center;
@@ -14,30 +13,30 @@
           flex-direction: column;
           max-width: 100%;
       }
-
       img{
           max-width: 100%;
           max-height: 100%;
       }
-
       code{
           font-family: Consolas, Inconsolata, monospace;
       }
-
       a{
           text-decoration: none;
           color: #0055AA;
       }
-
+      a img{
+          border: none;
+      }
       #documentation{
           text-align: justify;
       }
-
       #documentation pre{
           margin-left: 20px;
           overflow: auto;
       }
-
+      #documentation img{
+          margin: 5px;
+      }
       #symbol-index>ul{
           list-style: none;
           padding: 0;
@@ -68,7 +67,6 @@
           white-space: pre-wrap;
           font-size: 12pt;
       }
-
       @media (max-width: 800px){
           body{font-size: 12pt;}
       } </style> </head> <body> <header> <h1><img alt="flare" src="flare-logo.png"/></h1> <span class="version">0.2.0</span> <p class="description">Easy particle systems with fine grained control.</p> </header> <main> <article id="documentation">  <div><h2>What</h2> <p>Flare is a library designed to allow quick and precise particle effect creations. It does not concern itself with displaying and only with the management and movement of particles. As such, it can easily be integrated into any existing or future application.</p> <h2>So What's Different? Why Should I Use This?</h2> <p>Usually in particle systems the way you control things is by describing various states on the emitter. Flare instead takes a much more fine-grained approach by allowing you to control individual particles and describe their movement and change over time.</p> <h2>How To</h2> <p>As Flare does not do any graphics on its own, you will first have to create something that can render graphics of some kind. Once you have that, you should subclass <code><a href="#FLARE:PARTICLE">particle</a></code> to create your own particle types. You should also implement methods on <code><a href="#FLARE:PAINT">paint</a></code> so that the particle can be drawn. The last thing that's needed is a method on <code><a href="#FLARE:CALL-WITH-TRANSLATION">call-with-translation</a></code> that should perform a translation on your drawing target. That should settle everything in terms of hooking Flare up to your graphics system.</p> <p>Next you will need to keep a <code><a href="#FLARE:SCENE">scene</a></code> instance into which your particles will be spawned and your animations will be played. You should then call <code><a href="#FLARE:PAINT">paint</a></code> on the scene object in your drawing loop and call <code><a href="#FLARE:START">start</a></code> on the scene object when your application is initialised.</p> <p>Finally, the exciting part: defining animation progressions. This happens through <code><a href="#FLARE:DEFINE-PROGRESSION">define-progression</a></code>, which creates a globally named <code><a href="#FLARE:PROGRESSION-DEFINITION">progression-definition</a></code>. The body of a definition is made up of a series of intervals and animations. Each animation is composed of a selector and a bunch of changes. The selector decides to which units in the scene the changes should apply, and the changes decide what happens while the animation runs.</p> <p>So let's look at a simple example. We'll create a particle that spins on a circle.</p> <pre><code>(<a href="#FLARE:DEFINE-PROGRESSION">define-progression</a> spinner
@@ -481,137 +479,4 @@ See COMPILE-ANIMATIONS</pre> </article> </li><li> <a name="FLARE:DO-CONTAINER-TR
 
 See MAP-CONTAINER-TREE</pre> </article> </li><li> <a name="FLARE:WITH-TRANSLATION"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:WITH-TRANSLATION">WITH-TRANSLATION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Shorthand macro for translation.
 
-See CALL-WITH-TRANSLATION</pre> </article> </li></ul> </li><li class="package"> <h3> <a name="FLARE-QUEUE" href="#FLARE-QUEUE">FLARE-QUEUE</a> <span class="nicknames">(ORG.SHIRAKUMO.FLARE.QUEUE)</span> </h3> <ul><li> <a name="FLARE-QUEUE:CELL"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE-QUEUE:CELL">CELL</a></code></h4>  </header> <pre class="docstring">Struct to contain a queue cell with VALUE, LEFT, and RIGHT slots.
-
-See VALUE
-See LEFT
-See RIGHT</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE">QUEUE</a></code></h4>  </header> <pre class="docstring">Implements an ordered queue.
-
-Aside from MAP-QUEUE and DO-QUEUE you can also use ITERATE
-to go through the set by FOR .. ON-QUEUE or FOR .. IN-QUEUE.
-
-See HEAD
-See TAIL
-See SIZE
-See MAP-QUEUE
-See DO-QUEUE
-See ENQUEUE
-See DEQUEUE
-See QUEUE-REMOVE
-See QUEUE-SIZE
-See QUEUE-FIRST
-See QUEUE-LAST
-See QUEUE-VALUE-AT
-See QUEUE-INDEX-OF
-See CLEAR-QUEUE
-See IN-QUEUE-P
-See COERCE-QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:LEFT"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:LEFT">LEFT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">INSTANCE</code><code>)</code>  </header> <pre class="docstring">Accesses the cell left to the current cell.
-
-See CELL</pre> </article> </li><li> <a name="FLARE-QUEUE:RIGHT"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:RIGHT">RIGHT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">INSTANCE</code><code>)</code>  </header> <pre class="docstring">Accesses the cell right to the current cell.
-
-See CELL</pre> </article> </li><li> <a name="FLARE-QUEUE:VALUE"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:VALUE">VALUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">INSTANCE</code><code>)</code>  </header> <pre class="docstring">Accesses the value contained in a queue cell.
-
-See CELL</pre> </article> </li><li> <a name="FLARE-QUEUE:CELL-INSERT-BEFORE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:CELL-INSERT-BEFORE">CELL-INSERT-BEFORE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CELL NEIGHBOR</code><code>)</code>  </header> <pre class="docstring">Inserts the cell before its neighbour, making sure to keep all links updated.
-
-See CELL</pre> </article> </li><li> <a name="FLARE-QUEUE:CELL-REMOVE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:CELL-REMOVE">CELL-REMOVE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CELL</code><code>)</code>  </header> <pre class="docstring">Removes the cell out of the link chain, making sure to keep all links updated.
-Unless the cell is the only item in the link chain, its left/right slots are not
-modified.
-
-See CELL</pre> </article> </li><li> <a name="FLARE-QUEUE:CLEAR-QUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:CLEAR-QUEUE">CLEAR-QUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Removes all elements from the queue.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:COERCE-QUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:COERCE-QUEUE">COERCE-QUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE TYPE</code><code>)</code>  </header> <pre class="docstring">Allows coercing the queue to:
-
-queue, list, vector, or sequence.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:DEQUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:DEQUEUE">DEQUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Pops the next value off the front of the queue.
-The second value indicates whether there was any element in the queue at all.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:ENQUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:ENQUEUE">ENQUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE QUEUE</code><code>)</code>  </header> <pre class="docstring">Inserts the given value at the end of the queue.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:IN-QUEUE-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:IN-QUEUE-P">IN-QUEUE-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns T if the given value is found in the queue.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:MAKE-QUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:MAKE-QUEUE">MAKE-QUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <pre class="docstring">Creates a new queue instance.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:MAP-QUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:MAP-QUEUE">MAP-QUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FUNCTION QUEUE</code><code>)</code>  </header> <pre class="docstring">Maps the function over all values in the queue in order.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-FIRST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-FIRST">QUEUE-FIRST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the first (front) value in the queue if there is any.
-The second value indicates whether there was any element in the queue at all.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-INDEX-OF"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-INDEX-OF">QUEUE-INDEX-OF</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the index of the value in the queue.
-If the value could not be found, NIL is returned instead.
-
-This is potentially very costly as it might have to scan the entire queue.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-LAST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-LAST">QUEUE-LAST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the last (end) value in the queue if there is any.
-The second value indicates whether there was any element in the queue at all.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-REMOVE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-REMOVE">QUEUE-REMOVE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE QUEUE</code><code>)</code>  </header> <pre class="docstring">Removes the given value from the queue.
-
-This is potentially very costly as it might have to scan the entire queue.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-SIZE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-SIZE">QUEUE-SIZE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the number of elements in the queue.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-VALUE-AT"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-VALUE-AT">QUEUE-VALUE-AT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">N QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the value at the given position in the queue.
-The second value is NIL if the position is out of range.
-
-This is potentially very costly as it might have to scan the entire queue.
-
-See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:DO-QUEUE"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:DO-QUEUE">DO-QUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Iterates over each value in the queue in order.
-
-See QUEUE</pre> </article> </li></ul> </li><li class="package"> <h3> <a name="FLARE-INDEXED-SET" href="#FLARE-INDEXED-SET">FLARE-INDEXED-SET</a> <span class="nicknames">(ORG.SHIRAKUMO.FLARE.INDEXED-SET)</span> </h3> <ul><li> <a name="FLARE-INDEXED-SET:INDEXED-SET"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE-INDEXED-SET:INDEXED-SET">INDEXED-SET</a></code></h4>  </header> <pre class="docstring">A set in which each element also has an index.
-
-Aside from MAP-SET and DO-SET you can also use ITERATE
-to go through the set by FOR .. ON-SET or FOR .. IN-SET.
-
-See QUEUE
-See SET
-See MAKE-INDEXED-SET
-See MAP-SET
-See DO-SET
-See SET-ADD
-See SET-REMOVE
-See SET-SIZE
-See SET-FIRST
-See SET-LAST
-See SET-VALUE-AT
-See SET-INDEX-OF
-See CLEAR-SET
-See IN-SET-P
-See COERCE-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:CLEAR-SET"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:CLEAR-SET">CLEAR-SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Removes all values from the set.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:COERCE-SET"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:COERCE-SET">COERCE-SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SET TYPE</code><code>)</code>  </header> <pre class="docstring">Allows coercing the set to:
-
-indexed-set, hash-table, queue, list, vector, or sequence.
-
-See INDEXED-SET
-See COERCE-QUEUE</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:IN-SET-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:IN-SET-P">IN-SET-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE SET</code><code>)</code>  </header> <pre class="docstring">Returns T if the value is contained in the set.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:MAKE-INDEXED-SET"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:MAKE-INDEXED-SET">MAKE-INDEXED-SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <pre class="docstring">Creates a new indexed set.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:MAP-SET"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:MAP-SET">MAP-SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FUNCTION QUEUE</code><code>)</code>  </header> <pre class="docstring">Maps the function over all elements of the set in order.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-ADD"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-ADD">SET-ADD</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE SET</code><code>)</code>  </header> <pre class="docstring">Add a new value to the set.
-
-Returns two values, the value that was added, and whether it was added
-as a new element to the set. If it already existed, the second value is
-NIL.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-FIRST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-FIRST">SET-FIRST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the first item in the set.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-INDEX-OF"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-INDEX-OF">SET-INDEX-OF</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the index of the value in the set.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-LAST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-LAST">SET-LAST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the last item in the set.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-REMOVE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-REMOVE">SET-REMOVE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE SET</code><code>)</code>  </header> <pre class="docstring">Remove a value from the set.
-
-Returns two values, the set that was modified, and whether the value
-existed in the set to begin with. If it did not, the second value is
-NIL.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-SIZE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-SIZE">SET-SIZE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the number of items in the set.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-VALUE-AT"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-VALUE-AT">SET-VALUE-AT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">N QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the value at the given index in the set.
-
-See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:DO-SET"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:DO-SET">DO-SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Iterates over all elements of the set in order.
-
-See INDEXED-SET</pre> </article> </li></ul> </li></ul> </article>  </main> </body> </html> 
+See CALL-WITH-TRANSLATION</pre> </article> </li></ul> </li></ul> </article>  </main> </body> </html> 
