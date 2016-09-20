@@ -1,169 +1,83 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8"/>
-    <title>FLARE</title>
-    <style type="text/css">
-      html{font-family: serif;}
-      code a{text-decoration: none;}
-      h1{display: inline-block; margin-bottom: 0;}
-      code{font-family: monospace;}
-      h4{display: inline-block; margin: 0; padding: 0;}
-      #symbol-index ul{list-style: none;}
-      .package li{margin-bottom: 20px;}
-      .package pre{margin: 0 0 0 10px; white-space: pre-wrap;}
-      .package .nicknames{font-weight: normal;}
-      table{margin: 20px;}
-      td{padding-bottom: 10px;}
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1><img src="flare-logo.png" alt="flare"/></h1>
-      <span class="version">0.1.0</span>
-      <p class="description">Easy particle systems with fine grained control.</p>
-    </header>
-    <div id="content">
-      <article>
-        
-          <span><h2>What</h2>
+<!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <meta charset="utf-8"/> <title>Flare</title> <meta name="viewport" content="width=device-width"/> <meta name="description" content="Easy particle systems with fine grained control."/> <meta name="author" content="Nicolas Hafner &lt;shinmera@tymoon.eu&gt;"/> <style type="text/css"> body{
+          max-width: 1024px;
+          margin: 0 auto 0 auto;
+          font-family: sans-serif;
+          color: #333333;
+          font-size: 14pt;
+          padding: 5px;
+      }
 
-<p>Flare is a library designed to allow quick and precise particle effect creations. It does not concern itself with displaying and only with the management and movement of particles. As such, it can easily be integrated into any existing or future application.</p>
+      body>header{
+          display:flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          max-width: 100%;
+      }
 
-<h2>So What's Different? Why Should I Use This?</h2>
+      img{
+          max-width: 100%;
+          max-height: 100%;
+      }
 
-<p>Usually in particle systems the way you control things is by describing various states on the emitter. Flare instead takes a much more fine-grained approach by allowing you to control individual particles and describe their movement and change over time.</p>
+      code{
+          font-family: Consolas, Inconsolata, monospace;
+      }
 
-<h2>How To</h2>
+      a{
+          text-decoration: none;
+          color: #0055AA;
+      }
 
-<p>As Flare does not do any graphics on its own, you will first have to create something that can render graphics of some kind. Once you have that, you should subclass <code><a href="#FLARE:PARTICLE">particle</a></code> to create your own particle types. You should also implement methods on <code><a href="#FLARE:PAINT">paint</a></code> so that the particle can be drawn. The last thing that's needed is a method on <code><a href="#FLARE:CALL-WITH-TRANSLATION">call-with-translation</a></code> that should perform a translation on your drawing target. That should settle everything in terms of hooking Flare up to your graphics system.</p>
+      #documentation{
+          text-align: justify;
+      }
 
-<p>Next you will need to keep a <code><a href="#FLARE:SCENE">scene</a></code> instance into which your particles will be spawned and your animations will be played. You should then call <code><a href="#FLARE:PAINT">paint</a></code> on the scene object in your drawing loop and call <code><a href="#FLARE:START">start</a></code> on the scene object when your application is initialised.</p>
+      #documentation pre{
+          margin-left: 20px;
+      }
 
-<p>Finally, the exciting part: defining animation progressions. This happens through <code><a href="#FLARE:DEFINE-PROGRESSION">define-progression</a></code>, which creates a globally named <code><a href="#FLARE:PROGRESSION-DEFINITION">progression-definition</a></code>. The body of a definition is made up of a series of intervals and animations. Each animation is composed of a selector and a bunch of changes. The selector decides to which units in the scene the changes should apply, and the changes decide what happens while the animation runs.</p>
+      #symbol-index>ul{
+          list-style: none;
+          padding: 0;
+      }
+      #symbol-index .package>ul{
+          list-style: none;
+          padding: 0 0 0 10px;
+      }
+      #symbol-index .package .nicknames{
+          font-weight: normal;
+      }
+      #symbol-index .package h4{
+          display: inline-block;
+          margin: 0;
+      }
+      #symbol-index .package article{
+          margin: 0 0 15px 0;
+      }
+      #symbol-index .package article header{
+          font-size: 1.2em;
+          font-weight: normal;
+      }
+      #symbol-index .package .name{
+          margin-right: 5px;
+      }
+      #symbol-index .package .docstring{
+          margin: 0 0 0 15px;
+          white-space: pre-wrap;
+          font-size: 12pt;
+      }
 
-<p>So let's look at a simple example. We'll create a particle that spins on a circle.</p>
-
-<pre><code>(<a href="#FLARE:DEFINE-PROGRESSION">define-progression</a> spinner
+      @media (max-width: 800px){
+          body{font-size: 12pt;}
+      } </style> </head> <body> <header> <h1><img alt="flare" src="flare-logo.png"/></h1> <span class="version">0.2.0</span> <p class="description">Easy particle systems with fine grained control.</p> </header> <main> <article id="documentation">  <div><h2>What</h2> <p>Flare is a library designed to allow quick and precise particle effect creations. It does not concern itself with displaying and only with the management and movement of particles. As such, it can easily be integrated into any existing or future application.</p> <h2>So What's Different? Why Should I Use This?</h2> <p>Usually in particle systems the way you control things is by describing various states on the emitter. Flare instead takes a much more fine-grained approach by allowing you to control individual particles and describe their movement and change over time.</p> <h2>How To</h2> <p>As Flare does not do any graphics on its own, you will first have to create something that can render graphics of some kind. Once you have that, you should subclass <code><a href="#FLARE:PARTICLE">particle</a></code> to create your own particle types. You should also implement methods on <code><a href="#FLARE:PAINT">paint</a></code> so that the particle can be drawn. The last thing that's needed is a method on <code><a href="#FLARE:CALL-WITH-TRANSLATION">call-with-translation</a></code> that should perform a translation on your drawing target. That should settle everything in terms of hooking Flare up to your graphics system.</p> <p>Next you will need to keep a <code><a href="#FLARE:SCENE">scene</a></code> instance into which your particles will be spawned and your animations will be played. You should then call <code><a href="#FLARE:PAINT">paint</a></code> on the scene object in your drawing loop and call <code><a href="#FLARE:START">start</a></code> on the scene object when your application is initialised.</p> <p>Finally, the exciting part: defining animation progressions. This happens through <code><a href="#FLARE:DEFINE-PROGRESSION">define-progression</a></code>, which creates a globally named <code><a href="#FLARE:PROGRESSION-DEFINITION">progression-definition</a></code>. The body of a definition is made up of a series of intervals and animations. Each animation is composed of a selector and a bunch of changes. The selector decides to which units in the scene the changes should apply, and the changes decide what happens while the animation runs.</p> <p>So let's look at a simple example. We'll create a particle that spins on a circle.</p> <pre><code>(<a href="#FLARE:DEFINE-PROGRESSION">define-progression</a> spinner
   0 0 (<a href="http://l1sp.org/cl/t">T</a> (<a href="#FLARE:ENTER">enter</a> ring :size 100 :children (sphere :size 10)))
   0 T (&gt; (<a href="#FLARE:INCREASE">increase</a> angle :by 360 :for 1)))
-</code></pre>
+</code></pre> <p>This defines a progression named <code>spinner</code> with two animations</p> <ul> <li>The first animation takes place from the 0th second to the 0th second, so it will only ever happen exactly once. It applies to the scene object itself and causes only a single change. This change <code><a href="#FLARE:ENTER">enter</a></code>s a ring of size 100 with a single sphere child of size 10 into the scene.</li> <li>The second animation takes place from the 0th second to infinity, so it'll go on as long as we keep the scene running. It applies to the children of the scene object (in this case the ring) and has a single change that will increase the angle by 360 every second.</li> </ul> <p>Here <code>sphere</code> is the name of a simple particle. If you named your particle class something else, replace that with your own. In order to make the progression have an effect on our scene, we need to instantiate it and add it to the scene. You can instantiate a progression with <code><a href="#FLARE:PROGRESSION-INSTANCE">progression-instance</a></code> and add it to the scene by <code><a href="#FLARE:ENTER">enter</a></code>. Finally, we'll want to start it to see it in action.</p> <pre><code>(<a href="#FLARE:START">start</a> (<a href="#FLARE:ENTER">enter</a> (<a href="#FLARE:PROGRESSION-INSTANCE">progression-instance</a> 'spinner) scene-instance))
+</code></pre> <p>We can change the example to be a bit more exciting by making it be a pendulum instead of a mere spinner. To do this we substitute a <code><a href="#FLARE:CALC">calc</a></code> cahnge for the <code><a href="#FLARE:INCREASE">increase</a></code> change:</p> <pre><code>(<a href="#FLARE:CALC">calc</a> angle :to (<a href="http://l1sp.org/cl/+">+</a> 90 (<a href="http://l1sp.org/cl/*">*</a> (<a href="http://l1sp.org/cl/sin">sin</a> (<a href="http://l1sp.org/cl/*">*</a> clock 4)) 40)))
+</code></pre> <p>You can redefine the progression on the fly while it is still running and it should gracefully update on your screen. This should allow you to easily hack out rather complex animations. If you want to start again from the beginning, call <code><a href="#FLARE:RESET">reset</a></code> on the progression instance.</p> <p>An example implementation of all this including some nifty show progressions can be found in the <code>flare-viewer</code> system. You can also use this system yourself to play around with progressions for a bit.</p> <h2>Internals</h2> <p>Flare must handle two parts-- one the animation itself, and two the objects in the scene.</p> <h3>Scene Graph</h3> <p>The scene graph is made up of <code><a href="#FLARE:UNIT">unit</a></code>s and <code><a href="#FLARE:CONTAINER">container</a></code>s. Each unit must have a symbol for a name and each container has some data structure that can hold other objects. You can add and remove objects from a container using <code><a href="#FLARE:ENTER">enter</a></code> and <code><a href="#FLARE:LEAVE">leave</a></code> respectively. If you need to iterate over the entirety of the scene graph referenced by a container, use <code><a href="#FLARE:MAP-CONTAINER-TREE">map-container-tree</a></code> or <code><a href="#FLARE:DO-CONTAINER-TREE">do-container-tree</a></code>. Since containers should only hold units, you can use <code><a href="#FLARE:CONTAINER-UNIT">container-unit</a></code> for further nesting levels. At the bottom of the entire thing should be a <code><a href="#FLARE:SCENE-GRAPH">scene-graph</a></code>, which allows you to retrieve any unit within it by its name using the <code><a href="#FLARE:UNIT">unit</a></code> function.</p> <p>Building up on this are the <code><a href="#FLARE:SCENE">scene</a></code> and <code><a href="#FLARE:ENTITY">entity</a></code> classes. The scene furthermore is <code><a href="#FLARE:PAINTABLE">paintable</a></code>, <code><a href="#FLARE:ANIMATABLE">animatable</a></code>, and a <code><a href="#FLARE:CLOCK">clock</a></code>, so that it can be drawn, animated, and can keep the time. An entity can always contain further entities, and aside from being paintable and animatable as well, it also always has a <code><a href="#FLARE:LOCATION">location</a></code> vector so that we can move it around. All entities are always relative to their parent in their location. The transformation of this is achieved by a <code><a href="#FLARE:CALL-WITH-TRANSLATION">call-with-translation</a></code> around each <code><a href="#FLARE:PAINT">paint</a></code> call.</p> <p>Any <code><a href="#FLARE:ANIMATABLE">animatable</a></code> can keep a set of <code><a href="#FLARE:PROGRESSION">progression</a></code> instances that will be automatically updated when the animatable is, and thus carry out their transformations for as long as they should be active.</p> <h3>Animation</h3> <p>The animation process is divided up into <code><a href="#FLARE:PROGRESSION-DEFINITION">progression-definition</a></code>s, <code><a href="#FLARE:PROGRESSION">progression</a></code>s, <code><a href="#FLARE:ANIMATION">animation</a></code>s, and <code><a href="#FLARE:CHANGE">change</a></code>s. Progression-definitions merely exist as containers to instantiate and update progressions from. When their <code><a href="#FLARE:ANIMATIONS">animations</a></code> slot is set, they automatically update all instances.</p> <p>A progression is more complicated however as it has to actually manage all the various animations, ensure they're run in the proper order and for just long enough, and it has to make it possible to rewind everything and reset the state of the scene to how things were before. Thus, progressions each have three vectors of <code><a href="#FLARE:PRESENT-ANIMATIONS">present-animations</a></code>, <code><a href="#FLARE:PAST-ANIMATIONS">past-animations</a></code>, and <code><a href="#FLARE:FUTURE-ANIMATIONS">future-animations</a></code>. Since they must also know whom to act upon, they keep a back-link to the <code><a href="#FLARE:ANIMATABLE">animatable</a></code> that they should modify.</p> <p>Each <code><a href="#FLARE:UPDATE">update</a></code> then the progression checks if any new animations now have their time to shine and if so, move them onto the present set. All the present animations then get <code><a href="#FLARE:TICK">tick</a></code>ed with their appropriate time-step and the animatable passed along. Finally, all animations that are past their prime and have exceeded their duration are moved off onto the past set. If there are no more future or present animations available, the progression knows it's done and stops itself.</p> <p>Now, when a progression is <code><a href="#FLARE:RESET">reset</a></code>, it shuffles all the past animations into the present set, reorders everything in reverse, and then resets each animation in sequence. Each animation then causes each change to be reset, hopefully one by one back-tracking all the changes that were made to the scene.</p> <p>Thus by coupling a reset with an explicit clock-set and an update, a progression can be explicitly fast-forwarded or rewound to any particular point in its life-cycle and all the updates should stay consistent throughout.</p> <p>When an animation is ticked, the actual entity selection process starts to happen. When the progression is defined, each animation must be supplied with a selector, which is compiled down to a chain of function calls that either expand or limit the set of applicable objects. For a list of the possible selector constraints, see <code>compile-constraint</code>. Each change of the animation is then ticked with each object that passed the constraint functions.</p> <p>Finally, changes. Changes are divided into <code><a href="#FLARE:OPERATION">operation</a></code>s and <code><a href="#FLARE:TWEEN">tween</a></code>s. Operations change the scene in some way by adding, removing, or moving entities around. They should not affect any internal state of entities and only affect the object tree. Tweens on the other hand do the opposite and should only modify the internal state of whatever object they are passed in their <code><a href="#FLARE:TICK">tick</a></code> call, but should never change the object tree in any way.</p> <p>Flare supplies several default changes, some of which have parsers (<code><a href="#FLARE:DEFINE-CHANGE-PARSER">define-change-parser</a></code>) so that they can actually be used from a progression definition. On the operations side, we have <code><a href="#FLARE:ENTER-OPERATION">enter-operation</a></code> and <code><a href="#FLARE:LEAVE-OPERATION">leave-operation</a></code> used to add or remove objects respectively. The enter-operation is significant in the sense that it uses a <code><a href="#FLARE:CREATOR">creator</a></code> function that can potentially instantiate arbitrarily many or arbitrarily deep structures. On the tween side we have several mixins to make the definition of your own tweens easier (<code><a href="#FLARE:RANGE-TWEEN">range-tween</a></code> <code><a href="#FLARE:CONSTANT-TWEEN">constant-tween</a></code> <code><a href="#FLARE:SLOT-TWEEN">slot-tween</a></code> <code>accessor-tween</code>), from which two usable tweens arise, <code>range-accessor-tween</code> (<code><a href="#FLARE:SET">set</a></code>) and <code>increase-accessor-tween</code> (<code><a href="#FLARE:INCREASE">increase</a></code>). There's one more notable tween to mention: <code><a href="#FLARE:CALL-ACCESSOR-TWEEN">call-accessor-tween</a></code> (<code><a href="#FLARE:CALC">calc</a></code>), which sets the slot according to a user-definable function.</p> <p>Each change must know by itself how to reset the objects it acted upon to their initial state. The <code><a href="#FLARE:SLOT-TWEEN">slot-tween</a></code> and <code>accessor-tween</code> know how to do this by saving the original value of each object they act upon. Similarly, the enter and leave operations keep track of where they added or removed which objects.</p> <h2>Videos</h2> <p>Here are some demo videos made during various points in the development of Flare.</p> <p><a href="http://www.youtube.com/watch?v=szGU6mHgADQ" target="_blank"><img src="http://img.youtube.com/vi/szGU6mHgADQ/0.jpg" alt="Youtube Video" width="240" height="180" border="10"/></a></p> <p><a href="http://www.youtube.com/watch?v=-ScT0JyW-Fs" target="_blank"><img src="http://img.youtube.com/vi/-ScT0JyW-Fs/0.jpg" alt="Youtube Video" width="240" height="180" border="10"/></a></p> <p><a href="http://www.youtube.com/watch?v=9J8UMLhcaik" target="_blank"><img src="http://img.youtube.com/vi/9J8UMLhcaik/0.jpg" alt="Youtube Video" width="240" height="180" border="10"/></a></p> <p><a href="http://www.youtube.com/watch?v=4OJZF8hLsVk" target="_blank"><img src="http://img.youtube.com/vi/4OJZF8hLsVk/0.jpg" alt="Youtube Video" width="240" height="180" border="10"/></a></p> </div>  </article> <article id="copyright">  <h2>Copyright</h2> <span>flare</span> is licensed under the <span><a href="https://tldrlegal.com/search?q=Artistic">Artistic</a></span> license.  © <span>Nicolas Hafner &lt;shinmera@tymoon.eu&gt;</span> .  This library can be obtained on <a href="https://github.com/Shinmera/flare">https://github.com/Shinmera/flare</a>.  </article>  <article id="symbol-index"> <h2>Package Index</h2> <ul><li class="package"> <h3> <a name="FLARE" href="#FLARE">FLARE</a> <span class="nicknames">(ORG.SHIRAKUMO.FLARE)</span> </h3> <ul><li> <a name="FLARE:ANIMATABLE"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:ANIMATABLE">ANIMATABLE</a></code></h4>  </header> <pre class="docstring">Superclass container for anything that is animatable through progressions.
 
-<p>This defines a progression named <code>spinner</code> with two animations</p>
-
-<ul>
-<li>The first animation takes place from the 0th second to the 0th second, so it will only ever happen exactly once. It applies to the scene object itself and causes only a single change. This change <code><a href="#FLARE:ENTER">enter</a></code>s a ring of size 100 with a single sphere child of size 10 into the scene.</li>
-<li>The second animation takes place from the 0th second to infinity, so it'll go on as long as we keep the scene running. It applies to the children of the scene object (in this case the ring) and has a single change that will increase the angle by 360 every second.</li>
-</ul>
-
-<p>Here <code>sphere</code> is the name of a simple particle. If you named your particle class something else, replace that with your own. In order to make the progression have an effect on our scene, we need to instantiate it and add it to the scene. You can instantiate a progression with <code><a href="#FLARE:PROGRESSION-INSTANCE">progression-instance</a></code> and add it to the scene by <code><a href="#FLARE:ENTER">enter</a></code>. Finally, we'll want to start it to see it in action.</p>
-
-<pre><code>(<a href="#FLARE:START">start</a> (<a href="#FLARE:ENTER">enter</a> (<a href="#FLARE:PROGRESSION-INSTANCE">progression-instance</a> 'spinner) scene-instance))
-</code></pre>
-
-<p>We can change the example to be a bit more exciting by making it be a pendulum instead of a mere spinner. To do this we substitute a <code><a href="#FLARE:CALC">calc</a></code> cahnge for the <code><a href="#FLARE:INCREASE">increase</a></code> change:</p>
-
-<pre><code>(<a href="#FLARE:CALC">calc</a> angle :to (<a href="http://l1sp.org/cl/+">+</a> 90 (<a href="http://l1sp.org/cl/*">*</a> (<a href="http://l1sp.org/cl/sin">sin</a> (<a href="http://l1sp.org/cl/*">*</a> clock 4)) 40)))
-</code></pre>
-
-<p>You can redefine the progression on the fly while it is still running and it should gracefully update on your screen. This should allow you to easily hack out rather complex animations. If you want to start again from the beginning, call <code><a href="#FLARE:RESET">reset</a></code> on the progression instance.</p>
-
-<p>An example implementation of all this including some nifty show progressions can be found in the <code>flare-viewer</code> system. You can also use this system yourself to play around with progressions for a bit.</p>
-
-<h2>Internals</h2>
-
-<p>Flare must handle two parts-- one the animation itself, and two the objects in the scene.</p>
-
-<h3>Scene Objects</h3>
-
-<p>I'll mention the scene organisation first as it is both simpler and necessary to grasp to understand how animations work. Ok, so at the basis of all of this is the idea of <code><a href="#FLARE:CONTAINER">container</a></code>s and <code><a href="#FLARE:UNIT">unit</a></code>s. Containers are responsible for managing a set of objects. This set is indexed, so that the order is predictable (<code><a href="#FLARE-INDEXED-SET:INDEXED-SET">indexed-set</a></code>). Building on this there's the <code><a href="#FLARE:COLLECTIVE">collective</a></code>, which is a sort of top-level container that also has a name map so that certain units can be reached easily. Units by themselves can be containers again, so a unit may be arbitrarily deep down in the tree from the <code><a href="#FLARE:COLLECTIVE">collective</a></code>.</p>
-
-<p>Each unit thus has an optional name through which it is immediately reachable, and a <code><a href="#FLARE:COLLECTIVE">collective</a></code> slot that points back to the top-level collective it is contained in. Units will automatically propagate this information so that when a unit at a lower level <code><a href="#FLARE:ENTER">enter</a></code>s or <code><a href="#FLARE:LEAVE">leave</a></code>s, the collective and name are automatically set.</p>
-
-<p>Building up on this are the <code><a href="#FLARE:SCENE">scene</a></code> and <code><a href="#FLARE:ENTITY">entity</a></code> classes. The scene furthermore is <code><a href="#FLARE:PAINTABLE">paintable</a></code>, <code><a href="#FLARE:ANIMATABLE">animatable</a></code>, and a <code><a href="#FLARE:CLOCK">clock</a></code>, so that it can be drawn, animated, and can keep the time. An entity can always contain further entities, and aside from being paintable and animatable as well, it also always has a <code><a href="#FLARE:LOCATION">location</a></code> vector so that we can move it around. All entities are always relative to their parent in their location. The transformation of this is achieved by a <code><a href="#FLARE:CALL-WITH-TRANSLATION">call-with-translation</a></code> around each <code><a href="#FLARE:PAINT">paint</a></code> call.</p>
-
-<p>Any <code><a href="#FLARE:ANIMATABLE">animatable</a></code> can keep a set of <code><a href="#FLARE:PROGRESSION">progression</a></code> instances that will be automatically updated when the animatable is, and thus carry out their transformations for as long as they should be active.</p>
-
-<h3>Animation</h3>
-
-<p>The animation process is divided up into <code><a href="#FLARE:PROGRESSION-DEFINITION">progression-definition</a></code>s, <code><a href="#FLARE:PROGRESSION">progression</a></code>s, <code><a href="#FLARE:ANIMATION">animation</a></code>s, and <code><a href="#FLARE:CHANGE">change</a></code>s. Progression-definitions merely exist as containers to instantiate and update progressions from. When their <code><a href="#FLARE:ANIMATIONS">animations</a></code> slot is set, they automatically update all instances.</p>
-
-<p>A progression is more complicated however as it has to actually manage all the various animations, ensure they're run in the proper order and for just long enough, and it has to make it possible to rewind everything and reset the state of the scene to how things were before. Thus, progressions each have three vectors of <code><a href="#FLARE:PRESENT-ANIMATIONS">present-animations</a></code>, <code><a href="#FLARE:PAST-ANIMATIONS">past-animations</a></code>, and <code><a href="#FLARE:FUTURE-ANIMATIONS">future-animations</a></code>. Since they must also know whom to act upon, they keep a back-link to the <code><a href="#FLARE:ANIMATABLE">animatable</a></code> that they should modify.</p>
-
-<p>Each <code><a href="#FLARE:UPDATE">update</a></code> then the progression checks if any new animations now have their time to shine and if so, move them onto the present set. All the present animations then get <code><a href="#FLARE:TICK">tick</a></code>ed with their appropriate time-step and the animatable passed along. Finally, all animations that are past their prime and have exceeded their duration are moved off onto the past set. If there are no more future or present animations available, the progression knows it's done and stops itself.</p>
-
-<p>Now, when a progression is <code><a href="#FLARE:RESET">reset</a></code>, it shuffles all the past animations into the present set, reorders everything in reverse, and then resets each animation in sequence. Each animation then causes each change to be reset, hopefully one by one back-tracking all the changes that were made to the scene.</p>
-
-<p>Thus by coupling a reset with an explicit clock-set and an update, a progression can be explicitly fast-forwarded or rewound to any particular point in its life-cycle and all the updates should stay consistent throughout.</p>
-
-<p>When an animation is ticked, the actual entity selection process starts to happen. When the progression is defined, each animation must be supplied with a selector, which is compiled down to a chain of function calls that either expand or limit the set of applicable objects. For a list of the possible selector constraints, see <code>compile-constraint</code>. Each change of the animation is then ticked with each object that passed the constraint functions.</p>
-
-<p>Finally, changes. Changes are divided into <code><a href="#FLARE:OPERATION">operation</a></code>s and <code><a href="#FLARE:TWEEN">tween</a></code>s. Operations change the scene in some way by adding, removing, or moving entities around. They should not affect any internal state of entities and only affect the object tree. Tweens on the other hand do the opposite and should only modify the internal state of whatever object they are passed in their <code><a href="#FLARE:TICK">tick</a></code> call, but should never change the object tree in any way.</p>
-
-<p>Flare supplies several default changes, some of which have parsers (<code><a href="#FLARE:DEFINE-CHANGE-PARSER">define-change-parser</a></code>) so that they can actually be used from a progression definition. On the operations side, we have <code><a href="#FLARE:ENTER-OPERATION">enter-operation</a></code> and <code><a href="#FLARE:LEAVE-OPERATION">leave-operation</a></code> used to add or remove objects respectively. The enter-operation is significant in the sense that it uses a <code><a href="#FLARE:CREATOR">creator</a></code> function that can potentially instantiate arbitrarily many or arbitrarily deep structures. On the tween side we have several mixins to make the definition of your own tweens easier (<code><a href="#FLARE:RANGE-TWEEN">range-tween</a></code> <code><a href="#FLARE:CONSTANT-TWEEN">constant-tween</a></code> <code><a href="#FLARE:SLOT-TWEEN">slot-tween</a></code> <code>accessor-tween</code>), from which two usable tweens arise, <code>range-accessor-tween</code> (<code><a href="#FLARE:SET">set</a></code>) and <code>increase-accessor-tween</code> (<code><a href="#FLARE:INCREASE">increase</a></code>). There's one more notable tween to mention: <code><a href="#FLARE:CALL-ACCESSOR-TWEEN">call-accessor-tween</a></code> (<code><a href="#FLARE:CALC">calc</a></code>), which sets the slot according to a user-definable function.</p>
-
-<p>Each change must know by itself how to reset the objects it acted upon to their initial state. The <code><a href="#FLARE:SLOT-TWEEN">slot-tween</a></code> and <code>accessor-tween</code> know how to do this by saving the original value of each object they act upon. Similarly, the enter and leave operations keep track of where they added or removed which objects.</p>
-
-<h2>Videos</h2>
-
-<p>Here are some demo videos made during various points in the development of Flare.</p>
-
-<p><a href="http://www.youtube.com/watch?v=szGU6mHgADQ" target="_blank"><img src="http://img.youtube.com/vi/szGU6mHgADQ/0.jpg" alt="Youtube Video" width="240" height="180" border="10"/></a></p>
-
-<p><a href="http://www.youtube.com/watch?v=-ScT0JyW-Fs" target="_blank"><img src="http://img.youtube.com/vi/-ScT0JyW-Fs/0.jpg" alt="Youtube Video" width="240" height="180" border="10"/></a></p>
-
-<p><a href="http://www.youtube.com/watch?v=9J8UMLhcaik" target="_blank"><img src="http://img.youtube.com/vi/9J8UMLhcaik/0.jpg" alt="Youtube Video" width="240" height="180" border="10"/></a></p>
-
-<p><a href="http://www.youtube.com/watch?v=4OJZF8hLsVk" target="_blank"><img src="http://img.youtube.com/vi/4OJZF8hLsVk/0.jpg" alt="Youtube Video" width="240" height="180" border="10"/></a></p>
-</span>
-        
-      </article>
-      <article>
-        
-          <h2>Copyright</h2>
-          <span>flare</span> is licensed under the <span><a href="https://tldrlegal.com/search?q=Artistic">Artistic</a></span> license.
-          
-            © <span>Nicolas Hafner &lt;shinmera@tymoon.eu&gt;</span>
-            .
-          
-          This library can be obtained on <a href="https://github.com/Shinmera/flare">https://github.com/Shinmera/flare</a>.
-        
-      </article>
-      
-        <article id="symbol-index">
-          <h2>Package Index</h2>
-          <ul><li class="package">
-              <h3>
-                <a name="FLARE" href="#FLARE">FLARE</a>
-                <span class="nicknames">(ORG.SHIRAKUMO.FLARE)</span>
-              </h3>
-              <ul><li>
-                  <a name="FLARE:ANIMATABLE"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:ANIMATABLE" class="name">ANIMATABLE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Superclass container for anything that is animatable through progressions.
-
-See PROGRESSIONS</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ANIMATION"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:ANIMATION" class="name">ANIMATION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A representation for a single set of changes in a progression.
+See PROGRESSIONS</pre> </article> </li><li> <a name="FLARE:ANIMATION"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:ANIMATION">ANIMATION</a></code></h4>  </header> <pre class="docstring">A representation for a single set of changes in a progression.
 
 When an animation is ticked, the following happens:
 1. The selector is called with the given animatable and a function
@@ -179,20 +93,7 @@ as they need to ensure the scene stays consistent.
 See START
 See DURATION
 See SELECTOR
-See CHANGES</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ARC"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:ARC" class="name">ARC</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Formation to represent an equidistant distribution of entities along an arc.
+See CHANGES</pre> </article> </li><li> <a name="FLARE:ARC"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:ARC">ARC</a></code></h4>  </header> <pre class="docstring">Formation to represent an equidistant distribution of entities along an arc.
 
 See FORMATION
 See ORIENTED-ENTITY
@@ -200,20 +101,7 @@ See SIZED-ENTITY
 See UP
 See TANGENT
 See ANGLE
-See SPACING</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CALL-ACCESSOR-TWEEN"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:CALL-ACCESSOR-TWEEN" class="name">CALL-ACCESSOR-TWEEN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Combination of a call-change and an accessor-tween.
+See SPACING</pre> </article> </li><li> <a name="FLARE:CALL-ACCESSOR-TWEEN"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:CALL-ACCESSOR-TWEEN">CALL-ACCESSOR-TWEEN</a></code></h4>  </header> <pre class="docstring">Combination of a call-change and an accessor-tween.
 
 Creation: (calc accessor :to form)
 The FORM may use the implicit variables OBJECT, CLOCK, and STEP.
@@ -222,72 +110,20 @@ Implements TWEEN-VALUE.
 
 See CALL-CHANGE
 See SLOT-TWEEN
-See TWEEN-VALUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CALL-CHANGE"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:CALL-CHANGE" class="name">CALL-CHANGE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A change that calls a specified function on every tick.
+See TWEEN-VALUE</pre> </article> </li><li> <a name="FLARE:CALL-CHANGE"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:CALL-CHANGE">CALL-CHANGE</a></code></h4>  </header> <pre class="docstring">A change that calls a specified function on every tick.
 The function is called with the OBJECT, CLOCK, and STEP received from TICK.
 
 Creation: (call :func tick-function)
 
 See CHANGE
 See FUNC
-See TICK</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CALL-SLOT-TWEEN"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:CALL-SLOT-TWEEN" class="name">CALL-SLOT-TWEEN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Combination of a call-change and a slot-tween.
+See TICK</pre> </article> </li><li> <a name="FLARE:CALL-SLOT-TWEEN"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:CALL-SLOT-TWEEN">CALL-SLOT-TWEEN</a></code></h4>  </header> <pre class="docstring">Combination of a call-change and a slot-tween.
 
 Implements TWEEN-VALUE.
 
 See CALL-CHANGE
 See SLOT-TWEEN
-See TWEEN-VALUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CHANGE"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:CHANGE" class="name">CHANGE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Container for a single change or tween within an animation.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CLOCK"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:CLOCK" class="name">CLOCK</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A representation for an item that changes its state over time.
+See TWEEN-VALUE</pre> </article> </li><li> <a name="FLARE:CHANGE"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:CHANGE">CHANGE</a></code></h4>  </header> <pre class="docstring">Container for a single change or tween within an animation.</pre> </article> </li><li> <a name="FLARE:CLOCK"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:CLOCK">CLOCK</a></code></h4>  </header> <pre class="docstring">A representation for an item that changes its state over time.
 
 Keeps its own time information in seconds.
 
@@ -298,36 +134,7 @@ See RUNNING
 See UPDATE
 See SNYCHRONIZE
 See CLOCK
-See PREVIOUS-TIME</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:COLLECTIVE"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:COLLECTIVE" class="name">COLLECTIVE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A collective is a container that also has a name-map to easily reach objects.
-This includes objects that may be in containers further down the hierarchy.
-
-See CONTAINER</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CONSTANT-TWEEN"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:CONSTANT-TWEEN" class="name">CONSTANT-TWEEN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A tween mixin that simply increases a value every tick.
+See PREVIOUS-TIME</pre> </article> </li><li> <a name="FLARE:CONSTANT-TWEEN"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:CONSTANT-TWEEN">CONSTANT-TWEEN</a></code></h4>  </header> <pre class="docstring">A tween mixin that simply increases a value every tick.
 
 Implements TWEEN-VALUE
 Default BY and FOR are 1.
@@ -335,38 +142,18 @@ Default BY and FOR are 1.
 See TWEEN
 See BY
 See FOR
-See START</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CONTAINER"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:CONTAINER" class="name">CONTAINER</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A simple class that can hold a set of objects in an indexed-set.
+See START</pre> </article> </li><li> <a name="FLARE:CONTAINER"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:CONTAINER">CONTAINER</a></code></h4>  </header> <pre class="docstring">A simple class that can hold a set of objects.
 
 See CLEAR
 See OBJECTS
-See INSERT
-See WITHDRAW</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ENTER-OPERATION"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:ENTER-OPERATION" class="name">ENTER-OPERATION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Represents an operation that introduces new objects into the scene graph.
+See ENTER
+See LEAVE
+See MAP-CONTAINER-TREE
+See DO-CONTAINER-TREE
+See PRINT-CONTAINER-TREE</pre> </article> </li><li> <a name="FLARE:CONTAINER-UNIT"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:CONTAINER-UNIT">CONTAINER-UNIT</a></code></h4>  </header> <pre class="docstring">A container unit is a unit that can contain further objects.
+
+See CONTAINER
+See UNIT</pre> </article> </li><li> <a name="FLARE:ENTER-OPERATION"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:ENTER-OPERATION">ENTER-OPERATION</a></code></h4>  </header> <pre class="docstring">Represents an operation that introduces new objects into the scene graph.
 
 Creation: (enter class :n number-of-copies :children child-forms :parent parent init-args..)
 Child-forms being a list of enter forms, excluding the ENTER symbol at the start.
@@ -377,175 +164,44 @@ given target animatable.
 
 See OPERATION
 See OBJECTS
-See CREATOR</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ENTITY"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:ENTITY" class="name">ENTITY</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A paintable and animatable entity within a scene.
+See CREATOR</pre> </article> </li><li> <a name="FLARE:ENTITY"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:ENTITY">ENTITY</a></code></h4>  </header> <pre class="docstring">A paintable and animatable entity within a scene.
 
-See COLLECTIVE
-See SCENE-UNIT
+See CONTAINER-UNIT
 See PAINTABLE
 See ANIMATABLE
-See LOCATION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:FORMATION"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:FORMATION" class="name">FORMATION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Entity superclass for all formations.
+See LOCATION</pre> </article> </li><li> <a name="FLARE:FORMATION"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:FORMATION">FORMATION</a></code></h4>  </header> <pre class="docstring">Entity superclass for all formations.
 
 Formations only handle the positioning of child entities, but do not display by themselves.
 
-See ENTITY</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:INCREASE-SLOT-TWEEN"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:INCREASE-SLOT-TWEEN" class="name">INCREASE-SLOT-TWEEN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Combination of a constant-tween and a slot-tween.
+See ENTITY</pre> </article> </li><li> <a name="FLARE:INCREASE-SLOT-TWEEN"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:INCREASE-SLOT-TWEEN">INCREASE-SLOT-TWEEN</a></code></h4>  </header> <pre class="docstring">Combination of a constant-tween and a slot-tween.
 
 See CONSTANT-TWEEN
-See SLOT-TWEEN</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:LEAVE-OPERATION"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:LEAVE-OPERATION" class="name">LEAVE-OPERATION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Represents an operation that removes objects from the scene graph.
+See SLOT-TWEEN</pre> </article> </li><li> <a name="FLARE:LEAVE-OPERATION"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:LEAVE-OPERATION">LEAVE-OPERATION</a></code></h4>  </header> <pre class="docstring">Represents an operation that removes objects from the scene graph.
 
 Creation: (leave)
 
 Upon TICK, the given animatable is removed from its parents by LEAVE.
 
 See OPERATION
-See OBJECTS</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:OPERATION"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:OPERATION" class="name">OPERATION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Superclass for changes that modify the scene graph by adding, removing, or moving elements within it.
+See OBJECTS</pre> </article> </li><li> <a name="FLARE:OPERATION"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:OPERATION">OPERATION</a></code></h4>  </header> <pre class="docstring">Superclass for changes that modify the scene graph by adding, removing, or moving elements within it.
 
-See CHANGE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ORIENTED-ENTITY"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:ORIENTED-ENTITY" class="name">ORIENTED-ENTITY</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">An entity that can be oriented by a vector.
+See CHANGE</pre> </article> </li><li> <a name="FLARE:ORIENTED-ENTITY"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:ORIENTED-ENTITY">ORIENTED-ENTITY</a></code></h4>  </header> <pre class="docstring">An entity that can be oriented by a vector.
 
 See ENTITY
-See ORIENTATION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PAINTABLE"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:PAINTABLE" class="name">PAINTABLE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Superclass for anything that may be painted onto a target.
+See ORIENTATION</pre> </article> </li><li> <a name="FLARE:PAINTABLE"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:PAINTABLE">PAINTABLE</a></code></h4>  </header> <pre class="docstring">Superclass for anything that may be painted onto a target.
 
 See PAINT
-See TARGET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PARTICLE"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:PARTICLE" class="name">PARTICLE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Entity superclass for all particles.
+See TARGET</pre> </article> </li><li> <a name="FLARE:PARTICLE"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:PARTICLE">PARTICLE</a></code></h4>  </header> <pre class="docstring">Entity superclass for all particles.
 
 Particles should not move by themselves and only handle the displaying.
 
-See ENTITY</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PRINT-CHANGE"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:PRINT-CHANGE" class="name">PRINT-CHANGE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A NO-OP change that simply prints its TICK arguments when called.
+See ENTITY</pre> </article> </li><li> <a name="FLARE:PRINT-CHANGE"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:PRINT-CHANGE">PRINT-CHANGE</a></code></h4>  </header> <pre class="docstring">A NO-OP change that simply prints its TICK arguments when called.
 Useful for debugging.
 
 Creation: (print)
 
 See CHANGE
-See TICK</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PROGRESSION"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:PROGRESSION" class="name">PROGRESSION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">The controller to animate an animatable with.
+See TICK</pre> </article> </li><li> <a name="FLARE:PROGRESSION"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:PROGRESSION">PROGRESSION</a></code></h4>  </header> <pre class="docstring">The controller to animate an animatable with.
 
 Contains an entire sequence of animations and controls their behaviour
 and effects on the animatable. 
@@ -585,20 +241,7 @@ See DEFINITION
 See ANIMATABLE
 See ACTIVE
 See ENDED
-See FUTURE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PROGRESSION-DEFINITION"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:PROGRESSION-DEFINITION" class="name">PROGRESSION-DEFINITION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Container class to instantiate a progression from.
+See FUTURE</pre> </article> </li><li> <a name="FLARE:PROGRESSION-DEFINITION"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:PROGRESSION-DEFINITION">PROGRESSION-DEFINITION</a></code></h4>  </header> <pre class="docstring">Container class to instantiate a progression from.
 
 The definition should at all time keep track of the existing instances
 and update them in case the definition gets updated with new animations.
@@ -606,36 +249,10 @@ When the animations of the definition are set, the animations are also
 set for each of the known instances of the definition.
 
 See ANIMATIONS
-See INSTANCES</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:RANGE-SLOT-TWEEN"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:RANGE-SLOT-TWEEN" class="name">RANGE-SLOT-TWEEN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Combination of a range-tween and a slot-tween.
+See INSTANCES</pre> </article> </li><li> <a name="FLARE:RANGE-SLOT-TWEEN"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:RANGE-SLOT-TWEEN">RANGE-SLOT-TWEEN</a></code></h4>  </header> <pre class="docstring">Combination of a range-tween and a slot-tween.
 
 See RANGE-TWEEN
-See SLOT-TWEEN</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:RANGE-TWEEN"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:RANGE-TWEEN" class="name">RANGE-TWEEN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A tween mixin that interpolates a given range of values using an easing function.
+See SLOT-TWEEN</pre> </article> </li><li> <a name="FLARE:RANGE-TWEEN"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:RANGE-TWEEN">RANGE-TWEEN</a></code></h4>  </header> <pre class="docstring">A tween mixin that interpolates a given range of values using an easing function.
 
 Implements TWEEN-VALUE
 Default FROM is 0, TO is 1, and EASE is LINEAR.
@@ -644,1104 +261,184 @@ See TWEEN
 See FROM
 See TO
 See EASE-FUNC
-See *EASINGS*</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:RING"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:RING" class="name">RING</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Formation to represent an equidistant distribution of entities along a ring.
+See *EASINGS*</pre> </article> </li><li> <a name="FLARE:RING"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:RING">RING</a></code></h4>  </header> <pre class="docstring">Formation to represent an equidistant distribution of entities along a ring.
 
-See ARC</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SCENE"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:SCENE" class="name">SCENE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Container class to represent the top-level scene that should be drawn and managed.
+See ARC</pre> </article> </li><li> <a name="FLARE:SCENE"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:SCENE">SCENE</a></code></h4>  </header> <pre class="docstring">Container class to represent the top-level scene that should be drawn and managed.
 
-See COLLECTIVE
+See SCENE-GRAPH
 See CLOCK
 See PAINTABLE
-See ANIMATABLE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SCENE-UNIT"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:SCENE-UNIT" class="name">SCENE-UNIT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A unit within a scene.
+See ANIMATABLE</pre> </article> </li><li> <a name="FLARE:SCENE-GRAPH"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:SCENE-GRAPH">SCENE-GRAPH</a></code></h4>  </header> <pre class="docstring">A scene-graph is a container that also has a name-map to easily reach objects.
+This includes all objects in the container tree.
 
-See SCENE
-See UNIT</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SIZED-ENTITY"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:SIZED-ENTITY" class="name">SIZED-ENTITY</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">An entity that has a given size or extent.
+See CONTAINER</pre> </article> </li><li> <a name="FLARE:SIZED-ENTITY"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:SIZED-ENTITY">SIZED-ENTITY</a></code></h4>  </header> <pre class="docstring">An entity that has a given size or extent.
 
 See ENTITY
-See SIZE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SLOT-TWEEN"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:SLOT-TWEEN" class="name">SLOT-TWEEN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A tween mixin that modifies a slot on the object.
+See SIZE</pre> </article> </li><li> <a name="FLARE:SLOT-TWEEN"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:SLOT-TWEEN">SLOT-TWEEN</a></code></h4>  </header> <pre class="docstring">A tween mixin that modifies a slot on the object.
 
 Upon TICK the slot-value is set with the result of TWEEN-VALUE.
 
 See TWEEN
 See SLOT
 See ORIGINALS
-See TWEEN-VALUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:TARGET"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:TARGET" class="name">TARGET</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Superclass for a painting device onto which things can be drawn.
+See TWEEN-VALUE</pre> </article> </li><li> <a name="FLARE:TARGET"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:TARGET">TARGET</a></code></h4>  </header> <pre class="docstring">Superclass for a painting device onto which things can be drawn.
 
 See PAINT
-See CALL-WITH-TRANSLATION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:TWEEN"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:TWEEN" class="name">TWEEN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Superclass for changes that modify the given animatable, but do not change the scene graph.
+See CALL-WITH-TRANSLATION</pre> </article> </li><li> <a name="FLARE:TWEEN"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:TWEEN">TWEEN</a></code></h4>  </header> <pre class="docstring">Superclass for changes that modify the given animatable, but do not change the scene graph.
 
-See CHANGE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:UNIT"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE:UNIT" class="name">UNIT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A unit is an object with a name and a collective.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ANGLE"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:ANGLE" class="name">ANGLE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ARC)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the angle.
+See CHANGE</pre> </article> </li><li> <a name="FLARE:UNIT"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE:UNIT">UNIT</a></code></h4>  </header> <pre class="docstring">A unit is an object with a name.</pre> </article> </li><li> <a name="FLARE:ANGLE"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:ANGLE">ANGLE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ARC</code><code>)</code>  </header> <pre class="docstring">Accessor to the angle.
 
-See ARC</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ANIMATABLE"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:ANIMATABLE" class="name">ANIMATABLE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(OBJECT)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the animatable the progression is acting upon.
+See ARC</pre> </article> </li><li> <a name="FLARE:ANIMATABLE"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:ANIMATABLE">ANIMATABLE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <pre class="docstring">Accessor to the animatable the progression is acting upon.
 
-See PROGRESSION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ANIMATIONS"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:ANIMATIONS" class="name">ANIMATIONS</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(PROGRESSION-DEFINITION)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the vector of animations that the progression holds.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:BEGINNING"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:BEGINNING" class="name">BEGINNING</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ANIMATION)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the beginning (in seconds) at which the animation should start.
+See PROGRESSION</pre> </article> </li><li> <a name="FLARE:ANIMATIONS"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:ANIMATIONS">ANIMATIONS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PROGRESSION-DEFINITION</code><code>)</code>  </header> <pre class="docstring">Accessor to the vector of animations that the progression holds.</pre> </article> </li><li> <a name="FLARE:BEGINNING"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:BEGINNING">BEGINNING</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ANIMATION</code><code>)</code>  </header> <pre class="docstring">Accessor to the beginning (in seconds) at which the animation should start.
 
-See ANIMATION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CHANGES"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:CHANGES" class="name">CHANGES</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ANIMATION)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the list of changes that the animation executes.
+See ANIMATION</pre> </article> </li><li> <a name="FLARE:CHANGES"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:CHANGES">CHANGES</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ANIMATION</code><code>)</code>  </header> <pre class="docstring">Accessor to the list of changes that the animation executes.
 
-See ANIMATION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CLOCK"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:CLOCK" class="name">CLOCK</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CLOCK)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the current time in the clock.
+See ANIMATION</pre> </article> </li><li> <a name="FLARE:CLOCK"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:CLOCK">CLOCK</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CLOCK</code><code>)</code>  </header> <pre class="docstring">Accessor to the current time in the clock.
 
 Note that the current time in the clock must not necessarily be 100% accurate.
 In order to get perfectly accurate current time of the clock, you must call UPDATE
 on it before retrieving its current time value with CLOCK.
 
-See CLOCK</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:COLLECTIVE"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:COLLECTIVE" class="name">COLLECTIVE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(UNIT)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the collective the unit is in.
+See CLOCK</pre> </article> </li><li> <a name="FLARE:CREATOR"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:CREATOR">CREATOR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <pre class="docstring">Accessor to the function that upon calling instantiates one or more objects.
 
-See UNIT</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CREATOR"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:CREATOR" class="name">CREATOR</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(OBJECT)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the function that upon calling instantiates one or more objects.
-
-See ENTER-OPERATION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:DURATION"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:DURATION" class="name">DURATION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ANIMATION)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the duration (in seconds) that the animation should be active for.
+See ENTER-OPERATION</pre> </article> </li><li> <a name="FLARE:DURATION"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:DURATION">DURATION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ANIMATION</code><code>)</code>  </header> <pre class="docstring">Accessor to the duration (in seconds) that the animation should be active for.
 Can also be T, in which case the animation should go on forever.
 
-See ANIMATION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:EASING"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:EASING" class="name">EASING</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(NAME)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the easing function associated with the given name, if any.
+See ANIMATION</pre> </article> </li><li> <a name="FLARE:EASING"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:EASING">EASING</a></code></h4> <code class="qualifiers"></code> <code class="arguments">NAME</code><code>)</code>  </header> <pre class="docstring">Accessor to the easing function associated with the given name, if any.
 
-See *EASINGS*</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:FUTURE-ANIMATIONS"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:FUTURE-ANIMATIONS" class="name">FUTURE-ANIMATIONS</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(PROGRESSION)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the vector of animations that have yet to become activated after the current clock time.
+See *EASINGS*</pre> </article> </li><li> <a name="FLARE:FUTURE-ANIMATIONS"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:FUTURE-ANIMATIONS">FUTURE-ANIMATIONS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PROGRESSION</code><code>)</code>  </header> <pre class="docstring">Accessor to the vector of animations that have yet to become activated after the current clock time.
 
-See PROGRESSION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:INSTANCES"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:INSTANCES" class="name">INSTANCES</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(PROGRESSION-DEFINITION)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to all progression instances that were created from this definition.
+See PROGRESSION</pre> </article> </li><li> <a name="FLARE:INSTANCES"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:INSTANCES">INSTANCES</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PROGRESSION-DEFINITION</code><code>)</code>  </header> <pre class="docstring">Accessor to all progression instances that were created from this definition.
 
-See PROGRESSION-DEFINITION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:LOCATION"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:LOCATION" class="name">LOCATION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ENTITY)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the location of the entity.
+See PROGRESSION-DEFINITION</pre> </article> </li><li> <a name="FLARE:LOCATION"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:LOCATION">LOCATION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ENTITY</code><code>)</code>  </header> <pre class="docstring">Accessor to the location of the entity.
 
-See ENTITY</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:NAME"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:NAME" class="name">NAME</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(UNIT)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the name of the unit.
+See ENTITY</pre> </article> </li><li> <a name="FLARE:NAME-MAP"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:NAME-MAP">NAME-MAP</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SCENE-GRAPH</code><code>)</code>  </header> <pre class="docstring">Accessor to the name table of the scene-graph.
 
-See UNIT</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:NAME-MAP"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:NAME-MAP" class="name">NAME-MAP</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(COLLECTIVE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the name table of the collective.
+See SCENE-GRAPH</pre> </article> </li><li> <a name="FLARE:OBJECTS"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:OBJECTS">OBJECTS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CONTAINER</code><code>)</code>  </header> <pre class="docstring">Accessor to a value that stores which objects are being managed.</pre> </article> </li><li> <a name="FLARE:ORIENTATION"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:ORIENTATION">ORIENTATION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ENTITY</code><code>)</code>  </header> <pre class="docstring">Accessor to the vector that defines the orientation of the entity.
 
-See COLLECTIVE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:OBJECTS"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:OBJECTS" class="name">OBJECTS</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CONTAINER)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to a value that stores which objects are being managed.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ORIENTATION"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:ORIENTATION" class="name">ORIENTATION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ENTITY)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the vector that defines the orientation of the entity.
+See ORIENTED-ENTITY</pre> </article> </li><li> <a name="FLARE:ORIGINALS"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:ORIGINALS">ORIGINALS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <pre class="docstring">A hash table to store the original values of objects before they were changed.</pre> </article> </li><li> <a name="FLARE:PAST-ANIMATIONS"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:PAST-ANIMATIONS">PAST-ANIMATIONS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PROGRESSION</code><code>)</code>  </header> <pre class="docstring">Accessor to the vector of animations that have ended before the current clock time.
 
-See ORIENTED-ENTITY</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ORIGINALS"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:ORIGINALS" class="name">ORIGINALS</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(OBJECT)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A hash table to store the original values of objects before they were changed.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PAST-ANIMATIONS"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:PAST-ANIMATIONS" class="name">PAST-ANIMATIONS</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(PROGRESSION)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the vector of animations that have ended before the current clock time.
+See PROGRESSION</pre> </article> </li><li> <a name="FLARE:PRESENT-ANIMATIONS"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:PRESENT-ANIMATIONS">PRESENT-ANIMATIONS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PROGRESSION</code><code>)</code>  </header> <pre class="docstring">Accessor to the vector of currently active animations within the clock time.
 
-See PROGRESSION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PRESENT-ANIMATIONS"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:PRESENT-ANIMATIONS" class="name">PRESENT-ANIMATIONS</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(PROGRESSION)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the vector of currently active animations within the clock time.
+See PROGRESSION</pre> </article> </li><li> <a name="FLARE:PROGRESSION-DEFINITION"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:PROGRESSION-DEFINITION">PROGRESSION-DEFINITION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">NAME</code><code>)</code>  </header> <pre class="docstring">Accessor to the global progression definition by name.
 
-See PROGRESSION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PROGRESSION-DEFINITION"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:PROGRESSION-DEFINITION" class="name">PROGRESSION-DEFINITION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(NAME)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the global progression definition by name.
+See *PROGRESSIONS*</pre> </article> </li><li> <a name="FLARE:PROGRESSIONS"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:PROGRESSIONS">PROGRESSIONS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ANIMATABLE</code><code>)</code>  </header> <pre class="docstring">Accessor to the list of progressions that act upon this.
 
-See *PROGRESSIONS*</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PROGRESSIONS"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:PROGRESSIONS" class="name">PROGRESSIONS</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ANIMATABLE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the list of progressions that act upon this.
+See ANIMATABLE</pre> </article> </li><li> <a name="FLARE:RUNNING"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:RUNNING">RUNNING</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CLOCK</code><code>)</code>  </header> <pre class="docstring">Accessor to whether the clock is currently running or not.
 
-See ANIMATABLE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:RUNNING"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:RUNNING" class="name">RUNNING</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CLOCK)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to whether the clock is currently running or not.
+See CLOCK</pre> </article> </li><li> <a name="FLARE:SCENE-GRAPH"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:SCENE-GRAPH">SCENE-GRAPH</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CONTAINER-UNIT</code><code>)</code>  </header> <pre class="docstring">Accessor to the scene-graph the container-unit is in.
 
-See CLOCK</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SCENE"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:SCENE" class="name">SCENE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(SCENE-UNIT)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the scene the scene-unit is contained in.
-
-See SCENE
-See SCENE-UNIT</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SELECTOR"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:SELECTOR" class="name">SELECTOR</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ANIMATION)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the selector that describes which elements to affect.
+See CONTAINER-UNIT</pre> </article> </li><li> <a name="FLARE:SELECTOR"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:SELECTOR">SELECTOR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ANIMATION</code><code>)</code>  </header> <pre class="docstring">Accessor to the selector that describes which elements to affect.
 
 See ANIMATION
-See COMPILE-SELECTOR</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SIZE"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:SIZE" class="name">SIZE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ENTITY)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the size of the entity.
+See COMPILE-SELECTOR</pre> </article> </li><li> <a name="FLARE:SIZE"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:SIZE">SIZE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ENTITY</code><code>)</code>  </header> <pre class="docstring">Accessor to the size of the entity.
 
-See SIZED-ENTITY</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SLOT"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:SLOT" class="name">SLOT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(OBJECT)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the slot that should be modified.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SPACING"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:SPACING" class="name">SPACING</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ARC)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the spacing between items.
+See SIZED-ENTITY</pre> </article> </li><li> <a name="FLARE:SLOT"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:SLOT">SLOT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <pre class="docstring">Accessor to the slot that should be modified.</pre> </article> </li><li> <a name="FLARE:SPACING"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:SPACING">SPACING</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ARC</code><code>)</code>  </header> <pre class="docstring">Accessor to the spacing between items.
 
-See ARC</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:START"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:START" class="name">START</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CLOCK)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Starts the given clock.
+See ARC</pre> </article> </li><li> <a name="FLARE:START"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:START">START</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CLOCK</code><code>)</code>  </header> <pre class="docstring">Starts the given clock.
 
 Returns the object given.
 
-See CLOCK</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:UP"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:UP" class="name">UP</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ARC)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the UP vector.
+See CLOCK</pre> </article> </li><li> <a name="FLARE:TIMESCALE"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:TIMESCALE">TIMESCALE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CLOCK</code><code>)</code>  </header> <pre class="docstring">Accessor to the timescale of the clock to allow slowing or speeding up the progression of time.
 
-See ARC</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:VISIBILITY"/>
-                  <article>
-                    <header class="accessor">
-                      <span class="type">accessor</span>
-                      <code>
-                        <h4><a href="#FLARE:VISIBILITY" class="name">VISIBILITY</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(PAINTABLE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to how opaque the paintable is.
+See CLOCK</pre> </article> </li><li> <a name="FLARE:UP"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:UP">UP</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ARC</code><code>)</code>  </header> <pre class="docstring">Accessor to the UP vector.
+
+See ARC</pre> </article> </li><li> <a name="FLARE:VISIBILITY"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:VISIBILITY">VISIBILITY</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PAINTABLE</code><code>)</code>  </header> <pre class="docstring">Accessor to how opaque the paintable is.
 Has to be a float between 0 and 1.
 
-See PAINTABLE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:EASE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE:EASE" class="name">EASE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X BY &amp;OPTIONAL (FROM 0) (TO 1))</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Shorthand function to perform an easing interpolation.
+See PAINTABLE</pre> </article> </li><li> <a name="FLARE:EASE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:EASE">EASE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">X BY &amp;OPTIONAL (FROM 0) (TO 1)</code><code>)</code>  </header> <pre class="docstring">Shorthand function to perform an easing interpolation.
 
 X must be a float between 0 and 1
 BY must name an easing function
-FROM and TO must be REALs specifying the boundaries of the easing.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:MAP-CONTAINER-TREE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE:MAP-CONTAINER-TREE" class="name">MAP-CONTAINER-TREE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(FUNCTION CONTAINER)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Recursively maps FUNCTION over all descendants of CONTAINER.
+FROM and TO must be REALs specifying the boundaries of the easing.</pre> </article> </li><li> <a name="FLARE:MAP-CONTAINER-TREE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:MAP-CONTAINER-TREE">MAP-CONTAINER-TREE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FUNCTION CONTAINER</code><code>)</code>  </header> <pre class="docstring">Recursively maps FUNCTION over all descendants of CONTAINER.
 
-See CONTAINER</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PRINT"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE:PRINT" class="name">PRINT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(OBJECT &amp;OPTIONAL STREAM)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Output a newline, the mostly READable printed representation of OBJECT, and
-  space to the specified STREAM.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PRINT"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE:PRINT" class="name">PRINT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(OBJECT &amp;OPTIONAL STREAM)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Output a newline, the mostly READable printed representation of OBJECT, and
-  space to the specified STREAM.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PRINT-CONTAINER-TREE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE:PRINT-CONTAINER-TREE" class="name">PRINT-CONTAINER-TREE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CONTAINER &amp;OPTIONAL (STREAM T))</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Prints the entire CONTAINER tree hierarchy nicely to the given STREAM.
+See CONTAINER</pre> </article> </li><li> <a name="FLARE:PRINT"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:PRINT">PRINT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT &amp;OPTIONAL STREAM</code><code>)</code>  </header> <pre class="docstring">Output a newline, the mostly READable printed representation of OBJECT, and
+  space to the specified STREAM.</pre> </article> </li><li> <a name="FLARE:PRINT-CONTAINER-TREE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:PRINT-CONTAINER-TREE">PRINT-CONTAINER-TREE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CONTAINER &amp;OPTIONAL (DEPTH 0)</code><code>)</code>  </header> <pre class="docstring">Prints the entire CONTAINER tree hierarchy nicely to the given STREAM.
 
-See CONTAINER</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:REMOVE-EASING"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE:REMOVE-EASING" class="name">REMOVE-EASING</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(NAME)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Removes the easing function associated with the given name.
+See CONTAINER</pre> </article> </li><li> <a name="FLARE:REMOVE-EASING"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:REMOVE-EASING">REMOVE-EASING</a></code></h4> <code class="qualifiers"></code> <code class="arguments">NAME</code><code>)</code>  </header> <pre class="docstring">Removes the easing function associated with the given name.
 
-See *EASINGS*</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:REMOVE-PROGRESSION-DEFINITION"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE:REMOVE-PROGRESSION-DEFINITION" class="name">REMOVE-PROGRESSION-DEFINITION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(NAME)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Remove the global progression definition by name
+See *EASINGS*</pre> </article> </li><li> <a name="FLARE:REMOVE-PROGRESSION-DEFINITION"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:REMOVE-PROGRESSION-DEFINITION">REMOVE-PROGRESSION-DEFINITION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">NAME</code><code>)</code>  </header> <pre class="docstring">Remove the global progression definition by name
 
-See *PROGRESSIONS*</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SET"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE:SET" class="name">SET</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(SYMBOL NEW-VALUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Set SYMBOL's value cell to NEW-VALUE.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SET"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE:SET" class="name">SET</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(SYMBOL NEW-VALUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Set SYMBOL's value cell to NEW-VALUE.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ADD-PROGRESSION"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:ADD-PROGRESSION" class="name">ADD-PROGRESSION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(PROGRESSION ANIMATABLE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Attach a new progression onto the animatable.
+See *PROGRESSIONS*</pre> </article> </li><li> <a name="FLARE:SET"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:SET">SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SYMBOL NEW-VALUE</code><code>)</code>  </header> <pre class="docstring">Set SYMBOL's value cell to NEW-VALUE.</pre> </article> </li><li> <a name="FLARE:ADD-PROGRESSION"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:ADD-PROGRESSION">ADD-PROGRESSION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PROGRESSION ANIMATABLE</code><code>)</code>  </header> <pre class="docstring">Attach a new progression onto the animatable.
 
 See PROGRESSION
-See ANIMATABLE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CALL-WITH-TRANSLATION"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:CALL-WITH-TRANSLATION" class="name">CALL-WITH-TRANSLATION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(FUNC TARGET VEC)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Call FUNC after having performed a translation on TARGET by VEC.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CLEAR"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:CLEAR" class="name">CLEAR</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CONTAINER)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Removes all objects from the container.
+See ANIMATABLE</pre> </article> </li><li> <a name="FLARE:CALL-WITH-TRANSLATION"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:CALL-WITH-TRANSLATION">CALL-WITH-TRANSLATION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FUNC TARGET VEC</code><code>)</code>  </header> <pre class="docstring">Call FUNC after having performed a translation on TARGET by VEC.</pre> </article> </li><li> <a name="FLARE:CLEAR"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:CLEAR">CLEAR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CONTAINER</code><code>)</code>  </header> <pre class="docstring">Removes all objects from the CONTAINER.
 
 Returns the object given.
 
-See CONTAINER</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:EASE-OBJECT"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:EASE-OBJECT" class="name">EASE-OBJECT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(FROM TO X BY)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Shorthand function to ease a range.
+See CONTAINER</pre> </article> </li><li> <a name="FLARE:DEREGISTER"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:DEREGISTER">DEREGISTER</a></code></h4> <code class="qualifiers"></code> <code class="arguments">UNIT SCENE-GRAPH</code><code>)</code>  </header> <pre class="docstring">Deregisters the unit with the scene-graph, making it accessible by its name.
+Any unit that leaves from any part of the scene-graph must be deregistered by this
+function. This should happen automatically provided you use the CONTAINER-UNIT class
+for containers inside the scene-graph. Thus you need not call this function unless
+you implement your own container.
+
+See UNIT
+See SCENE-GRAPH</pre> </article> </li><li> <a name="FLARE:EASE-OBJECT"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:EASE-OBJECT">EASE-OBJECT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FROM TO X BY</code><code>)</code>  </header> <pre class="docstring">Shorthand function to ease a range.
 
 FROM and TO must be matching objects
 
 By default works on REALs and VECs.
 
-See EASE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ENTER"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:ENTER" class="name">ENTER</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(UNIT COLLECTIVE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Adds the given UNIT into the COLLECTIVE.
+See EASE</pre> </article> </li><li> <a name="FLARE:ENTER"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:ENTER">ENTER</a></code></h4> <code class="qualifiers"></code> <code class="arguments">UNIT SCENE-GRAPH</code><code>)</code>  </header> <pre class="docstring">Adds the given UNIT into the CONTAINER.
 
 Returns the unit given.
 
 See UNIT
-See COLLECTIVE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:INSERT"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:INSERT" class="name">INSERT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CONTAINER &amp;REST OBJECTS)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Insert the OBJECTs into the CONTAINER.
-
-Returns the container given.
-
-See CONTAINER</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:LEAVE"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:LEAVE" class="name">LEAVE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(UNIT COLLECTIVE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Removes the given UNIT from the COLLECTIVE.
+See CONTAINER</pre> </article> </li><li> <a name="FLARE:LEAVE"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:LEAVE">LEAVE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">UNIT SCENE-GRAPH</code><code>)</code>  </header> <pre class="docstring">Removes the given UNIT from the CONTAINER.
 
 Returns the unit given.
 
 See UNIT
-See COLLECTIVE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ORIGINAL-VALUE"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:ORIGINAL-VALUE" class="name">ORIGINAL-VALUE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(OBJECT TWEEN)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the original value this object might have had before the given tween changed anything.
+See CONTAINER</pre> </article> </li><li> <a name="FLARE:NAME"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:NAME">NAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">UNIT</code><code>)</code>  </header> <pre class="docstring">Reader to the name of the unit.
 
-See TWEEN</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PAINT"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:PAINT" class="name">PAINT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(PAINTABLE TARGET)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Performs the necessary painting operations to draw PAINTABLE onto TARGET.
+See UNIT</pre> </article> </li><li> <a name="FLARE:ORIGINAL-VALUE"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:ORIGINAL-VALUE">ORIGINAL-VALUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT TWEEN</code><code>)</code>  </header> <pre class="docstring">Returns the original value this object might have had before the given tween changed anything.
+
+See TWEEN</pre> </article> </li><li> <a name="FLARE:PAINT"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:PAINT">PAINT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PAINTABLE TARGET</code><code>)</code>  </header> <pre class="docstring">Performs the necessary painting operations to draw PAINTABLE onto TARGET.
 
 See TARGET
-See PAINTABLE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PROGRESSION"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:PROGRESSION" class="name">PROGRESSION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(DENOMINATOR ANIMATABLE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Find all progressions that match the denominator within the container.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:PROGRESSION-INSTANCE"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:PROGRESSION-INSTANCE" class="name">PROGRESSION-INSTANCE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(PROGRESSION-DEFINITION)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Constructs a new progression instance using the given definition.
+See PAINTABLE</pre> </article> </li><li> <a name="FLARE:PROGRESSION"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:PROGRESSION">PROGRESSION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">DENOMINATOR ANIMATABLE</code><code>)</code>  </header> <pre class="docstring">Find all progressions that match the denominator within the container.</pre> </article> </li><li> <a name="FLARE:PROGRESSION-INSTANCE"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:PROGRESSION-INSTANCE">PROGRESSION-INSTANCE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PROGRESSION-DEFINITION</code><code>)</code>  </header> <pre class="docstring">Constructs a new progression instance using the given definition.
 
 See PROGRESSION
-See PROGRESSION-DEFINITION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:REMOVE-PROGRESSION"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:REMOVE-PROGRESSION" class="name">REMOVE-PROGRESSION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(PROGRESSION ANIMATABLE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Remove an existing progression from animatable.
+See PROGRESSION-DEFINITION</pre> </article> </li><li> <a name="FLARE:REGISTER"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:REGISTER">REGISTER</a></code></h4> <code class="qualifiers"></code> <code class="arguments">UNIT SCENE-GRAPH</code><code>)</code>  </header> <pre class="docstring">Registers the unit with the scene-graph, making it accessible by its name.
+Any unit that is entered into any part of the scene-graph must be registered by this
+function. This should happen automatically provided you use the CONTAINER-UNIT class
+for containers inside the scene-graph. Thus you need not call this function unless
+you implement your own container.
+
+See UNIT
+See SCENE-GRAPH</pre> </article> </li><li> <a name="FLARE:REMOVE-PROGRESSION"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:REMOVE-PROGRESSION">REMOVE-PROGRESSION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">PROGRESSION ANIMATABLE</code><code>)</code>  </header> <pre class="docstring">Remove an existing progression from animatable.
 
 See PROGRESSION
-See ANIMATABLE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:RESET"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:RESET" class="name">RESET</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CLOCK)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Resets the given clock to its initial state.
+See ANIMATABLE</pre> </article> </li><li> <a name="FLARE:RESET"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:RESET">RESET</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CLOCK</code><code>)</code>  </header> <pre class="docstring">Resets the given clock to its initial state.
 
 Returns the object given.
 
-See CLOCK</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:STOP"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:STOP" class="name">STOP</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CLOCK)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Stops the given clock.
+See CLOCK</pre> </article> </li><li> <a name="FLARE:STOP"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:STOP">STOP</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CLOCK</code><code>)</code>  </header> <pre class="docstring">Stops the given clock.
 
 Returns the object given.
 
-See CLOCK</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SYNCHRONIZE"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:SYNCHRONIZE" class="name">SYNCHRONIZE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CLOCK NEW)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Synchronize the clock to the new time.
+See CLOCK</pre> </article> </li><li> <a name="FLARE:SYNCHRONIZE"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:SYNCHRONIZE">SYNCHRONIZE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CLOCK NEW</code><code>)</code>  </header> <pre class="docstring">Synchronize the clock to the new time.
 
 Time should be another clock or seconds.
 
 Returns the object given.
 
-See CLOCK</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:TICK"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:TICK" class="name">TICK</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(ANIMATION ANIMATABLE CLOCK STEP)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Performs a single update tick, moving along the animation on the animatable at the given clock for the given step amount of time.
+See CLOCK</pre> </article> </li><li> <a name="FLARE:TICK"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:TICK">TICK</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ANIMATION ANIMATABLE CLOCK STEP</code><code>)</code>  </header> <pre class="docstring">Performs a single update tick, moving along the animation on the animatable at the given clock for the given step amount of time.
 
 See ANIMATION
 See ANIMATABLE
-See CLOCK</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:UNIT"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:UNIT" class="name">UNIT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(NAME COLLECTIVE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to a given, named unit in the collective.
+See CLOCK</pre> </article> </li><li> <a name="FLARE:UNIT"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:UNIT">UNIT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">NAME SCENE-GRAPH</code><code>)</code>  </header> <pre class="docstring">Accessor to a given, named unit in the scene-graph.
 
 See UNIT
-See COLLECTIVE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:UNITS"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:UNITS" class="name">UNITS</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(COLLECTIVE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Accessor to the indexed set of objects in the collective.
+See SCENE-GRAPH</pre> </article> </li><li> <a name="FLARE:UNITS"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:UNITS">UNITS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SCENE-GRAPH</code><code>)</code>  </header> <pre class="docstring">Returns a fresh list of all units in the scene-graph tree.
 
 See UNIT
-See INDEXED-SET
-See COLLECTIVE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:UPDATE"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:UPDATE" class="name">UPDATE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(OBJECT)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Updates the given object, causing its internal representation to be adapted for the current time.
+See SCENE-GRAPH</pre> </article> </li><li> <a name="FLARE:UPDATE"> </a> <article> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:UPDATE">UPDATE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <pre class="docstring">Updates the given object, causing its internal representation to be adapted for the current time.
 
-Returns the object given.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:WITHDRAW"/>
-                  <article>
-                    <header class="generic">
-                      <span class="type">generic</span>
-                      <code>
-                        <h4><a href="#FLARE:WITHDRAW" class="name">WITHDRAW</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(CONTAINER &amp;REST OBJECTS)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Removes the OBJECTs from the CONTAINER.
+Returns the object given.</pre> </article> </li><li> <a name="FLARE:DEFINE-CHANGE-PARSER"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:DEFINE-CHANGE-PARSER">DEFINE-CHANGE-PARSER</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Define a parser for the given type of change.</pre> </article> </li><li> <a name="FLARE:DEFINE-EASING"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:DEFINE-EASING">DEFINE-EASING</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Shorthand macro to define an easing function.
 
-Returns the container given.
-
-See CONTAINER</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:DEFINE-CHANGE-PARSER"/>
-                  <article>
-                    <header class="macro">
-                      <span class="type">macro</span>
-                      <code>
-                        <h4><a href="#FLARE:DEFINE-CHANGE-PARSER" class="name">DEFINE-CHANGE-PARSER</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(&amp;REST ARGS)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Define a parser for the given type of change.</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:DEFINE-EASING"/>
-                  <article>
-                    <header class="macro">
-                      <span class="type">macro</span>
-                      <code>
-                        <h4><a href="#FLARE:DEFINE-EASING" class="name">DEFINE-EASING</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(&amp;REST ARGS)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Shorthand macro to define an easing function.
-
-See EASING</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:DEFINE-PROGRESSION"/>
-                  <article>
-                    <header class="macro">
-                      <span class="type">macro</span>
-                      <code>
-                        <h4><a href="#FLARE:DEFINE-PROGRESSION" class="name">DEFINE-PROGRESSION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(&amp;REST ARGS)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Convenience macro to define a global progression.
+See EASING</pre> </article> </li><li> <a name="FLARE:DEFINE-PROGRESSION"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:DEFINE-PROGRESSION">DEFINE-PROGRESSION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Convenience macro to define a global progression.
 Returns the progression name.
 
 The formal specification of the body intervals is as follows:
@@ -1772,528 +469,22 @@ An example definition follows:
   20 (:ring (leave)))
 
 At time 0, a ring is created with name :ring and 20 bullets of size 2 as
-its children. It is entered into the collective. Then from time 0 to 8,
+its children. It is entered into the scene-graph. Then from time 0 to 8,
 the ring's size is increased by 2 every second. Simultaneously from time
 0 to 20 the ring's angle is increased to 1000, eased by the quad-in-out
 interpolation and the ring's children (the 20 bullets) increase in size
-to 50. At time 20, the ring is removed from the collective again.
+to 50. At time 20, the ring is removed from the scene-graph again.
 
 See PROGRESSION-DEFINITION
-See COMPILE-ANIMATIONS</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:DO-CONTAINER-TREE"/>
-                  <article>
-                    <header class="macro">
-                      <span class="type">macro</span>
-                      <code>
-                        <h4><a href="#FLARE:DO-CONTAINER-TREE" class="name">DO-CONTAINER-TREE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(&amp;REST ARGS)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Iterates over all descendants of CONTAINER
+See COMPILE-ANIMATIONS</pre> </article> </li><li> <a name="FLARE:DO-CONTAINER-TREE"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:DO-CONTAINER-TREE">DO-CONTAINER-TREE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Iterates over all descendants of CONTAINER
 
-See MAP-CONTAINER-TREE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:WITH-TRANSLATION"/>
-                  <article>
-                    <header class="macro">
-                      <span class="type">macro</span>
-                      <code>
-                        <h4><a href="#FLARE:WITH-TRANSLATION" class="name">WITH-TRANSLATION</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(&amp;REST ARGS)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Shorthand macro for translation.
+See MAP-CONTAINER-TREE</pre> </article> </li><li> <a name="FLARE:WITH-TRANSLATION"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#FLARE:WITH-TRANSLATION">WITH-TRANSLATION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Shorthand macro for translation.
 
-See CALL-WITH-TRANSLATION</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:BACK-IN"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:BACK-IN" class="name">BACK-IN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a back-in curve.
+See CALL-WITH-TRANSLATION</pre> </article> </li></ul> </li><li class="package"> <h3> <a name="FLARE-QUEUE" href="#FLARE-QUEUE">FLARE-QUEUE</a> <span class="nicknames">(ORG.SHIRAKUMO.FLARE.QUEUE)</span> </h3> <ul><li> <a name="FLARE-QUEUE:CELL"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE-QUEUE:CELL">CELL</a></code></h4>  </header> <pre class="docstring">Struct to contain a queue cell with VALUE, LEFT, and RIGHT slots.
 
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:BACK-IN-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:BACK-IN-OUT" class="name">BACK-IN-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a back-in-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:BACK-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:BACK-OUT" class="name">BACK-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a back-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:BOUNCE-IN"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:BOUNCE-IN" class="name">BOUNCE-IN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a bounce-in curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:BOUNCE-IN-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:BOUNCE-IN-OUT" class="name">BOUNCE-IN-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a bounce-in-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:BOUNCE-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:BOUNCE-OUT" class="name">BOUNCE-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a bounce-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CIRC-IN"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:CIRC-IN" class="name">CIRC-IN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a circ-in curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CIRC-IN-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:CIRC-IN-OUT" class="name">CIRC-IN-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a circ-in-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CIRC-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:CIRC-OUT" class="name">CIRC-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a circ-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CUBIC-IN"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:CUBIC-IN" class="name">CUBIC-IN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a cubic-in curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CUBIC-IN-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:CUBIC-IN-OUT" class="name">CUBIC-IN-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a cubic-in-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:CUBIC-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:CUBIC-OUT" class="name">CUBIC-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a cubic-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ELASTIC-IN"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:ELASTIC-IN" class="name">ELASTIC-IN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a elastic-in curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ELASTIC-IN-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:ELASTIC-IN-OUT" class="name">ELASTIC-IN-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a elastic-in-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:ELASTIC-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:ELASTIC-OUT" class="name">ELASTIC-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a elastic-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:EXPO-IN"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:EXPO-IN" class="name">EXPO-IN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a expo-in curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:EXPO-IN-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:EXPO-IN-OUT" class="name">EXPO-IN-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a expo-in-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:EXPO-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:EXPO-OUT" class="name">EXPO-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a expo-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:LINEAR"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:LINEAR" class="name">LINEAR</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a linear curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:QUAD-IN"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:QUAD-IN" class="name">QUAD-IN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a quad-in curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:QUAD-IN-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:QUAD-IN-OUT" class="name">QUAD-IN-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a quad-in-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:QUAD-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:QUAD-OUT" class="name">QUAD-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a quad-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:QUART-IN"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:QUART-IN" class="name">QUART-IN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a quart-in curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:QUART-IN-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:QUART-IN-OUT" class="name">QUART-IN-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a quart-in-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:QUART-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:QUART-OUT" class="name">QUART-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a quart-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:QUINT-IN"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:QUINT-IN" class="name">QUINT-IN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a quint-in curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:QUINT-IN-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:QUINT-IN-OUT" class="name">QUINT-IN-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a quint-in-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:QUINT-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:QUINT-OUT" class="name">QUINT-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a quint-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SINE-IN"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:SINE-IN" class="name">SINE-IN</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a sine-in curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SINE-IN-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:SINE-IN-OUT" class="name">SINE-IN-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a sine-in-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE:SINE-OUT"/>
-                  <article>
-                    <header class="easing">
-                      <span class="type">easing</span>
-                      <code>
-                        <h4><a href="#FLARE:SINE-OUT" class="name">SINE-OUT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(X)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Interpolates by a sine-out curve.
-
-See http://easings.net/</pre>
-                  </article>
-                </li></ul>
-            </li><li class="package">
-              <h3>
-                <a name="FLARE-QUEUE" href="#FLARE-QUEUE">FLARE-QUEUE</a>
-                <span class="nicknames">(ORG.SHIRAKUMO.FLARE.QUEUE)</span>
-              </h3>
-              <ul><li>
-                  <a name="FLARE-QUEUE:QUEUE"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:QUEUE" class="name">QUEUE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Implements an ordered queue.
+See VALUE
+See LEFT
+See RIGHT</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE">QUEUE</a></code></h4>  </header> <pre class="docstring">Implements an ordered queue.
 
 Aside from MAP-QUEUE and DO-QUEUE you can also use ITERATE
 to go through the set by FOR .. ON-QUEUE or FOR .. IN-QUEUE.
@@ -2313,249 +504,60 @@ See QUEUE-VALUE-AT
 See QUEUE-INDEX-OF
 See CLEAR-QUEUE
 See IN-QUEUE-P
-See COERCE-QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:CLEAR-QUEUE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:CLEAR-QUEUE" class="name">CLEAR-QUEUE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Removes all elements from the queue.
+See COERCE-QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:LEFT"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:LEFT">LEFT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">INSTANCE</code><code>)</code>  </header> <pre class="docstring">Accesses the cell left to the current cell.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:COERCE-QUEUE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:COERCE-QUEUE" class="name">COERCE-QUEUE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(QUEUE TYPE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Allows coercing the queue to:
+See CELL</pre> </article> </li><li> <a name="FLARE-QUEUE:RIGHT"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:RIGHT">RIGHT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">INSTANCE</code><code>)</code>  </header> <pre class="docstring">Accesses the cell right to the current cell.
+
+See CELL</pre> </article> </li><li> <a name="FLARE-QUEUE:VALUE"> </a> <article> <header class="accessor"> <span class="type">accessor</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:VALUE">VALUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">INSTANCE</code><code>)</code>  </header> <pre class="docstring">Accesses the value contained in a queue cell.
+
+See CELL</pre> </article> </li><li> <a name="FLARE-QUEUE:CELL-INSERT-BEFORE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:CELL-INSERT-BEFORE">CELL-INSERT-BEFORE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CELL NEIGHBOR</code><code>)</code>  </header> <pre class="docstring">Inserts the cell before its neighbour, making sure to keep all links updated.
+
+See CELL</pre> </article> </li><li> <a name="FLARE-QUEUE:CELL-REMOVE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:CELL-REMOVE">CELL-REMOVE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CELL</code><code>)</code>  </header> <pre class="docstring">Removes the cell out of the link chain, making sure to keep all links updated.
+Unless the cell is the only item in the link chain, its left/right slots are not
+modified.
+
+See CELL</pre> </article> </li><li> <a name="FLARE-QUEUE:CLEAR-QUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:CLEAR-QUEUE">CLEAR-QUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Removes all elements from the queue.
+
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:COERCE-QUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:COERCE-QUEUE">COERCE-QUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE TYPE</code><code>)</code>  </header> <pre class="docstring">Allows coercing the queue to:
 
 queue, list, vector, or sequence.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:DEQUEUE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:DEQUEUE" class="name">DEQUEUE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Pops the next value off the front of the queue.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:DEQUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:DEQUEUE">DEQUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Pops the next value off the front of the queue.
 The second value indicates whether there was any element in the queue at all.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:ENQUEUE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:ENQUEUE" class="name">ENQUEUE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(VALUE QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Inserts the given value at the end of the queue.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:ENQUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:ENQUEUE">ENQUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE QUEUE</code><code>)</code>  </header> <pre class="docstring">Inserts the given value at the end of the queue.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:IN-QUEUE-P"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:IN-QUEUE-P" class="name">IN-QUEUE-P</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(VALUE QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns T if the given value is found in the queue.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:IN-QUEUE-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:IN-QUEUE-P">IN-QUEUE-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns T if the given value is found in the queue.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:MAKE-QUEUE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:MAKE-QUEUE" class="name">MAKE-QUEUE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Creates a new queue instance.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:MAKE-QUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:MAKE-QUEUE">MAKE-QUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <pre class="docstring">Creates a new queue instance.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:MAP-QUEUE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:MAP-QUEUE" class="name">MAP-QUEUE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(FUNCTION QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Maps the function over all values in the queue in order.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:MAP-QUEUE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:MAP-QUEUE">MAP-QUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FUNCTION QUEUE</code><code>)</code>  </header> <pre class="docstring">Maps the function over all values in the queue in order.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:QUEUE-FIRST"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:QUEUE-FIRST" class="name">QUEUE-FIRST</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the first (front) value in the queue if there is any.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-FIRST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-FIRST">QUEUE-FIRST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the first (front) value in the queue if there is any.
 The second value indicates whether there was any element in the queue at all.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:QUEUE-INDEX-OF"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:QUEUE-INDEX-OF" class="name">QUEUE-INDEX-OF</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(VALUE QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the index of the value in the queue.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-INDEX-OF"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-INDEX-OF">QUEUE-INDEX-OF</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the index of the value in the queue.
 If the value could not be found, NIL is returned instead.
 
 This is potentially very costly as it might have to scan the entire queue.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:QUEUE-LAST"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:QUEUE-LAST" class="name">QUEUE-LAST</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the last (end) value in the queue if there is any.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-LAST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-LAST">QUEUE-LAST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the last (end) value in the queue if there is any.
 The second value indicates whether there was any element in the queue at all.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:QUEUE-REMOVE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:QUEUE-REMOVE" class="name">QUEUE-REMOVE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(VALUE QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Removes the given value from the queue.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-REMOVE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-REMOVE">QUEUE-REMOVE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE QUEUE</code><code>)</code>  </header> <pre class="docstring">Removes the given value from the queue.
 
 This is potentially very costly as it might have to scan the entire queue.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:QUEUE-SIZE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:QUEUE-SIZE" class="name">QUEUE-SIZE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the number of elements in the queue.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-SIZE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-SIZE">QUEUE-SIZE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the number of elements in the queue.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:QUEUE-VALUE-AT"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:QUEUE-VALUE-AT" class="name">QUEUE-VALUE-AT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(N QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the value at the given position in the queue.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:QUEUE-VALUE-AT"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:QUEUE-VALUE-AT">QUEUE-VALUE-AT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">N QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the value at the given position in the queue.
 The second value is NIL if the position is out of range.
 
 This is potentially very costly as it might have to scan the entire queue.
 
-See QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-QUEUE:DO-QUEUE"/>
-                  <article>
-                    <header class="macro">
-                      <span class="type">macro</span>
-                      <code>
-                        <h4><a href="#FLARE-QUEUE:DO-QUEUE" class="name">DO-QUEUE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(&amp;REST ARGS)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Iterates over each value in the queue in order.
+See QUEUE</pre> </article> </li><li> <a name="FLARE-QUEUE:DO-QUEUE"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-QUEUE:DO-QUEUE">DO-QUEUE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Iterates over each value in the queue in order.
 
-See QUEUE</pre>
-                  </article>
-                </li></ul>
-            </li><li class="package">
-              <h3>
-                <a name="FLARE-INDEXED-SET" href="#FLARE-INDEXED-SET">FLARE-INDEXED-SET</a>
-                <span class="nicknames">(ORG.SHIRAKUMO.FLARE.INDEXED-SET)</span>
-              </h3>
-              <ul><li>
-                  <a name="FLARE-INDEXED-SET:INDEXED-SET"/>
-                  <article>
-                    <header class="class">
-                      <span class="type">class</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:INDEXED-SET" class="name">INDEXED-SET</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">A set in which each element also has an index.
+See QUEUE</pre> </article> </li></ul> </li><li class="package"> <h3> <a name="FLARE-INDEXED-SET" href="#FLARE-INDEXED-SET">FLARE-INDEXED-SET</a> <span class="nicknames">(ORG.SHIRAKUMO.FLARE.INDEXED-SET)</span> </h3> <ul><li> <a name="FLARE-INDEXED-SET:INDEXED-SET"> </a> <article> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#FLARE-INDEXED-SET:INDEXED-SET">INDEXED-SET</a></code></h4>  </header> <pre class="docstring">A set in which each element also has an index.
 
 Aside from MAP-SET and DO-SET you can also use ITERATE
 to go through the set by FOR .. ON-SET or FOR .. IN-SET.
@@ -2574,218 +576,41 @@ See SET-VALUE-AT
 See SET-INDEX-OF
 See CLEAR-SET
 See IN-SET-P
-See COERCE-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:CLEAR-SET"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:CLEAR-SET" class="name">CLEAR-SET</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Removes all values from the set.
+See COERCE-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:CLEAR-SET"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:CLEAR-SET">CLEAR-SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Removes all values from the set.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:COERCE-SET"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:COERCE-SET" class="name">COERCE-SET</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(SET TYPE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Allows coercing the set to:
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:COERCE-SET"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:COERCE-SET">COERCE-SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SET TYPE</code><code>)</code>  </header> <pre class="docstring">Allows coercing the set to:
 
 indexed-set, hash-table, queue, list, vector, or sequence.
 
 See INDEXED-SET
-See COERCE-QUEUE</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:IN-SET-P"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:IN-SET-P" class="name">IN-SET-P</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(VALUE SET)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns T if the value is contained in the set.
+See COERCE-QUEUE</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:IN-SET-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:IN-SET-P">IN-SET-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE SET</code><code>)</code>  </header> <pre class="docstring">Returns T if the value is contained in the set.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:MAKE-INDEXED-SET"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:MAKE-INDEXED-SET" class="name">MAKE-INDEXED-SET</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">()</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Creates a new indexed set.
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:MAKE-INDEXED-SET"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:MAKE-INDEXED-SET">MAKE-INDEXED-SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <pre class="docstring">Creates a new indexed set.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:MAP-SET"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:MAP-SET" class="name">MAP-SET</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(FUNCTION QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Maps the function over all elements of the set in order.
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:MAP-SET"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:MAP-SET">MAP-SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FUNCTION QUEUE</code><code>)</code>  </header> <pre class="docstring">Maps the function over all elements of the set in order.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:SET-ADD"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:SET-ADD" class="name">SET-ADD</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(VALUE SET)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Add a new value to the set.
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-ADD"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-ADD">SET-ADD</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE SET</code><code>)</code>  </header> <pre class="docstring">Add a new value to the set.
 
 Returns two values, the value that was added, and whether it was added
 as a new element to the set. If it already existed, the second value is
 NIL.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:SET-FIRST"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:SET-FIRST" class="name">SET-FIRST</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the first item in the set.
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-FIRST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-FIRST">SET-FIRST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the first item in the set.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:SET-INDEX-OF"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:SET-INDEX-OF" class="name">SET-INDEX-OF</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(VALUE QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the index of the value in the set.
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-INDEX-OF"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-INDEX-OF">SET-INDEX-OF</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the index of the value in the set.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:SET-LAST"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:SET-LAST" class="name">SET-LAST</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the last item in the set.
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-LAST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-LAST">SET-LAST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the last item in the set.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:SET-REMOVE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:SET-REMOVE" class="name">SET-REMOVE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(VALUE SET)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Remove a value from the set.
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-REMOVE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-REMOVE">SET-REMOVE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">VALUE SET</code><code>)</code>  </header> <pre class="docstring">Remove a value from the set.
 
 Returns two values, the set that was modified, and whether the value
 existed in the set to begin with. If it did not, the second value is
 NIL.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:SET-SIZE"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:SET-SIZE" class="name">SET-SIZE</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the number of items in the set.
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-SIZE"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-SIZE">SET-SIZE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the number of items in the set.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:SET-VALUE-AT"/>
-                  <article>
-                    <header class="function">
-                      <span class="type">function</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:SET-VALUE-AT" class="name">SET-VALUE-AT</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(N QUEUE)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Returns the value at the given index in the set.
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:SET-VALUE-AT"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:SET-VALUE-AT">SET-VALUE-AT</a></code></h4> <code class="qualifiers"></code> <code class="arguments">N QUEUE</code><code>)</code>  </header> <pre class="docstring">Returns the value at the given index in the set.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li><li>
-                  <a name="FLARE-INDEXED-SET:DO-SET"/>
-                  <article>
-                    <header class="macro">
-                      <span class="type">macro</span>
-                      <code>
-                        <h4><a href="#FLARE-INDEXED-SET:DO-SET" class="name">DO-SET</a></h4>
-                        <span class="qualifiers"></span>
-                        <span class="arguments">(&amp;REST ARGS)</span>
-                      </code>
-                    </header>
-                    <pre class="docstring">Iterates over all elements of the set in order.
+See INDEXED-SET</pre> </article> </li><li> <a name="FLARE-INDEXED-SET:DO-SET"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#FLARE-INDEXED-SET:DO-SET">DO-SET</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Iterates over all elements of the set in order.
 
-See INDEXED-SET</pre>
-                  </article>
-                </li></ul>
-            </li></ul>
-        </article>
-      
-    </div>
-  </body>
-</html>
+See INDEXED-SET</pre> </article> </li></ul> </li></ul> </article>  </main> </body> </html> 
