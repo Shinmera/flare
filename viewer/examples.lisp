@@ -22,7 +22,7 @@
 (defmethod initialize-instance :after ((entity colored-entity) &key)
   (setf (color entity) (color entity)))
 
-(defmethod (setf color) ((vec vec) (entity colored-entity))
+(defmethod (setf color) ((vec vec3) (entity colored-entity))
   (setf (slot-value entity 'color)
         (q+:make-qcolor
          (round (* 255 (vx vec)))
