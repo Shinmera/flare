@@ -14,7 +14,3 @@
 
 (staple:define-simple-converter symb-easing flare:easing)
 
-(defun staple ()
-  (staple:generate :flare
-                   :packages '(:flare :flare-queue :flare-indexed-set)
-                   :if-exists :supersede))
