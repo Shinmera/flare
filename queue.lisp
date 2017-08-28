@@ -127,11 +127,19 @@
           (not (eql (left (tail queue)) (head queue)))))
 
 (defun queue-value-at (n queue)
-  (for ((current in-queue queue)
+  (for ((current of-queue queue)
         (i from 0))
     (when (= i n)
-      (return (values current T))))
+      (return (values (value current) T))))
   (values NIL NIL))
+
+(defun (setf queue-value-at) (value n queue)
+  (for ((current of-queue queue)
+        (i from 0))
+    (when (= i n)
+      (setf (value current) value)
+      (return (values value T))))
+  (values value NIL))
 
 (defun queue-index-of (value queue)
   (for ((current in-queue queue)

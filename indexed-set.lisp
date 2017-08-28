@@ -39,6 +39,7 @@
 (setf (fdefinition 'set-first) (fdefinition 'queue-first))
 (setf (fdefinition 'set-last) (fdefinition 'queue-last))
 (setf (fdefinition 'set-value-at) (fdefinition 'queue-value-at))
+(setf (fdefinition '(setf set-value-at)) (fdefinition '(setf queue-value-at)))
 (setf (fdefinition 'set-index-of) (fdefinition 'queue-index-of))
 (setf (fdefinition 'clear-set) (fdefinition 'clear-queue))
 

@@ -53,6 +53,12 @@
     (leave item container))
   container)
 
+(defmethod unit (n (container container))
+  (set-value-at n (objects container)))
+
+(defmethod (setf unit) (value n (container container))
+  (setf (set-value-at n (objects container)) value))
+
 (defmethod for:make-iterator ((container container) &rest args)
   (apply #'for:make-iterator (objects container) args))
 
