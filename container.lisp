@@ -26,7 +26,7 @@
   (check-type name (and symbol (not null))))
 
 (defmethod print-object ((unit unit) stream)
-  (print-unreadable-object (unit stream :type T)
+  (print-unreadable-object (unit stream :type T :identity T)
     (format stream "~a" (name unit))))
 
 (defclass container ()

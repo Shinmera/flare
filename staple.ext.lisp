@@ -1,16 +1,12 @@
-(in-package #:cl-user)
+(defpackage #:flare-staple
+  (:nicknames #:org.shirakumo.fraf.flare.staple)
+  (:use #:cl))
+(in-package #:org.shirakumo.fraf.flare.staple)
 
-(defclass symb-easing (staple:symb-function)
-  ())
+(defclass easing (definitions:global-definition) ())
 
-(defmethod staple:symb-function ((symb symb-easing))
-  (flare:easing (staple:symb-symbol symb)))
-
-(defmethod staple:symb-documentation ((symb symb-easing))
-  (documentation (staple:symb-symbol symb) 'flare:easing))
-
-(defmethod staple:symb-type-order ((symb (eql 'symb-easing)))
-  (1+ (staple:symb-type-order 'symb-function)))
-
-(staple:define-simple-converter symb-easing flare:easing)
-
+(definitions:define-simple-type-map easing flare:easing)
+(definitions:define-simple-object-lookup easing flare:easing)
+(definitions:define-simple-documentation-lookup easing flare:easing)
+(definitions:define-simple-definition-resolver easing flare:easing)
+(defmethod staple:definition-order ((_ easing)) 91)
