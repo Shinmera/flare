@@ -1028,9 +1028,9 @@ body      ::= interval*
 interval  ::= start [end] animation*
 animation ::= (selector change*)
 change    ::= (change-type argument*)
-start     --- An integer (in seconds) that represents the starting time 
+start     --- A real (in seconds) that represents the starting time 
               of the animations
-end       --- An integer (or T, indicating infinity) that represents the 
+end       --- A leal (or T, indicating infinity) that represents the 
               ending time of the animations
 selector  --- A valid selector as per COMPILE-SELECTOR
 change    --- A valid change as per COMPILE-CHANGE
