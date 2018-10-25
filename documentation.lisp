@@ -110,7 +110,7 @@ See PROGRESSION
 See ANIMATABLE")
   
   (function progression
-    "Find all progressions that match the denominator within the container.")
+    "Return the first progression instance that matches the denominator within the container.")
 
   (function animations
     "Accessor to the vector of animations that the progression holds.")

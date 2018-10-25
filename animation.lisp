@@ -70,7 +70,10 @@
 (defmethod progression ((definition progression-definition) (animatable animatable))
   (loop for progression in (progressions animatable)
         when (eql (definition progression) definition)
-        collect progression))
+        return progression))
+
+(defmethod progression ((definition symbol) animatable)
+  (progression (progression-definition definition) animatable))
 
 (defclass progression-definition ()
   ((animations :initform (make-array 0) :accessor animations)
