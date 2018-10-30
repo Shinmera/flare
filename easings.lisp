@@ -41,10 +41,20 @@
 (defmethod ease-object ((from real) (to real) x by)
   (ease x by from to))
 
+(defmethod ease-object ((from vec2) (to vec2) x by)
+  (vec (ease x by (vx2 from) (vx2 to))
+       (ease x by (vy2 from) (vy2 to))))
+
 (defmethod ease-object ((from vec3) (to vec3) x by)
-  (vec (ease x by (vx from) (vx to))
-       (ease x by (vy from) (vy to))
-       (ease x by (vz from) (vz to))))
+  (vec (ease x by (vx3 from) (vx3 to))
+       (ease x by (vy3 from) (vy3 to))
+       (ease x by (vz3 from) (vz3 to))))
+
+(defmethod ease-object ((from vec4) (to vec4) x by)
+  (vec (ease x by (vx4 from) (vx4 to))
+       (ease x by (vy4 from) (vy4 to))
+       (ease x by (vz4 from) (vz4 to))
+       (ease x by (vw4 from) (vw4 to))))
 
 (define-easing linear (x)
   x)
