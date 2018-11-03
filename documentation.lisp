@@ -515,6 +515,8 @@ See CLOCK"))
   (function name
     "Reader to the name of the unit.
 
+The name may be NIL.
+
 See UNIT")
   
   (function enter
@@ -610,7 +612,8 @@ See CONTAINER")
 
   (type scene-graph
     "A scene-graph is a container that also has a name-map to easily reach objects.
-This includes all objects in the container tree.
+
+This includes all objects in the container tree that have a non-NIL name.
 
 See CONTAINER")
 

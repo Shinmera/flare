@@ -19,11 +19,10 @@
 (defgeneric scene-graph (container-unit))
 
 (defclass unit ()
-  ((name :initarg :name :reader name))
-  (:default-initargs :name (gensym "")))
+  ((name :initform NIL :initarg :name :reader name)))
 
 (defmethod initialize-instance :before ((unit unit) &key name)
-  (check-type name (and symbol (not null))))
+  (check-type name symbol))
 
 (defmethod print-object ((unit unit) stream)
   (print-unreadable-object (unit stream :type T :identity T)
@@ -94,21 +93,20 @@ Tree:"
 
 (defmethod print-object ((scene-graph scene-graph) stream)
   (print-unreadable-object (scene-graph stream :type T :identity T)
-    (format stream "~a items" (hash-table-count (name-map scene-graph)))))
+    (format stream "~a units" (hash-table-count (name-map scene-graph)))))
 
 (defmethod register :around ((unit unit) (scene-graph scene-graph))
-  (unless (eql unit (gethash (name unit) (name-map scene-graph)))
+  (when (or (null (name unit))
+            (not (eql unit (gethash (name unit) (name-map scene-graph)))))
     (call-next-method)))
 
 (defmethod register ((unit unit) (scene-graph scene-graph))
-  (setf (gethash (name unit) (name-map scene-graph)) unit))
-
-(defmethod deregister :around ((unit unit) (scene-graph scene-graph))
-  (when (eql unit (gethash (name unit) (name-map scene-graph)))
-    (call-next-method)))
+  (when (name unit)
+    (setf (gethash (name unit) (name-map scene-graph)) unit)))
 
 (defmethod deregister ((unit unit) (scene-graph scene-graph))
-  (remhash (name unit) (name-map scene-graph)))
+  (when (eql unit (gethash (name unit) (name-map scene-graph)))
+    (remhash (name unit) (name-map scene-graph))))
 
 (defmethod enter :after ((unit unit) (scene-graph scene-graph))
   (register unit scene-graph))

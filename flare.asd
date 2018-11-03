@@ -6,7 +6,7 @@
 
 
 (asdf:defsystem flare
-  :version "0.2.0"
+  :version "1.1.0"
   :author "Nicolas Hafner <shinmera@tymoon.eu>"
   :license "Artistic"
   :description "Easy particle systems with fine grained control."
