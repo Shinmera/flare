@@ -46,8 +46,10 @@
   (print-unreadable-object (queue stream :type T)
     (format stream "~s ~s" :size (size queue))))
 
-(defun make-queue ()
-  (make-instance 'queue))
+(defun make-queue (&rest items)
+  (let ((queue (make-instance 'queue)))
+    (dolist (item items queue)
+      (enqueue item queue))))
 
 ;; Iteration
 
@@ -130,16 +132,14 @@
   (for ((current of-queue queue)
         (i from 0))
     (when (= i n)
-      (return (values (value current) T))))
-  (values NIL NIL))
+      (return (values (value current) T)))))
 
 (defun (setf queue-value-at) (value n queue)
-  (for ((current of-queue queue)
+  (for ((current in-queue queue)
         (i from 0))
     (when (= i n)
       (setf (value current) value)
-      (return (values value T))))
-  (values value NIL))
+      (return (values value T)))))
 
 (defun queue-index-of (value queue)
   (for ((current in-queue queue)
