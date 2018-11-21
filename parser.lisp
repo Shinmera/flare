@@ -122,6 +122,7 @@
                                                    :defindex (incf *animation-defindex*))))
          ,@(loop for change in changes
                  collect `(push (compile-change ,@change) (changes ,animation)))
+         (setf (changes ,animation) (nreverse (changes ,animation)))
          ,animation))))
 
 (defmacro compile-animations (&body intervals)
