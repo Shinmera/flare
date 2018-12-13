@@ -25,6 +25,28 @@
          (flare-queue::set-size (1+ (flare-queue::size set)) set)
          (values set T))))
 
+(defun set-add-before (after value set)
+  (cond ((gethash value (set set))
+         (values set NIL))
+        (T
+         (let ((pivot (gethash after (set set)))
+               (cell (flare-queue::make-cell value NIL NIL)))
+           (setf (gethash value (set set)) cell)
+           (flare-queue::cell-insert-before cell pivot))
+         (flare-queue::set-size (1+ (flare-queue::size set)) set)
+         (values set T))))
+
+(defun set-add-after (before value set)
+  (cond ((gethash value (set set))
+         (values set NIL))
+        (T
+         (let ((pivot (gethash before (set set)))
+               (cell (flare-queue::make-cell value NIL NIL)))
+           (setf (gethash value (set set)) cell)
+           (flare-queue::cell-insert-after cell pivot))
+         (flare-queue::set-size (1+ (flare-queue::size set)) set)
+         (values set T))))
+
 (defun set-remove (value set)
   (let ((cell (gethash value (set set))))
     (cond (cell

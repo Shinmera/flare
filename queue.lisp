@@ -19,6 +19,13 @@
         (left neighbor) cell)
   cell)
 
+(defun cell-insert-after (cell neighbor)
+  (setf (left cell) neighbor
+        (right cell) (right neighbor)
+        (left (right cell)) cell
+        (right neighbor) cell)
+  cell)
+
 (defun cell-remove (cell)
   (setf (left (right cell)) (left cell)
         (right (left cell)) (right cell))

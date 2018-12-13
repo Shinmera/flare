@@ -46,6 +46,8 @@
    #:in-set
    #:do-set
    #:set-add
+   #:set-add-before
+   #:set-add-after
    #:set-remove
    #:set-size
    #:set-first
