@@ -26,7 +26,7 @@
 
 (defmethod print-object ((unit unit) stream)
   (print-unreadable-object (unit stream :type T :identity T)
-    (format stream "~a" (name unit))))
+    (format stream "~@[~a~]" (name unit))))
 
 (defclass container ()
   ((objects :initform (make-indexed-set) :accessor objects)))
