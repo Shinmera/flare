@@ -26,8 +26,8 @@
    (running :initarg :running :accessor running)
    (timescale :initarg :timescale :accessor timescale))
   (:default-initargs
-   :clock 0.0s0
-   :timescale 1.0s0
+   :clock 0.0f0
+   :timescale 1.0f0
    :running NIL))
 
 (define-self-returning-method stop ((clock clock)))
@@ -48,7 +48,7 @@ Internal clock is at ~a~&"
     (format stream "~s ~a" (if (running clock) :running :stopped) (clock clock))))
 
 (defmethod reset ((clock clock))
-  (setf (clock clock) 0.0s0)
+  (setf (clock clock) 0.0f0)
   (setf (previous-time clock) (get-internal-real-time)))
 
 (defmethod synchronize ((clock clock) (with clock))
@@ -56,7 +56,7 @@ Internal clock is at ~a~&"
         (previous-time clock) (previous-time with)))
 
 (defmethod synchronize ((clock clock) (with real))
-  (setf (clock clock) (float with 0.0s0)
+  (setf (clock clock) (float with 0.0f0)
         (previous-time clock) (get-internal-real-time)))
 
 (defmethod stop ((clock clock))
@@ -71,7 +71,7 @@ Internal clock is at ~a~&"
     (incf (clock clock)
           (* (float (/ (- new-time (previous-time clock))
                        internal-time-units-per-second)
-                    1.0s0)
+                    1.0f0)
              (timescale clock)))
     (setf (previous-time clock) new-time)))
 
