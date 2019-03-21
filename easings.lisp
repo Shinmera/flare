@@ -36,6 +36,17 @@
                     (error "No such easing ~s found." by))))
     (+ from (* (funcall easing x) (- to from)))))
 
+(define-compiler-macro ease (&whole whole &environment env x by &optional (from 0) (to 1))
+  (if (constantp by env)
+      (let ((fromg (gensym "FROM")))
+        `(let ((,fromg ,from))
+           (+ ,fromg (* (funcall (load-time-value
+                                  (or (easing ,by)
+                                      (error "No such easing ~s found." ,by)))
+                                 ,x)
+                        (- ,to ,fromg)))))
+      whole))
+
 (defgeneric ease-object (from to x by))
 
 (defmethod ease-object ((from real) (to real) x by)
@@ -185,9 +196,6 @@
              (- (/ (* (expt 2 (* (1- x) 10)) (sin (/ (* (- (1- x) s) 2 PI) p))) 2))
              (1+ (/ (* (expt 2 (* x -10)) (sin (/ (* (- (1- x) s) 2 PI) p))) 2)))))))
 
-(define-easing bounce-in (x)
-  (- 1 (ease (- 1 x) 'bounce-out)))
-
 (define-easing bounce-out (x)
   (let ((s 7.5625)
         (p 2.75))
@@ -199,6 +207,9 @@
            (+ (* s (expt (- x (/ 2.25 p)) 2)) 0.9375))
           (T
            (+ (* s (expt (- x (/ 2.625 p)) 2)) 0.984375)))))
+
+(define-easing bounce-in (x)
+  (- 1 (ease (- 1 x) 'bounce-out)))
 
 (define-easing bounce-in-out (x)
   (if (< x 0.5)
