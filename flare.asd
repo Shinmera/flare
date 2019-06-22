@@ -8,7 +8,7 @@
 (asdf:defsystem flare
   :version "1.1.0"
   :author "Nicolas Hafner <shinmera@tymoon.eu>"
-  :license "Artistic"
+  :license "zlib"
   :description "Easy particle systems with fine grained control."
   :homepage "https://Shinmera.github.io/flare/"
   :bug-tracker "https://github.com/Shinmera/flare/issues"
