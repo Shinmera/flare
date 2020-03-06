@@ -72,6 +72,18 @@
 (defmethod next ((iterator queue-iterator))
   (value (setf (object iterator) (right (object iterator)))))
 
+(defmethod step-functions ((iterator queue-iterator))
+  (let ((object (object iterator))
+        (tail (tail iterator)))
+    (values
+     (lambda ()
+       (value (setf object (right object))))
+     (lambda ()
+       (not (eql (right object) tail)))
+     (lambda (value)
+       (setf (value object) value))
+     (lambda ()))))
+
 (defmethod make-iterator ((queue queue) &key)
   (make-instance 'queue-iterator :object (head queue) :tail (tail queue)))
 
