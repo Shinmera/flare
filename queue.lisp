@@ -12,6 +12,10 @@
                  (:predicate NIL))
   value left right)
 
+(defun cell-tie (left right)
+  (setf (right left) right)
+  (setf (left right) left))
+
 (defun cell-insert-before (cell neighbor)
   (setf (left cell) (left neighbor)
         (right cell) neighbor
@@ -27,9 +31,11 @@
   cell)
 
 (defun cell-remove (cell)
-  (setf (left (right cell)) (left cell)
-        (right (left cell)) (right cell))
+  (cell-tie (left cell) (right cell))
   cell)
+
+(defun remove-cells (left right)
+  (cell-tie (left left) (right right)))
 
 (defmethod print-object ((cell cell) stream)
   (if *print-readably*

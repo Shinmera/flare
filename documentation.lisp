@@ -1242,8 +1242,18 @@ See CELL")
 
 See CELL")
 
+  (function cell-tie
+    "Tie the two cells together so that they become adjacent.
+
+See CELL")
+
   (function cell-insert-before
     "Inserts the cell before its neighbour, making sure to keep all links updated.
+
+See CELL")
+
+  (function cell-insert-after
+    "Inserts the cell after its neighbour, making sure to keep all links updated.
 
 See CELL")
 
@@ -1251,6 +1261,14 @@ See CELL")
     "Removes the cell out of the link chain, making sure to keep all links updated.
 Unless the cell is the only item in the link chain, its left/right slots are not
 modified.
+
+See CELL")
+
+  (function remove-cells
+    "Removes all cells between and including the given left and right cells.
+
+Note that the consequences are undefined if the given left cell is actually to the
+right of the right cell, or if they are from different queues entirely.
 
 See CELL")
 

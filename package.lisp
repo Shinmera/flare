@@ -14,8 +14,11 @@
    #:value
    #:left
    #:right
+   #:cell-tie
    #:cell-insert-before
+   #:cell-insert-after
    #:cell-remove
+   #:remove-cells
    #:queue
    #:make-queue
    #:in-queue
