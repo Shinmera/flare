@@ -12,22 +12,21 @@
                  (:predicate NIL))
   value left right)
 
+(declaim (inline cell-tie))
 (defun cell-tie (left right)
   (setf (right left) right)
   (setf (left right) left))
 
 (defun cell-insert-before (cell neighbor)
-  (setf (left cell) (left neighbor)
-        (right cell) neighbor
-        (right (left cell)) cell
-        (left neighbor) cell)
+  (let ((left (left neighbor)))
+    (cell-tie left cell)
+    (cell-tie cell neighbor))
   cell)
 
 (defun cell-insert-after (cell neighbor)
-  (setf (left cell) neighbor
-        (right cell) (right neighbor)
-        (left (right cell)) cell
-        (right neighbor) cell)
+  (let ((right (right neighbor)))
+    (cell-tie neighbor cell)
+    (cell-tie cell right))
   cell)
 
 (defun cell-remove (cell)
@@ -116,7 +115,8 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defmacro do-queue ((value queue &optional result) &body body)
     `(block NIL
-       (map-queue (lambda (,value) ,@body) ,queue)
+       (for ((,value in-queue ,queue))
+         ,@body)
        ,result)))
 
 (defun enqueue (value queue)
