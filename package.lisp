@@ -10,6 +10,7 @@
   (:nicknames #:org.shirakumo.flare.queue)
   (:use #:cl #:for)
   (:export
+   #:make-cell
    #:cell
    #:value
    #:left
