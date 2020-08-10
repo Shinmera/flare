@@ -58,12 +58,7 @@
 (defvar *i* 0)
 
 (defun compile-constraint (constraint next)
-  (cond ((keywordp constraint)
-         (lambda (scene-graph)
-           (let ((unit (unit constraint scene-graph)))
-             (when unit
-               (funcall next unit)))))
-        ((integerp constraint)
+  (cond ((integerp constraint)
          (lambda (object)
            (when (= constraint *i*)
              (funcall next object))))
@@ -84,8 +79,9 @@
                       (funcall next unit)
                       (incf *i*)))))
                (T (lambda (object)
-                    (when (typep object constraint)
-                      (funcall next object))))))
+                    (let ((unit (unit constraint object)))
+                      (when unit
+                        (funcall next unit)))))))
         ((functionp constraint)
          (lambda (object)
            (when (funcall constraint object)

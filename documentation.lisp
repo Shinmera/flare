@@ -964,7 +964,7 @@ See DEFINE-PROGRESSION")
     "Compile a selector constraint into a function.
 
 constraint ::= name | nth | this | children | everything | function | list
-name       --- A keyword naming a unit in the scene-graph
+name       --- A symbol naming a unit in the scene-graph
 nth        --- An integer specifying the nth unit in the scene-graph
 this       --- The symbol T meaning the current object
 children   --- A symbol with name \">\" specifying all children of the current object
