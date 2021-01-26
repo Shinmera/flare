@@ -11,10 +11,6 @@
 (defclass scene (scene-graph clock paintable animatable)
   ())
 
-(defmethod start :after ((scene scene))
-  (dolist (progression (progressions scene))
-    (setf (previous-time progression) (previous-time scene))))
-
 (defclass entity (container-unit paintable animatable)
   ((location :initarg :location :accessor location))
   (:default-initargs

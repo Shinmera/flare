@@ -35,9 +35,9 @@
   (for:for ((item over container))
     (paint item target)))
 
-(defmethod update ((container container))
+(defmethod update ((container container) dt)
   (for:for ((item over container))
-    (update item)))
+    (update item dt)))
 
 (defmethod enter (thing (container container))
   (set-add thing (objects container))

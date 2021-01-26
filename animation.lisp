@@ -35,9 +35,9 @@
 (defclass animatable ()
   ((progressions :initform () :accessor progressions)))
 
-(defmethod update :after ((animatable animatable))
+(defmethod update :after ((animatable animatable) dt)
   (dolist (progression (progressions animatable))
-    (update progression)))
+    (update progression dt)))
 
 (defmethod reset :before ((animatable animatable))
   (dolist (progression (progressions animatable))
@@ -145,10 +145,10 @@
     ;; Fast-forward
     (setf (clock progression) clock)
     (cond ((running progression)
-           (update progression))
+           (update progression 0.0))
           (T
            (setf (running progression) T)
-           (update progression)
+           (update progression 0.0)
            (setf (running progression) NIL))))
   animations)
 
@@ -189,7 +189,7 @@
     (when (and (< new old) (not *resetting*))
       (reset progression))))
 
-(defmethod update ((progression progression))
+(defmethod update ((progression progression) dt)
   ;; Start new ones
   (shift-array-elements
    (future-animations progression)
@@ -300,6 +300,6 @@
     (enter progr scene)
     (start scene)
     (start progr)
-    (loop (update scene)
+    (loop (update scene 0.7)
           (format-progression progr)
           (sleep 0.7))))
