@@ -1,2 +1,2 @@
-
+*.lisp eof=lf
 doc/ linguist-vendored
