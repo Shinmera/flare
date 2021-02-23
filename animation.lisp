@@ -274,19 +274,8 @@
   (dolist (change (changes animation))
     (reset change)))
 
-
 (defun format-progression (progr)
-  (format T "~&Clock: ~a~
-             ~&
-             ~&Progression:~
-             ~&  Future:~{~
-             ~&    ~a~}
-             ~&  Present:~{~
-             ~&    ~a~}~
-             ~&  Past: ~{~
-             ~&    ~a~}~
-             ~&
-             ~&Scene:"
+  (format T "~&Clock: ~a~%~%Progression:~%  Future:~{~%    ~a~}~%  Present:~{~~%    ~a~}~~%  Past: ~{~~%    ~a~}~~%~%Scene:"
           (clock (animatable progr))
           (coerce (future-animations progr) 'list)
           (coerce (present-animations progr) 'list)
