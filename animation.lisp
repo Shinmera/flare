@@ -99,6 +99,7 @@
   ;; Take the chance to clear out empty references.
   ;; FIXME: This system sucks. Maybe something more indirect where the progression instance checks for changes on its own would be better
   (setf (instances definition) (delete-if-not #'tg:weak-pointer-value (instances definition)))
+  #++
   (loop for pointer in (instances definition)
         do (setf (animations (tg:weak-pointer-value pointer)) (animations definition))))
 
