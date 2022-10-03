@@ -106,7 +106,8 @@ Tree:"
 
 (defmethod deregister ((unit unit) (scene-graph scene-graph))
   (when (eql unit (gethash (name unit) (name-map scene-graph)))
-    (remhash (name unit) (name-map scene-graph))))
+    (remhash (name unit) (name-map scene-graph)))
+  unit)
 
 (defmethod enter :after ((unit unit) (scene-graph scene-graph))
   (register unit scene-graph))
