@@ -3,9 +3,9 @@
   :author "Yukari Hafner <shinmera@tymoon.eu>"
   :license "zlib"
   :description "Easy particle systems with fine grained control."
-  :homepage "https://Shinmera.github.io/flare/"
-  :bug-tracker "https://github.com/Shinmera/flare/issues"
-  :source-control (:git "https://github.com/Shinmera/flare.git")
+  :homepage "https://shinmera.com/docs/flare/"
+  :bug-tracker "https://shinmera.com/project/flare/issues"
+  :source-control (:git "https://shinmera.com/project/flare.git")
   :serial T
   :components ((:file "package")
                (:file "toolkit")
